@@ -5,31 +5,16 @@ organization's architecture, standards, principles, and the details of the modul
 implement them, published as plain markdown a person reads on GitHub and a site serves without
 rewriting.
 
-This repository is the workspace's docs tier. In a marathon workspace, human-facing
-documentation is centralized here rather than authored per repository: member repositories keep
-their working `context/` and link to the pages that document them, stating any enhancements to
-the derived principle beside the link.
+This repository is the workspace's docs tier, the one place the workspace's human-facing
+documentation is authored; `CLAUDE.md` states the working rule.
 
 ## Capabilities
 
-- **Orientation** (`index.md`) — the overview a reader starts from: the effort, the hierarchy,
-  the vocabulary, and the routed map of the pages.
-- **The architecture** (`architecture.md`) — the Elemental Architecture, the one definitive
-  architecture the blueprint builds out.
-- **Architecture principles** (`principles/`) — the conventions every standard and module
-  satisfies, one page per principle.
-- **Standards** (`standards/`) — each standard's definition, its standard-level principles, and
-  its modules' documented details; `go-elemental` is the first.
-- **Harness** (`harness/`) — the principles of the organization's agentic infrastructure, with
-  the harness repositories as worked examples.
-- **Metadata schema** — YAML front matter giving every page machine-readable identity, documented
-  in `README.md`.
+The tree is the hierarchy table in `README.md`: the overview (`index.md`), the architecture
+(`architecture.md`) with its `principles/`, the `standards/` with their modules, the `harness/`
+outside the hierarchy, and the metadata schema `README.md` documents. What the tree still
+owes the code is `concepts/dsl-docs-pass.md`, the inventory `v1.alignment.docs` works from.
 
 ## Site hosting
 
-Deferred. The settled direction: a thin `standards-lab.github.io` repository whose Actions
-workflow checks this repository out, builds, and deploys with `actions/deploy-pages`, triggered
-by `repository_dispatch` from here — so the apex `https://standards-lab.github.io/` serves this
-content while this repository stays the sole authoring home. Theme and toolchain are open; the
-pages are kept toolchain-neutral (plain markdown, YAML front matter, relative links) so the
-choice stays free.
+Deferred: `backlog.docs-site` in the workspace roadmap carries it.

@@ -1,27 +1,22 @@
 # The SQL meta language
 
-Captured 2026-08-25, during the go-database `query-vocabulary` session that designed the
-composition core now in the `ast` package (renamed and layered in the `writes-vocabulary`
-session, 2026-08-28). Unscheduled R&D beyond the v1 path; `backlog.sql-meta-language` in
-the workspace roadmap cites this concept.
+Captured 2026-08-25, when go-database's Go statement AST was the runtime half a compiler
+would target; reframed 2026-08-31 under the DSL strategy (standards-lab
+`context/design/dsl-driven-services.md`), which retired that AST for authored SQL files, and
+again 2026-09-03 when the `v1.data.sql.prototype` experiment built the first phase.
+Unscheduled R&D beyond the v1 path; `backlog.sql-meta-language` in the workspace roadmap
+cites this concept and narrows to what remains.
 
-> Superseded in part (2026-08-31): the DSL strategy (`standards-lab
-> context/design/dsl-driven-services.md`, `v1.data.sql`) retires the `ast` package this
-> concept treats as its permanent runtime half and its lowering target. The concept's claims
-> reframe rather than fall: authored SQL files become the authoring surface the meta language
-> would sit above, its schema-typing premise aligns with the new `migrate` mechanism, and
-> build-time fragment composition is its recognizable phase one. The `v1.data.sql.docs`
-> session rewrites this note; until then, read the ast-anchored passages as describing
-> v0.3.0.
->
-> Reframed (2026-09-03): the `v1.data.sql.prototype` experiment built the first phase. The
-> sqlate grammar (`--|` declarations, `{{ }}` parameters and placeholders with list expansion,
-> `{{> ns.name}}` includes, namespaces, tiers, overlays, and `sqlint.toml` with `[export]`) is
-> language independent, and `sqlate` is its first host, in Go; another host implements the
-> grammar, not the Go API. What this concept still holds beyond that phase is schema typing
-> (types from the migration set rather than declared) and portability by construction
-> (compiled to a dialect rather than declared by tier). `backlog.sql-meta-language` narrows to
-> those two.
+## The first phase exists
+
+The sqlate grammar (`--|` declarations, `{{ }}` parameters and placeholders with list
+expansion, `{{> ns.name}}` includes, namespaces, tiers, overlays, and `sqlint.toml` with
+`[export]`) is language independent, and `sqlate` is its first host, in Go; another host
+implements the grammar, not the Go API. Authored SQL files are the authoring surface the meta
+language sits above, and build-time fragment composition is its recognizable phase one. What
+this concept still holds beyond that phase is schema typing (types from the migration set
+rather than declared) and portability by construction (compiled to a dialect rather than
+declared by tier).
 
 ## The gap
 
@@ -60,17 +55,17 @@ typed bindings.
   expressions against it: columns, types, nullability, relations, through a core type system
   with per-provider mappings. This is what makes editor completion real rather than keyword
   lists.
-- **Compilation.** Typed AST, then provider backends emitting dialect SQL. The go-database
-  ast package's statements-as-values are this compiler's runtime shape seen from the other
-  side: the Go composition core is the dynamic half, and the meta language would be the
-  authoring surface above it, lowering to the same statement values.
+- **Compilation.** Typed AST, then provider backends emitting dialect SQL. sqlate's compile
+  step, parameters resolved to the dialect's positions and includes resolved against the
+  catalog, is the untyped first phase of this; the meta language adds the type checker and
+  the dialect backends.
 - **Host-language neutrality.** The protobuf model: the compiler emits provider SQL plus a
   neutral binding manifest — parameters in, row shapes out, as a JSON intermediate
   representation — and thin per-language generators produce typed wrappers: Go structs today,
   C# for the .NET mirror later. Hosts bind to generated types and the IR, never to the
   language. Distributing the compiler as WASM or a C ABI lets any toolchain embed it; a small
-  optional runtime handles dynamic composition, which is the directives use case go-database's
-  operation package serves today.
+  optional runtime handles dynamic composition, the request-time directives sqlate's `query`
+  package serves today.
 - **Tooling.** An LSP server for schema-aware completion and type errors, and a formatter.
   The LSP is the bulk of "feels like a first-class language."
 
@@ -79,9 +74,9 @@ typed bindings.
 A real language project: grammar, type checker, one backend (Postgres), one binding generator
 (Go), and the LSP. A credible seed is a few focused milestones, not a weekend, and each
 component has proven precedent — the combination is the novelty. The reference architecture is
-the natural proving ground: its migrations own a real schema, its ast package defines the
-runtime AST a compiler would target, and its planned .NET mirror is the second host language
-that keeps the bindings honest.
+the natural proving ground: its migrations own a real schema, sqlate's grammar and pattern
+catalog are the authoring surface a compiler would consume, and its planned .NET mirror is
+the second host language that keeps the bindings honest.
 
 ## The path out of concept stage
 
@@ -112,13 +107,13 @@ that builds the project. This concept page then decays to a pointer.
   diverge).
 - The tier rule is load-bearing: the core never grows past the standard, and native reach is
   per-unit and declared — the language-level analogue of the import-boundary lint.
-- Not a dependency of the v1 path. The ast package stands on its own; the meta language is a
-  possible authoring surface above it, and nothing in v1 waits on it.
+- Not a dependency of the v1 path. sqlate stands on its own; the meta language is a possible
+  compiler above its authored files, and nothing in v1 waits on it.
 - The split of labor is permanent, not transitional. Compiled units own what is authorable
-  ahead of time; the host-side AST owns what the request shapes at runtime — dynamic filters,
-  sorts, paging. The meta language displaces the static-query ladder (codegen, builders,
-  templates), not the dynamic half the ast and operation packages serve; that half is where
-  ORMs live, and it stays a runtime concern by design.
+  ahead of time; the host library owns what the request shapes at runtime — dynamic filters,
+  sorts, paging, which sqlate composes from library patterns at request time. The meta
+  language displaces the static-query ladder (codegen, builders, templates), not that dynamic
+  half; that half is where ORMs live, and it stays a runtime concern by design.
 
 ## Open questions
 
@@ -144,6 +139,6 @@ that builds the project. This concept page then decays to a pointer.
   — is where sqlc has spent its defect budget and where sqlx punts to a live engine's describe.
   Owning the inference versus asking a migrated database is entangled with the schema-source
   question, because introspection gets the engine's own answer for free.
-- Dynamic composition: where the compiled-unit boundary ends and the runtime (or the host-side
-  AST, like the ast package) takes over.
+- Dynamic composition: where the compiled-unit boundary ends and the runtime, sqlate's
+  request-time composition today, takes over.
 - Name and home: its own repository under the organization when it leaves concept stage.
