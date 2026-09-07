@@ -1,6 +1,6 @@
 # The DSL docs pass — inventory
 
-Captured at the 2026-08-31 workspace retrospective; `v1.data.sql.docs` in the coordinator's
+Captured at the 2026-08-31 workspace retrospective; `v1.alignment.docs` in the coordinator's
 roadmap cites this note as the session's work list. The strategy it documents is the
 coordinator's `standards-lab/context/design/dsl-driven-services.md`. The note is deleted at
 the pass's close.
@@ -37,13 +37,16 @@ the pass's close.
 
 - `standards/go-elemental/go-database/layers.md` — total loss: all 69 lines are the four-layer
   ontology. Replaced by the v0.4 shape.
-- `standards/go-elemental/go-database/index.md` — "built as four layers" and three of six
-  package bullets; rewrite around `database`/`query`/`migrate`/`seed`/`postgres`.
+- `standards/go-elemental/go-database/index.md` — "built as four layers", the `ast`, `operation`,
+  `exec`, and `seed` bullets, and a dependency line that omits sqlate; rewrite around
+  `database`/`admin`/`postgres` over sqlate.
 - `standards/go-elemental/go-database/dialect.md` — the "Render capabilities" half
   (`PagingRenderer` override, `ReturningRenderer` declared-native) presupposes Go-side
   rendering; rewrite around what survives (`Placeholder`, `MapError`, the divergence ledger's
   by-discipline form).
-- `standards/go-elemental/go-database/tiers.md`, `providers.md` — survive; verify wording.
+- `standards/go-elemental/go-database/providers.md` — states that a provider supplies the
+  engine's `Dialect`; since v0.4.0 the dialect is `sqlate/postgres`'s and the provider
+  constructs the pool alone. `tiers.md` — verify wording.
 - `standards/go-elemental/go-web-sdk/reads.md:28` — "deliberately parallel to go-database's
   read vocabulary" and "go-database answers with its typed unknown-field error" (that error
   lived in `operation`; it survives into `query` — re-anchor, don't delete).
@@ -62,12 +65,40 @@ the pass's close.
 
 ## Catalog and harness adjacents (verified here, owned elsewhere)
 
-- `standards-lab/references.md` go-database and go-web-sdk entries refresh with the releases
-  (owned by `backlog.workspace-sweep`; this pass verifies the go-database entry against the
-  new pages).
+- `standards-lab/references.md` states each repository's purpose and points at its README
+  since `v1.alignment.review`; this pass verifies the go-database entry against the new pages.
 - The harness tier has no page describing the marathon code-project loop's staged form after
   v0.9.0 — the marathon session's closeout updates it; this pass verifies consistency with
   the project-kinds paragraph.
-- The roadmap's `backlog.validation-first` names its docs page as remaining work and lost its
-  worked exhibit (the ast render layer); when that page is written, a current exhibit is
-  named.
+- The validation-first layering principle page, in this task's summary, lost its worked
+  exhibit (the ast render layer) with go-database v0.4; the page names a current one.
+
+## Drift inventory (`v1.alignment.review`, 2026-09-07)
+
+Pages the code moved out from under, found by the review and left for this pass:
+
+- `standards/go-elemental/go-core/index.md` — four packages; `process/processtest` (v0.4.0)
+  is undocumented.
+- `standards/go-elemental/go-web-sdk/index.md` — "`middleware` is currently the only
+  sub-package" (`webtest` shipped at v0.7.0); the design list has no page for the
+  error-returning handler adapter, the request helpers (`IfMatch`, `DecodeJSON`), or `webtest`.
+- `standards/go-elemental/go-web-sdk/problems.md` — "the SDK maps only its own vocabulary — a
+  `QueryError` is a 400" and "detail only on a 400" predate v0.6.0's built-in mappings
+  (`PreconditionError`, `BodyError`) and `ErrorWriter.Detail`.
+- `standards/go-elemental/go-web-sdk/reads.md` — "every remaining parameter as the filter set"
+  predates the ordered filter list and the `field[op]=value` operator grammar.
+- `standards/go-elemental/go-web-sdk-template/baseline.md` and `elements.md` — four packages
+  (`internal/infrastructure`, `internal/domain`, `internal/reactors`, `internal/app`), five
+  build points, one `/api` group, no `reads` block; template v0.6.0 collapsed the root into
+  `internal/app` as one file per layer with the admin layer and its `/admin` mount. No page
+  for the template's integration tier (v0.7.0).
+- `architecture.md` — "a Domain Service anchors exactly one Entity" predates the 2026-09-03
+  amendment.
+- `standards/go-elemental/principles/tests-and-docs.md` — "CI needs no database container";
+  `release-and-ci.md` — no integration job and no green-integration-licenses-release rule.
+- `index.md` and `standards/go-elemental/index.md` — go-web-service "(planned)"; go-database
+  listed as the only infrastructure library, sqlate absent.
+- `standards/go-elemental/index.md` — the anticipated .NET standard is named `dotnet-minimal`;
+  the naming rule makes it `dotnet-elemental`.
+- Principle pages absent: DSL-driven services, context architecture, validation-first
+  layering, rolling currency.
