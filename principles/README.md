@@ -17,3 +17,7 @@ a principle, tightening it for its own scope, and never loosen it.
 - [Independent, artifact-keyed releases](independent-releases.md)
 - [Repository topology](repository-topology.md)
 - [The composition root](composition-root.md)
+- [Rolling currency](rolling-currency.md)
+- [Validation-first layering](validation-first.md)
+- [Context architecture](context-architecture.md)
+- [A standalone tool beside the library](tool-beside-library.md)

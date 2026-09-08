@@ -66,6 +66,22 @@ changes when the provider does.
 Full interchangeability is a limit the classes approach; no technology fully reaches it, and the
 declaration is what makes the difference legible.
 
+## Providers are adapters behind one interface
+
+The library reaches every provider of a technology through one interface per capability, and a
+provider is an adapter beneath that interface. The interface is defined where it is consumed,
+in the library, and a new provider is a new adapter, never a change to the interface. Adapters
+isolate vendor churn: a provider's SDK changes without the interface changing.
+
+The organization's SQL support is the reference pattern. The dialect interface is defined in
+the [SQL templating library](https://github.com/standards-lab/sqlate) and implemented by each
+engine sub-module, and the database infrastructure library constructs the pool over the
+provider and supplies no dialect of its own.
+
+Where tooling projects a model for downstream consumers, it emits one machine-readable
+projection of that model, and a consumer reads the projection rather than the authoring
+format. The authoring format then changes without breaking its consumers.
+
 ## Providers and platforms
 
 A provider is one implementation of one target API, and the boundary between self-hosted and

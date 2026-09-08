@@ -7,7 +7,7 @@ type: index
 # Go Elemental principles
 
 The conventions every Go Elemental repository shares. Each enhances the
-[architecture principles](../../../principles/index.md) for the standard's scope; a member
+[architecture principles](../../../principles/README.md) for the standard's scope; a member
 repository may enhance one further, stating the enhancement where it links to the principle.
 
 - [Dependencies](dependencies.md)
@@ -16,3 +16,4 @@ repository may enhance one further, stating the enhancement where it links to th
 - [Lifecycle and context ownership](lifecycle-and-context.md)
 - [Tests and documentation](tests-and-docs.md)
 - [Releases and CI](release-and-ci.md)
+- [DSL-driven services](dsl-driven-services.md)

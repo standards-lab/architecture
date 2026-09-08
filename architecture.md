@@ -28,9 +28,9 @@ query/command operation model of CQRS. It deliberately drops the vocabulary DDD 
 around them (aggregates, value objects, repositories, command buses), because that vocabulary
 existed to keep monolithic applications coherent. In a system of many narrowly scoped services,
 each application is small enough that the five elements below describe its entire design.
-"Feature" was considered as a further element and rejected: every candidate feature is exactly
-one Entity and its Domain Service, so the term would only relabel a pair the elements already
-describe. Features stay informal prose.
+"Feature" was considered as a further element and rejected: every candidate feature is one
+domain, a Domain Service and the Entities it composes, so the term would only relabel what the
+elements already describe. Features stay informal prose.
 
 ## The elements
 
@@ -53,11 +53,16 @@ Top to bottom:
   and they are distinct from domain services. They follow a uniform lifecycle contract: ordered
   startup, reverse-order drain, readiness checks feeding the probes. Each is constructed and
   registered once, declaratively, in the composition root.
-- **Domain Service**: the public interface the application presents over one Entity. It exposes
-  what may be done to that Entity as two operation kinds: a **Query** is an immutable operation
-  that reads the system's current state; a **Command** is a mutable operation that requests a
-  change to it. A Domain Service anchors exactly one Entity, and its module is the unit a route
-  or a Reactor calls.
+- **Domain Service**: the public interface the application presents over a domain. A
+  **domain** is a composition of one or more Entities around a **root Entity**, the Entity the
+  domain's other Entities depend on and the one whose identity the domain's records carry. An
+  Entity that depends on the root and nothing else is the root's metadata. An Entity that
+  depends on the root and reaches beyond the domain is where the domain connects to other
+  domains and systems. The Domain Service exposes what may be done to the domain as two
+  operation kinds: a **Query** is an immutable operation that reads the system's current
+  state; a **Command** is a mutable operation that requests a change to it. A Domain Service
+  serves one domain, and its module is the unit a route or a Reactor calls. The simplest
+  domain is one root Entity alone.
 - **Entity**: the elemental component. An Entity is a data structure, table-backed or not; it
   defines its intrinsic capability, and the Domain Service decides what of that capability is
   exposed.
@@ -80,10 +85,10 @@ the same as any other Reactor source.
   persisted metadata, and a row is an instance of entity data. A Domain Service exposes methods
   (the idiomatic Go term for an owned operation on a type) that a web service maps to API
   endpoints. Another language describes the same components in its own idiom.
-- **The anchored Entity is the consistency boundary.** Commands are transactional and cascade
-  through entity operations atomically. An operation spanning entities belongs to the Domain
-  Service of the Entity that owns the transaction, which composes the other entities' operations
-  within it.
+- **The domain's root Entity is the consistency boundary.** Commands are transactional and
+  cascade through entity operations atomically. An operation spanning entities belongs to the
+  Domain Service of the domain whose root owns the transaction, which composes the other
+  entities' operations within it, its own Entities and another domain's alike.
 - **Dependencies flow downward through the elements.** The application layer depends on
   everything it assembles; a Reactor depends on the infrastructure connection it owns and the
   Domain Service it calls; domain services depend on their Entity and the infrastructure services
@@ -100,18 +105,35 @@ the same as any other Reactor source.
 
 ## Principles
 
-- [The composition root](principles/composition-root.md) — the one package where an application assembles
-  and declares its composition.
+The architecture's principles are cataloged at [`principles/`](principles/README.md); every
+standard and module beneath the architecture satisfies them, and a lower level may tighten one
+and never loosen it:
+
+- [Resolution matches purpose](principles/resolution.md) — interface with a technology at the
+  resolution the purpose requires.
+- [Dependencies flow downward only](principles/downward-dependencies.md) — a repository depends
+  on lower tiers and names its dependencies, never its dependents.
+- [A minimal, deliberate dependency footprint](principles/minimal-footprint.md) — every
+  dependency is deliberate, and each standard draws its own line.
+- [Service tiers](principles/service-tiers.md) — the standard and native tiers of every
+  infrastructure service, and the swap-cost classes.
+- [Independent, artifact-keyed releases](principles/independent-releases.md) — every releasable
+  artifact has its own tag namespace.
+- [Repository topology](principles/repository-topology.md) — the five repository tiers and the
+  dependency rule between them.
+- [The composition root](principles/composition-root.md) — the one package where an application
+  assembles and declares its composition.
 
 ## A note on "Domain Service"
 
 "Domain Service" deliberately narrows a term domain-driven design uses more broadly: here it is
-always the public interface over exactly one Entity. Engineers onboarding from a DDD background
-should read the definition above rather than assuming the inherited, broader one.
+always the public interface over one domain, rooted in one Entity. Engineers onboarding from a
+DDD background should read the definition above rather than assuming the inherited, broader
+one.
 
 ## Implementing standards
 
 A standard declares the architecture it implements in its definition.
-[Go Elemental](standards/go-elemental/index.md) is the first implementing standard; its
-[web service template](standards/go-elemental/go-web-sdk-template/index.md) is the first
+[Go Elemental](standards/go-elemental/README.md) is the first implementing standard; its
+[web service template](https://github.com/standards-lab/go-web-sdk-template) is the first
 code expression of the elements.

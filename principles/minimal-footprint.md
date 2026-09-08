@@ -16,9 +16,10 @@ adopt an established idiom above them only when a requirement demands it.
 
 The principle states the [architecture](../architecture.md)'s supply-chain purpose in
 principle form, and carries both of its dimensions: mitigating what a dependency admits, and
-establishing the deliberate maintenance boundaries that keep a dependency set current — a
+establishing the deliberate maintenance boundaries that keep a dependency set current. A
 handful of deliberately sourced dependencies can be held pinned and current the week upstream
-releases; fifty cannot.
+releases; fifty cannot. [Rolling currency](rolling-currency.md) states that second dimension as
+its own principle, and the two justify each other.
 
 Heavy dependencies, such as vendor SDKs and database drivers, are isolated behind sub-modules
 that present a light interface. A consumer that needs only the interface never compiles the
