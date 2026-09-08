@@ -20,3 +20,4 @@ a principle, tightening it for its own scope, and never loosen it.
 - [Rolling currency](rolling-currency.md)
 - [Validation-first layering](validation-first.md)
 - [Context architecture](context-architecture.md)
+- [A standalone tool beside the library](tool-beside-library.md)
