@@ -28,7 +28,7 @@ for SQL that provider is Postgres.
 ## Principles
 
 The conventions every Go Elemental repository shares, enhancing the
-[architecture principles](../../principles/index.md):
+[architecture principles](../../principles/README.md):
 
 - [Dependencies](principles/dependencies.md) — the dependency line applied to each repository
   tier, and where vendor libraries are isolated.

@@ -9,7 +9,7 @@ standard: go-elemental
 
 # go-web-sdk-template
 
-The web service template of [Go Elemental](../index.md): scaffolds an initial Go Elemental web
+The web service template of [Go Elemental](../README.md): scaffolds an initial Go Elemental web
 service application, and the first code expression of the
 [Elemental Architecture](../../../architecture.md)'s application
 layout. A generated service starts as a minimal runnable web service on go-core and go-web-sdk

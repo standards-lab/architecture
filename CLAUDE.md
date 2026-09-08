@@ -26,7 +26,8 @@ an external project.
 The hierarchy runs from universal to specific, and each directory level documents one level of
 it:
 
-- `index.md` — orientation: the blueprint, the vocabulary, and the map of everything here.
+- `README.md` — orientation: the blueprint, the vocabulary, the map of everything here, and the
+  front-matter schema; a README is every directory's index.
 - `architecture.md` — the Elemental Architecture, the one definitive architecture the blueprint
   builds out.
 - `principles/` — the architecture's principles, the highest level of resolution.

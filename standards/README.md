@@ -15,5 +15,5 @@ that lineage in its definition. A standard whose posture does not satisfy the ar
 principles is not a standard of this blueprint — it implements some other architecture, and is
 referenced from the catalog rather than documented here.
 
-- [Go Elemental](go-elemental/index.md) — the Go implementation of the Elemental Architecture:
+- [Go Elemental](go-elemental/README.md) — the Go implementation of the Elemental Architecture:
   a complete reference architecture on the Go standard library.

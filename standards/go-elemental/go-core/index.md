@@ -9,7 +9,7 @@ standard: go-elemental
 
 # go-core
 
-The Core SDK of [Go Elemental](../index.md): the common primitives useful across all Go Elemental
+The Core SDK of [Go Elemental](../README.md): the common primitives useful across all Go Elemental
 application types, and the first place the standard becomes code. A package is admitted only
 when every application type in the standard uses it. Functionality specific to a single
 application type belongs in that type's application SDK, and functionality specific to an

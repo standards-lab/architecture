@@ -9,7 +9,7 @@ standard: go-elemental
 
 # go-web-sdk
 
-The Application SDK for [Go Elemental](../index.md) web services: what every web service otherwise
+The Application SDK for [Go Elemental](../README.md) web services: what every web service otherwise
 hand-writes around the standard library's `net/http`, supplied once. Its standard tier is HTTP's
 common standard itself, RFC 9110 for the protocol and RFC 9457 for problem responses, built
 directly on the standard library's `net/http` transport. The SDK therefore has no providers and

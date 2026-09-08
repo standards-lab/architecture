@@ -9,7 +9,7 @@ standard: go-elemental
 
 # go-database
 
-The SQL infrastructure library of [Go Elemental](../index.md): the database service in two tiers,
+The SQL infrastructure library of [Go Elemental](../README.md): the database service in two tiers,
 built as four layers. A reader who opens it sees the organization's SQL data-access conventions
 and nothing else, and a consumer who depends on it pulls in exactly one service. The approach is
 plain SQL over `database/sql` with a raw driver in the provider; no ORM, per the standard's
