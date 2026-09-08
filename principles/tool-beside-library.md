@@ -23,7 +23,7 @@ them forces one audience to carry the other's dependencies.
 
 ## Where the organization applies the principle
 
-The [sqlate library](../standards/go-elemental/sql/sqlate.md) established the pattern. Its
+The [sqlate library](https://github.com/standards-lab/sqlate) established the pattern. Its
 conventions linter is the `sqlint` package, callable from a program, and the `sqlint` command
 in the same sub-module runs that package over a module for an operator. The sub-module keeps
 the linter's configuration-file dependency out of the base library.

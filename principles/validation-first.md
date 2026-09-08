@@ -38,8 +38,8 @@ because the outermost scope ran first.
 - Authored SQL. The parameter delimiter is reserved, so text that looks like a parameter and is
   not one fails the file's load. A statement then compiles against the pattern catalog, and at
   startup the process verifies every statement in a domain's inventory against the live schema,
-  so a renamed column fails the process before it serves a request. The mechanism is documented
-  at [the SQL artifact's pages](../standards/go-elemental/sql/index.md).
+  so a renamed column fails the process before it serves a request. The convention is the
+  [DSL-driven services](../standards/go-elemental/principles/dsl-driven-services.md) principle's.
 - Requests. The web SDK parses a read request's query string in full before any statement is
   composed, and it rejects a malformed key or an operator on a reserved name as the request's
   defect. The mechanism is documented at

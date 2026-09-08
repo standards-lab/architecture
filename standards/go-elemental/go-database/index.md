@@ -9,47 +9,43 @@ standard: go-elemental
 
 # go-database
 
-The SQL infrastructure library of [Go Elemental](../index.md): the connection pool with its
-configuration, lifecycle, and readiness, the database admin service over the
-[sqlate library](../sql/sqlate.md), and the PostgreSQL provider. A consumer who depends on it
-pulls in exactly one service. Statements, sessions, transactions, and the dialect are sqlate's:
-this library owns the pool the session runs over and the administration of the schema the
-statements run against.
+The SQL infrastructure library of [Go Elemental](../index.md): the database service in two tiers,
+built as four layers. A reader who opens it sees the organization's SQL data-access conventions
+and nothing else, and a consumer who depends on it pulls in exactly one service. The approach is
+plain SQL over `database/sql` with a raw driver in the provider; no ORM, per the standard's
+[dependency line](../principles/dependencies.md).
 
-The repository is one base module, `github.com/standards-lab/go-database`, with the `postgres`
-provider as a nested sub-module that pins its driver. The base module depends on the standard
-library, go-core, and sqlate, per the standard's [dependency line](../principles/dependencies.md).
+The repository is one base module, `github.com/standards-lab/go-database`, defining the standard
+tier, with the `postgres` provider as a nested sub-module that pins its driver. The base module
+depends on the standard library and go-core.
 
-## The packages
+## Packages and modules
 
-The README lists the packages, and each package's `doc.go` states its API. Their places in the
-architecture:
+The base module's packages are the library's layers, dependencies pointing one way; see
+[The layer ontology](layers.md).
 
-- The `database` package is the SQL infrastructure service: a lifecycle-integrated wrapper
-  over a `database/sql` connection pool and the configuration block that sizes it. It meets
-  go-core's lifecycle contracts as bare method values, reports live connectivity as its
-  readiness, and classifies its two service conditions, not ready and connection failed, in
-  dual-wrapped form. See [service tiers in SQL](tiers.md).
-- The `admin` package is the database admin service: schema state, verification, correction,
-  seeding, named states, and diagnostics as operations over sqlate's functions, run once at
-  startup and on demand from an administrative surface. See [the admin service](admin.md).
-- The `postgres` sub-module is the PostgreSQL provider: it constructs the pool over pgx's
-  `database/sql` adapter and supplies no dialect. See [providers](providers.md).
+- **database** — the service layer: the wrapper over a provider-constructed pool, meeting
+  go-core's lifecycle contracts for startup, shutdown, and readiness; the `Dialect` interface
+  providers implement; the `Session` and `Tx` seam that carries the dialect and owns commit
+  classification; the configuration block that joins the layered load; and the error taxonomy —
+  connectivity, the constraint classes, version mismatch — in dual-wrapped form. See
+  [Service tiers in SQL](tiers.md) and [The dialect interface](dialect.md).
+- **ast** — the statement layer: standard SQL as values. Expressions, predicates, and table
+  references compose `Select` and `Compound` (the sealed query expressions) and the write
+  statements `Insert`, `Update`, and `Delete`, each rendered through the dialect into SQL text
+  and bound arguments.
+- **operation** — the contract layer: CQRS-shaped constructors lowering to rendered statements.
+  A `Projection` serves the list and single-row queries under a field-name contract; the
+  command shapes carry the identity-returning insert and the optimistic-concurrency guarded
+  update and delete.
+- **exec** — the execution layer, the only layer touching `database/sql` at runtime: the query
+  runners over `Session`, the command runners over `Tx`, and the mapping of driver errors and
+  guard outcomes onto the service layer's taxonomy.
+- **seed** — reference-data loading: a runner over the consumer's seed file system, a typed load
+  function per table, one transaction per step, the decode format selected by extension.
+- **postgres** — the PostgreSQL provider: constructs the pool over pgx's `database/sql` adapter
+  and supplies the postgres dialect, including constraint classification and the `RETURNING`
+  capability. See [Providers](providers.md).
 
-## How a composition root wires the library
-
-The composition root imports the provider once and constructs the pool from the finalized
-configuration block. It wraps the pool's connection with sqlate's session over the dialect the
-engine's sqlate sub-module supplies, so the session and the pool share one set of connections.
-It registers the pool's start and shutdown as lifecycle hooks, and it constructs the admin
-service over the pool, the session, the migrator, and the pattern catalog, registering it at
-its lifecycle stage. The provider's native API stays reachable through the pool the wrapper
-exposes and the options map the configuration passes through.
-
-## What the library does not own
-
-The library owns the operations and their policy and none of the content it administers. The
-migration set, the seeder with its named sets, the pattern catalog, and the statements registry
-are the consumer's, passed in at construction. The HTTP half of the admin service, a route
-group over its operations, is application code; the [reference service](../go-web-service/database.md)
-documents the pattern.
+The code and each package's `doc.go` are authoritative for the API; these pages document the
+design.

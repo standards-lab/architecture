@@ -73,11 +73,10 @@ provider is an adapter beneath that interface. The interface is defined where it
 in the library, and a new provider is a new adapter, never a change to the interface. Adapters
 isolate vendor churn: a provider's SDK changes without the interface changing.
 
-The organization's SQL support is the reference pattern. The
-[dialect interface](../standards/go-elemental/sql/dialect.md) is defined in the SQL templating
-library and implemented by each engine sub-module. The
-[database infrastructure library](../standards/go-elemental/go-database/index.md) constructs
-the pool over the provider and supplies no dialect of its own.
+The organization's SQL support is the reference pattern. The dialect interface is defined in
+the [SQL templating library](https://github.com/standards-lab/sqlate) and implemented by each
+engine sub-module, and the database infrastructure library constructs the pool over the
+provider and supplies no dialect of its own.
 
 Where tooling projects a model for downstream consumers, it emits one machine-readable
 projection of that model, and a consumer reads the projection rather than the authoring

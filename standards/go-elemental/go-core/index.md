@@ -21,19 +21,21 @@ to the standard library alone.
 
 ## Packages
 
-The README lists the packages, and each package's `doc.go` states its API. Their places in the
-standard:
-
-- The `config` package loads layered configuration: a base file, environment overlays, and
-  secrets, resolved through a merge and finalize contract each subsystem's configuration
-  implements. See [configuration](config.md).
-- The `lifecycle` package is the process lifecycle for long-running programs: services
-  started in stages with a barrier between them, readiness tracked as each service's status
-  changes, and a reverse-stage drain within a timeout. The conventions it fixes for every
-  application are the standard's
+- **config** — layered configuration: a base file, environment overlays, and secrets, resolved
+  through a merge/finalize contract each subsystem's configuration implements. See
+  [Configuration](config.md).
+- **lifecycle** — the process lifecycle for long-running programs: staged services with
+  ordered startup, reverse-stage drain, and named readiness checks; bracketing hooks and
+  monitors for process-level callbacks; a readiness signal that tracks the process through
+  startup and drain; and timeout-bounded graceful shutdown. The conventions it fixes for every
+  application are documented in the standard's
   [lifecycle and context ownership](../principles/lifecycle-and-context.md) principle.
-- The `logging` package constructs the `*slog.Logger` a process writes through, from a
-  configuration that takes part in the layered load. See [logging](logging.md).
-- The `process` package holds the parts of a binary's main sequence that run before the
-  program's own infrastructure exists, and its `processtest` package is the integration
-  toolkit that runs a program as the binary. See [the process sequence and its toolkit](process.md).
+- **logging** — the `*slog.Logger` a process writes through, built from a configuration that
+  takes part in the layered load. See [Logging](logging.md).
+- **process** — the pre-infrastructure main sequence of a binary: the signal-derived root
+  context, failure and usage reporting before a logger exists, and the exit-code convention
+  the reporters return. The conventions it fixes are documented in the standard's
+  [lifecycle and context ownership](../principles/lifecycle-and-context.md) principle.
+
+The code and each package's `doc.go` are authoritative for the API; these pages document the
+design.

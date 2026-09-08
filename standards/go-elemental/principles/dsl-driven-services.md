@@ -27,10 +27,10 @@ trivial, execute and query, and all the meaning is in the text. Forcing such a s
 protocol-driven pattern produces a large host-language interface standing in for a language
 that was already the right interface.
 
-SQL is the standard's reference implementation of the category, documented at
-[the SQL artifact](../sql/index.md). Its shape is what a later search or policy integration
-reproduces, with no shared code: native text, a thin library, a verification step, and a tier
-declaration.
+SQL is the standard's reference implementation of the category, hosted by the
+[sqlate library](https://github.com/standards-lab/sqlate), whose guide documents the grammar
+and the packages. Its shape is what a later search or policy integration reproduces, with no
+shared code: native text, a thin library, a verification step, and a tier declaration.
 
 ## What the host-language layer does
 
@@ -90,6 +90,27 @@ inside the line?" is asked when a layer is planned, not discovered at review. Th
 is the standard's worked case: SQL carries the expressive content, and a statement vocabulary
 in the host language, however capable, would be a second layer expressing what the first
 already does.
+
+## What the standard's authored SQL declares
+
+The conventions below are the standard's, followed by every repository that authors SQL and
+stated by none of them alone:
+
+- Every file declares its tier in its header, standard or native. A native file names the
+  engine feature it uses and how another engine expresses the same effect, so the native files
+  of a repository are its complete port list, found by one search. The conventions linter
+  refuses a standard file that uses a form the engine declares native.
+- A statement is named for its operation, never for its SQL verb. The file, the store method,
+  the service method, and the route share one name.
+- A command's validation belongs to the domain's entity. Existence and uniqueness belong to
+  the store, as the constraint violations the engine reports.
+- A shared pattern is published under a namespace and included at compile time. It earns a
+  host function only when it carries a protocol the SQL alone cannot guarantee; the
+  optimistic-concurrency guard is the one such pattern.
+- A statement is validated at three moments, each the earliest its scope allows
+  ([validation-first layering](../../../principles/validation-first.md)): when the file loads,
+  when the directory compiles against the pattern catalog, and at startup, when the process
+  prepares every statement of a domain's inventory against the live, migrated schema.
 
 ## Injection safety is structural
 

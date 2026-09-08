@@ -70,12 +70,11 @@ is testable through the API, not when its library lands.
 
 A library whose infrastructure an integration suite exercises ships its integration toolkit
 beside it, the way a scripted driver ships beside a SQL library for the unit tier. The core
-SDK's [`process/processtest`](../go-core/process.md) package runs a program as the binary and
-drives it through the seams a terminal or an orchestrator uses. The web SDK's
-[`webtest`](../go-web-sdk/webtest.md) package is the client a black-box suite drives a running
-service through. The template ships the wiring engine-free, its
-[`integration` package](../go-web-sdk-template/integration.md), task, and CI job, and a
-generated service adds its compose stack.
+SDK's `process/processtest` package runs a program as the binary and drives it through the
+seams a terminal or an orchestrator uses. The web SDK's `webtest` package is the client a
+black-box suite drives a running service through. The template ships the wiring engine-free,
+its `integration` package, task, and CI job, and a generated service adds its compose stack.
+Each package's documentation states its API.
 
 ## doc.go and godoc
 
