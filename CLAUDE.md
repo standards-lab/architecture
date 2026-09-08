@@ -1,4 +1,4 @@
-# docs
+# architecture
 
 The Standards Lab workspace's architecture: the canonical home for the Elemental Architecture,
 its principles, each standard's definition and principles, the harness principles, and a

@@ -1,4 +1,4 @@
-# docs context
+# architecture context
 
 The architecture layer of the Standards Lab workspace: one repository holding the Elemental
 Architecture, its principles, each standard's definition and principles, the harness
