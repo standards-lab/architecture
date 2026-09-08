@@ -19,6 +19,13 @@ column name, an identifier format, a naming convention — may harden into the l
 contract. A library fixes mechanisms; the consumer's schema and conventions bind where the
 consumer composes it.
 
+The rule extends to policy. A library ships no policy numbers: a default page size, a maximum
+request size, a timeout the application should choose. Such a value is application policy,
+and a library claiming one would put policy where no consumer can answer for it. The library
+takes the value as a parameter, the application's configuration supplies it, and the
+composition root hands it to each construction site, so per-resource variation is different
+values at different sites.
+
 The worked case is go-database's optimistic-concurrency guard: the mechanism — match by key
 and expected version, increment in the same statement — is standard SQL and belongs to the
 library; the organization's convention of naming that column `version` binds in the service's

@@ -33,8 +33,8 @@ because the outermost scope ran first.
 
 - Configuration. A configuration type finalizes once, in a fixed order, and a malformed
   environment override fails the finalize step, so the composition root never receives a
-  configuration that did not validate. The mechanism is documented at
-  [go-core's configuration page](../standards/go-elemental/go-core/config.md).
+  configuration that did not validate. The mechanism is the core SDK's `config` package, and
+  its package documentation states the contract.
 - Authored SQL. The parameter delimiter is reserved, so text that looks like a parameter and is
   not one fails the file's load. A statement then compiles against the pattern catalog, and at
   startup the process verifies every statement in a domain's inventory against the live schema,
@@ -42,5 +42,5 @@ because the outermost scope ran first.
   [DSL-driven services](../standards/go-elemental/principles/dsl-driven-services.md) principle's.
 - Requests. The web SDK parses a read request's query string in full before any statement is
   composed, and it rejects a malformed key or an operator on a reserved name as the request's
-  defect. The mechanism is documented at
-  [the paginated reads page](../standards/go-elemental/go-web-sdk/reads.md).
+  defect. The mechanism is the web SDK's query parse, and its package documentation states the
+  grammar.

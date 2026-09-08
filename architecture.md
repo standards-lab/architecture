@@ -135,5 +135,5 @@ one.
 
 A standard declares the architecture it implements in its definition.
 [Go Elemental](standards/go-elemental/README.md) is the first implementing standard; its
-[web service template](standards/go-elemental/go-web-sdk-template/index.md) is the first
+[web service template](https://github.com/standards-lab/go-web-sdk-template) is the first
 code expression of the elements.

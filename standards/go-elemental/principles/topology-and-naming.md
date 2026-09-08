@@ -60,12 +60,19 @@ import a package under `internal/`. It enforces nothing on the inner one — wit
 root-level package importing `internal/domain` compiles. The direction is a convention, kept by
 review and package documentation, not by the compiler.
 
-This is an Application-layer principle, independent of application type: what a web service's
-`internal/app` orchestrates from `internal/infrastructure`, `internal/domain`, and
-`internal/reactors` (see the [web service template](../go-web-sdk-template/baseline.md)) is one
-realization; a CLI or a worker composes its own `internal/*` layers the same way. It does not
-apply to a core SDK or an application SDK, which are libraries, not applications, and have no
-`internal/*` composition root of their own.
+The composition root, `internal/app`, is laid out as one file per layer of the architecture:
+one file constructs the infrastructure services, one the administrative services and their
+mount, one the domain services and their mount, one the reactors, with the list of mounts and
+the middleware stack each a file of their own. Each layer file constructs its layer and owns
+its mount, so the package's file list is the architecture's layer list, and extending the
+application means editing a layer file's body while the signatures, the entrypoint, and the
+run method stay untouched. A package that the layers share and that must not import the
+composition root, the application's database infrastructure for one, lives at the root level.
+
+This is an Application-layer principle, independent of application type: a web service's
+`internal/app` is one realization, and a CLI or a worker composes its own `internal/app` the
+same way. It does not apply to a core SDK or an application SDK, which are libraries, not
+applications, and have no composition root of their own.
 
 ## Release tags
 

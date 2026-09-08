@@ -33,6 +33,26 @@ import-boundary rule of the [service tiers](../../../principles/service-tiers.md
   and the providers of its declared stack, each at a pinned release. Provider imports are
   confined to the packages the import boundary declares.
 
+## Peers compose in the application
+
+Application SDKs and infrastructure libraries are peers on the core SDK. An application SDK
+never imports an infrastructure library, neither its base module nor a provider, and an
+infrastructure library never imports an application SDK's vocabulary into its contract. Their
+composition happens in the application: the SDK exposes an extension point, and the
+application declares the policy at its composition root. The web SDK's error writing is the
+worked case: the SDK defines the error-returning handler and the writer, and the application
+supplies the matchers that map the database library's error types to HTTP statuses, so a new
+infrastructure library costs the SDK nothing and its errors are one more matcher. The same
+direction places HTTP middleware in the transport: a transport-agnostic library supplies the
+collaborator, a logger for one, and never returns an HTTP type.
+
+## A provider is selected by construction
+
+A consumer selects a provider in its composition root by importing it and calling its typed
+constructor. There is no runtime registry, no registration call, and no import side effect;
+importing a package never registers anything. Adding a provider is one new import at the
+composition root and no change to the base module.
+
 ## Integration is structural where it can be
 
 A library integrates with go-core by implementing its contracts rather than by importing more
