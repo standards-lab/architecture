@@ -43,13 +43,18 @@ handler logs its record at error with the panic value attached, then the panic c
 standard library's recovery. Beyond the probe carve-out the middleware does not judge status
 codes: whether a 5xx was the application's own failure belongs to error mapping.
 
-## The response-writer wrapper
+## The response-writer wrappers
 
-Wrapping the response writer to record the status is where request loggers accumulate defects,
-and the wrapper is written against two known ones: swallowing a second header write instead of
+Wrapping the response writer is where request loggers accumulate defects, and each wrapper in
+the SDK is written against two known ones: swallowing a second header write instead of
 delegating it, which hides the standard library's superfluous-header warning, and omitting the
-unwrap method, which silently costs a handler flushing and hijacking. The wrapper records the
-first status, always delegates, unwraps so the standard response controller reaches through it,
-and delegates the zero-copy read-from path so a handler serving files keeps it. Seeding the
-recorded status with 200 covers the handler that writes a body without an explicit header write,
-which removes any need to intercept the body write.
+unwrap method, which silently costs a handler flushing and hijacking. Every wrapper records
+the first status, always delegates, unwraps so the standard response controller reaches
+through it, and delegates the zero-copy read-from path so a handler serving files keeps it.
+
+The SDK has two wrappers, because they answer two questions. The request logger's wrapper
+needs only the status: it seeds the recorded status with 200, which covers a handler that
+writes a body with no explicit header write, and intercepts the header write alone. The
+[error-returning handler adapter](problems.md)'s wrapper needs to know whether a response was
+committed at all, so it intercepts the body write and the read-from path as well, recording an
+implicit 200 when either runs before a header write.

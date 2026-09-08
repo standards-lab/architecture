@@ -37,6 +37,14 @@ wraps the whole dispatch, modules and fallback alike.
 Dispatch is longest-prefix match on segment boundaries; `/api/v10` does not match a module
 mounted at `/api/v1`. The native mux answers every path no module owns.
 
+## Where an error-returning handler registers
+
+A group carries one error writer, set once on the group, and registers an error-returning
+handler under it. The writer is per group rather than per route because the status policy it
+composes belongs to the surface the group serves: the public API's matchers and an operator
+surface's matchers differ, and each group states its own. The adapter and the writer are
+documented at [problem responses](problems.md).
+
 ## Registration mistakes panic at wiring time
 
 A malformed prefix, a duplicate pattern, a second module at a taken prefix, and a sealed-group

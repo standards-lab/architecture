@@ -14,18 +14,30 @@ for the API; this page records the reasoning.
 ## One parse, both halves
 
 `ParseQuery` parses a read request's query string in full into a `Query`: the `page`, `size`,
-and `sort` parameters, and every remaining parameter as the filter set. The reserved parameter
-names are private to the parse, and one call yields both halves, so a handler cannot parse the
-paging parameters and forget to strip them from the filters — the split cannot be done wrong or
-half-done. The result is flat: page, size, sort, and filters as direct members, with no
-sub-struct to name a partial concept.
+and `sort` parameters, and every remaining parameter as a filter. The reserved parameter names
+are private to the parse, and one call yields both halves, so a handler cannot parse the
+paging parameters and forget to strip them from the filters. The result is flat: page, size,
+sort, and the filter list as direct members, with no sub-struct to name a partial concept.
+
+## The filter grammar
+
+A filter is a field name with an optional operator in brackets. `status=active` names no
+operator, and `created[gte]=2026-01-01` names one. A repeated parameter carries several values
+under one filter, so `code=a&code=b` is one filter with two values. The parse returns the
+filters as an ordered list, sorted by field and then by operator, so a consumer composes a
+deterministic predicate from the same request every time. An operator on a reserved name, or
+a malformed key, is rejected as a `QueryError`. The operators pass through as text: the SDK
+enumerates none, and whether an operator is supported is the data layer's check.
 
 ## The contract carries no storage detail
 
-`Query` and `Sort` are the SDK's own types — deliberately parallel to go-database's read
-vocabulary without importing it. Sort and filter names are lexical: text from the wire, and
-whether one names a readable field is the data layer's check (go-database answers with its
-typed unknown-field error). Nothing an engine does — offset arithmetic, dialect paging forms —
+`Query`, `Sort`, and `Filter` are the SDK's own types, and the SDK imports no data library.
+Sort and filter names and the operators are lexical, text from the wire. Whether a name is a
+readable field or an operator is supported is the data layer's check: in the standard's
+authored SQL, the [statement's projection base](../sql/statements.md) declares the readable
+fields, and the SQL library rejects an unknown field or operator with its typed directives
+error before any SQL is composed. The translation from the parsed query to the data layer's
+directives is the application's, by the downward-dependency rule. Nothing an engine does
 reaches the HTTP side, so either half of the read path can change without moving the other.
 
 ## The sort grammar
@@ -48,10 +60,10 @@ construction, not request input.
 
 ## Rejections are typed
 
-A malformed or out-of-bounds parameter returns a `QueryError` — the parameter, the offending
-input, and the reason. It is the one error class the SDK maps itself: the
-[error-to-problem mapping](problems.md) writes it as a 400 with the error text as the detail,
-since a rejected query parameter is request-shaped and client-actionable by definition.
+A malformed or out-of-bounds parameter returns a `QueryError` carrying the parameter, the
+offending input, and the reason. The [error-to-problem mapping](problems.md) writes it as a
+400 with the error text as the detail, since a rejected query parameter is request-shaped and
+client-actionable by definition.
 
 ## The envelope
 
