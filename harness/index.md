@@ -43,6 +43,9 @@ on the GitHub releases the tags cut, and each file's preamble states so.
   smallest-verifiable stages, each committed, reported, and reviewed before the next begins.
 - [Objective instructions](objective-instructions.md) — instructions state what the system
   supports, in the present tense; removals live in the changelog, never as counter-instructions.
+- [Tool-based skills](tool-based-skills.md) — a skill encodes judgment and a tool encodes
+  procedure; the schema, the checks, and the scaffolding are tooling the skill calls, never
+  prose the skill restates.
 
 ## Conventions not yet paged
 
