@@ -38,7 +38,8 @@ Release preparation commits directly to `main`: the changelog date, the license,
 edits, and the README brought current with the release's changes. The changelog, `context/`,
 and `doc.go` move with the work itself; the README has no earlier forcing point, so this step
 is where it is checked rather than left to rot behind them. The tag is pushed only after
-main's CI run passes, so a release never points at a commit that failed CI.
+main's CI run passes, the integration job included where the repository has one, so a release
+never points at a commit that failed CI.
 
 No release branch is retained. The tag is the durable artifact, and a branch can be recreated
 from its tag at any time. A `release/v<major>.<minor>.x` branch is created only when a
@@ -76,6 +77,13 @@ only by a deliberate bump. The variants:
   same modules and are updated together.
 - A template repository runs the checks inside its `template/` subtree.
 
+A repository with an integration tier ([tests and documentation](tests-and-docs.md)) runs a
+second job, `integration`, on push to `main` and on manual dispatch: it runs the repository's
+`integration` task, which boots the compose stack as an isolated project where the service has
+one, runs the tagged suite against the built binary, and tears the project down. The job runs
+below the per-pull-request rate by design, and a green integration run on `main` is the
+condition for cutting a release.
+
 The repositories are public: modules resolve through the public Go proxy and checksum database,
 and CI needs no private-module configuration. The service-tiers import boundary is a
 consumer-side check and runs in consumers; inside an infrastructure library, the module topology
@@ -92,5 +100,6 @@ ships.
 ## Tasks
 
 Each repository defines its developer tasks with mise (`build`, `test`, `vet`, `fmt`, `tidy`,
-`lint`), each wrapping a plain Go command and looping over the module list where the repository
-is multi-module. The repository works without mise; the tasks are a convenience.
+`lint`, and `integration` where the repository has the tier), each wrapping a plain Go command
+and looping over the module list where the repository is multi-module. The repository works
+without mise; the tasks are a convenience.

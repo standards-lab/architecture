@@ -16,3 +16,4 @@ repository may enhance one further, stating the enhancement where it links to th
 - [Lifecycle and context ownership](lifecycle-and-context.md)
 - [Tests and documentation](tests-and-docs.md)
 - [Releases and CI](release-and-ci.md)
+- [DSL-driven services](dsl-driven-services.md)
