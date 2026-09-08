@@ -11,8 +11,8 @@ Every contextual detail has exactly one authoritative home. Any other layer that
 detail links to that home and never restates or redefines it. A restatement is a second source
 of truth from the moment it is written, and it drifts from the moment the original changes.
 
-The principle governs every layer that carries written context: the principle pages and the
-documentation landing zone, each repository's README and `CLAUDE.md` file, each project's
+The principle governs every layer that carries written context: the architecture and its
+principle pages, each repository's README, documentation, and `CLAUDE.md` file, each project's
 working context, and the harness instructions the organization builds with. It applies the
 [downward-dependency principle](downward-dependencies.md) to prose: a detail is defined once,
 at the layer whose authority it is, and every other layer refers to that definition by link.
@@ -21,9 +21,12 @@ at the layer whose authority it is, and every other layer refers to that definit
 
 - API behavior is defined in the code and its API documentation, the `doc.go` file of a Go
   package.
-- A repository's place in the architecture and its design reasoning are defined in its
-  landing-zone page.
-- An organizational principle is defined in the landing zone's principle pages.
+- A repository's implementation and its design reasoning are defined in the repository: its
+  README, its documentation, and its source.
+- A repository's place in the architecture is one entry of the architecture's catalog: a
+  description and a link, and nothing deeper.
+- A principle, a definition, or a convention that has generalized past one repository is
+  defined in the architecture's pages.
 - A workflow's mechanics are defined in the one file of the workflow skill that owns them.
 - Direction that is in flight and not yet settled is defined in the working context of the
   repository that owns it.
@@ -31,9 +34,9 @@ at the layer whose authority it is, and every other layer refers to that definit
 ## How another layer refers to a detail
 
 A layer that needs a detail defined elsewhere cites the home. A repository README links the
-landing-zone page that describes the repository. A landing-zone page links the API
-documentation for a package inventory. A profile links the landing zone. A summary that adds no
-information beyond the link is a restatement and is removed.
+principles the repository follows. The architecture's catalog links the repository rather than
+describing its packages. A profile links the architecture. A summary that adds no information
+beyond the link is a restatement and is removed.
 
 A narrowing is not a restatement. A profile that states less than the design supports, or a
 repository that declares a tighter dependency line than its standard, asserts something the
@@ -49,7 +52,8 @@ the next one.
 | Layer | The question the layer answers |
 |-------|--------------------------------|
 | The principle pages | What does the organization believe? |
-| A landing-zone page | What is this repository, and where does it sit in the architecture? |
+| The architecture's catalog | Which repositories implement the architecture, and where is each? |
+| A repository's README and documentation | What does this repository do, and how is it used? |
 | A repository's `CLAUDE.md` file | How does a contributor work in this repository? |
 | A repository's working context | What is in flight? |
 | The code and its API documentation | What does the software do? |
