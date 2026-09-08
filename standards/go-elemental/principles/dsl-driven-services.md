@@ -75,12 +75,11 @@ file declares its tier, standard or native, a native file names the engine featu
 how another engine expresses it, and a lint enforces the declarations in CI. The native files
 of a repository are its complete port list.
 
-Portability by discipline is a deliberate trade, recorded as one. An earlier library in the
-standard enforced portability by construction, with a typed error at render time for a feature
-the target engine lacked. The declared stack selects one engine, and the portability promise
-exists to bound a future port, not to make today's code engine-neutral. Discipline is the
-chosen side of that trade, and the standard states it so a later design does not buy the type
-guarantee back with a builder.
+Portability by discipline is a deliberate trade, and the standard states it as one. The
+alternative, portability by construction through a builder that rejects an unsupported feature
+at render time, buys a type guarantee with a permanent dependency. The declared stack selects
+one engine, and the portability promise exists to bound a future port, not to make today's
+code engine-neutral. Discipline is the chosen side of that trade.
 
 ## Sufficiency before capability
 
@@ -88,8 +87,9 @@ A layer must justify itself against what the language, the standard library, and
 already inside the dependency line express. A fully capable layer that the language already
 expresses is a defect, not a feature. The question "does the industry already solve this
 inside the line?" is asked when a layer is planned, not discovered at review. The SQL support
-is the standard's first worked case: a capable statement vocabulary in the host language was
-retired because SQL already carried the expressive content.
+is the standard's worked case: SQL carries the expressive content, and a statement vocabulary
+in the host language, however capable, would be a second layer expressing what the first
+already does.
 
 ## Injection safety is structural
 

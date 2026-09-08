@@ -54,13 +54,15 @@ Top to bottom:
   startup, reverse-order drain, readiness checks feeding the probes. Each is constructed and
   registered once, declaratively, in the composition root.
 - **Domain Service**: the public interface the application presents over a domain. A
-  **domain** is a composition of one or more Entities around one anchor: the Entity whose
-  identity the domain's records carry, with the Entities composed beside it (a ledger of
-  custody beside an item, a device row extending an item instance). The Domain Service exposes
-  what may be done to the domain as two operation kinds: a **Query** is an immutable operation
-  that reads the system's current state; a **Command** is a mutable operation that requests a
-  change to it. A Domain Service anchors one domain, and its module is the unit a route or a
-  Reactor calls. The simplest domain is one Entity, and most domains start that way.
+  **domain** is a composition of one or more Entities around a **root Entity**, the Entity the
+  domain's other Entities depend on and the one whose identity the domain's records carry. An
+  Entity that depends on the root and nothing else is the root's metadata. An Entity that
+  depends on the root and reaches beyond the domain is where the domain connects to other
+  domains and systems. The Domain Service exposes what may be done to the domain as two
+  operation kinds: a **Query** is an immutable operation that reads the system's current
+  state; a **Command** is a mutable operation that requests a change to it. A Domain Service
+  serves one domain, and its module is the unit a route or a Reactor calls. The simplest
+  domain is one root Entity alone.
 - **Entity**: the elemental component. An Entity is a data structure, table-backed or not; it
   defines its intrinsic capability, and the Domain Service decides what of that capability is
   exposed.
@@ -83,9 +85,9 @@ the same as any other Reactor source.
   persisted metadata, and a row is an instance of entity data. A Domain Service exposes methods
   (the idiomatic Go term for an owned operation on a type) that a web service maps to API
   endpoints. Another language describes the same components in its own idiom.
-- **The domain's anchor Entity is the consistency boundary.** Commands are transactional and
+- **The domain's root Entity is the consistency boundary.** Commands are transactional and
   cascade through entity operations atomically. An operation spanning entities belongs to the
-  Domain Service of the domain whose anchor owns the transaction, which composes the other
+  Domain Service of the domain whose root owns the transaction, which composes the other
   entities' operations within it, its own Entities and another domain's alike.
 - **Dependencies flow downward through the elements.** The application layer depends on
   everything it assembles; a Reactor depends on the infrastructure connection it owns and the
@@ -125,10 +127,9 @@ and never loosen it:
 ## A note on "Domain Service"
 
 "Domain Service" deliberately narrows a term domain-driven design uses more broadly: here it is
-always the public interface over one domain, anchored on one Entity. Engineers onboarding from
-a DDD background should read the definition above rather than assuming the inherited, broader
-one. The definition was amended in 2026-09 from "exactly one Entity" to a domain of one or
-more, when the first multi-entity domains were designed.
+always the public interface over one domain, rooted in one Entity. Engineers onboarding from a
+DDD background should read the definition above rather than assuming the inherited, broader
+one.
 
 ## Implementing standards
 

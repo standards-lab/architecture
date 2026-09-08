@@ -44,6 +44,3 @@ because the outermost scope ran first.
   composed, and it rejects a malformed key or an operator on a reserved name as the request's
   defect. The mechanism is documented at
   [the paginated reads page](../standards/go-elemental/go-web-sdk/reads.md).
-
-An earlier exhibit, a statement-rendering layer that validated each clause before emitting it,
-was retired when the organization moved to authored SQL. The rule outlived the layer.
