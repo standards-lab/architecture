@@ -1,39 +1,45 @@
 # docs
 
-The Standards Lab organization's documentation landing zone: the canonical home for the
-Elemental Architecture, its standards, its principles, and the documented details of every
-module repository in the effort. Managed with the marathon workflow; start from
-`context/README.md`.
+The Standards Lab workspace's architecture: the canonical home for the Elemental Architecture,
+its principles, each standard's definition and principles, the harness principles, and a
+catalog of the repositories that implement them. A `context` project managed with the marathon
+workflow, run by `start` and `plan`; start from `context/README.md`.
 
-## The workspace docs tier
+## What belongs here
 
-This repository is the single human-facing docs tier for the `~/architecture` workspace. Member
-repositories author no `docs/` directory of their own: their settled design knowledge is
-documented here, and their `context/` and `README.md` link to the pages that document them. A
-repository that tightens a documented principle states that enhancement beside its link, in the
-repository — a lower level enhances the principle it derives from and never loosens it.
+This repository holds what has generalized past one repository: a principle, a definition, a
+convention. Anything a reader can infer from a repository's source does not belong here.
+Anything that serves as a general guideline or development principle does.
 
-The pages describe what exists. Marathon's decay rule does not apply to them — a page restating
-the code is doing its job — but a page the code has moved out from under is a defect, fixed in
-the change that moved the code or in the next session here.
+A repository documents its own implementation, in its README, its package documentation, its
+source, and an optional `docs/` directory its README indexes. A page here that restates a
+repository's implementation is a defect, reduced to the principle it states or removed. The
+catalog names each repository with a description and a link and goes no deeper.
 
-Code on a page is illustrative only: it links to a direct example, or it encodes a generic
-representation of the pattern that stands on its own; it never depends on the current source of
-an external project.
+A page arrives by promotion and only by promotion: a concept in the repository that owns the
+knowledge, a design note once it settles, and a page here once the design has generalized past
+that one repository. A member's `close` or `review` lands the generalized note as a concept in
+this repository's `context/`, and a session here authors the page.
+
+A repository that tightens a principle states that enhancement beside its link to the principle,
+in its README's Standard section. A lower level enhances the principle it derives from and
+never loosens it.
 
 ## Structure
 
-The hierarchy runs from universal to specific, and each directory level documents one level of
-it:
+A README is every directory's index, so the tree is its own navigation on GitHub. The hierarchy
+runs from universal to specific, and each directory documents one level of it:
 
-- `README.md` — orientation: the blueprint, the vocabulary, the map of everything here, and the
-  front-matter schema; a README is every directory's index.
-- `architecture.md` — the Elemental Architecture, the one definitive architecture the blueprint
-  builds out.
-- `principles/` — the architecture's principles, the highest level of resolution.
-- `standards/<key>/` — each standard's definition, its principles, and its modules'
-  documented details.
-- `harness/` — principles for the agentic infrastructure the organization builds with, outside
-  the software hierarchy above.
+- `README.md` is the entry page: the blueprint, the vocabulary, the map of everything here, the
+  what-belongs-here rule, and the front-matter schema.
+- `architecture.md` is the Elemental Architecture, the one definitive architecture the
+  blueprint builds out.
+- `principles/` holds the architecture's principles, the highest level of resolution.
+- `standards/<key>/` holds each standard's definition, its principles, and its catalog of
+  member repositories.
+- `harness/` holds the principles for the agentic infrastructure the organization builds with,
+  outside the software hierarchy.
 
-Every page opens with YAML front matter; the schema is documented in `README.md`.
+Every page opens with YAML front matter; the schema is in the root `README.md`. Code on a page
+is illustrative only: it links to a direct example, or it encodes a generic representation of
+the pattern that stands on its own; it never depends on the current source of a repository.
