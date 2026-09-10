@@ -44,10 +44,15 @@ The integration suite is marked by one build tag, `//go:build integration`, and 
 application's root-level `integration` package. It runs the composed service as the binary
 against the service's own compose stack, the same compose definition a developer runs, booted
 as an isolated compose project on its own port and torn down with its volume when the run
-ends. The suite exercises the service only through its API and drives it only through
-production seams: configuration by environment variable, the API and the admin mount for state
-control, the network for fault injection, and signals and the exit code for lifecycle. Nothing
-in the runtime exists for the tests' sake.
+ends. The suite exercises the service only through its API and drives it only through production
+surfaces:
+
+- configuration by environment variable
+- the API and the admin mount for state control
+- the network for fault injection
+- signals and the exit code for lifecycle
+
+Nothing in the runtime exists for the tests' sake.
 
 The tier runs on push to `main` and on manual dispatch, below the per-pull-request rate by
 design, and a release is cut only from a `main` whose integration run has passed
@@ -71,7 +76,8 @@ is testable through the API, not when its library lands.
 A library whose infrastructure an integration suite exercises ships its integration toolkit
 beside it, the way a scripted driver ships beside a SQL library for the unit tier. The core
 SDK's `process/processtest` package runs a program as the binary and drives it through the
-seams a terminal or an orchestrator uses. The web SDK's `webtest` package is the client a
+interfaces a terminal or an orchestrator uses: its output, its signals, and its exit code. The
+web SDK's `webtest` package is the client a
 black-box suite drives a running service through. The template ships the wiring engine-free,
 its `integration` package, task, and CI job, and a generated service adds its compose stack.
 Each package's documentation states its API.
@@ -80,4 +86,7 @@ Each package's documentation states its API.
 
 Production source is written without doc comments; the agent writes godoc. Each package has
 exactly one `doc.go` containing only the package comment, and that comment is the authoritative
-description of the package's API.
+description of the package's API. A short method that exists only to satisfy a standard
+library interface — `Error() string` on a type whose doc comment already states what the error
+means, `String() string` on a `Stringer` — carries no comment of its own; Go convention leaves
+these to speak for themselves.

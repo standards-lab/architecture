@@ -7,16 +7,20 @@ level: architecture
 
 # Service tiers
 
-An infrastructure library presents its technology — a database engine, an identity provider, an
-object store, a message broker — as a service in two tiers, and a consumer targets one tier or
+An infrastructure library presents its technology (a database engine, an identity provider, an
+object store, a message broker) as a service in two tiers, and a consumer targets one tier or
 the other per use. A consumer is either exercising a standard feature, usable across any
 provider of the technology, or a feature native to one implementation. There is no third case
 to reason about.
 
 - **Standard** — the interface every provider of the technology implements, and it is exactly
-  the technology's common standard: SQL in ISO/IEC 9075; authentication in OAuth 2.0, OpenID
-  Connect, and JWT; HTTP in RFC 9110 and RFC 9457; observability in OpenTelemetry. The standard
-  tier stays compliant with that standard and does not grow past it. Where no formal standard
+  the technology's common standard:
+  - SQL in ISO/IEC 9075
+  - authentication in OAuth 2.0, OpenID Connect, and JWT
+  - HTTP in RFC 9110 and RFC 9457
+  - observability in OpenTelemetry
+
+  The standard tier stays compliant with that standard and does not grow past it. Where no formal standard
   exists, as in object storage and messaging, the organization establishes the common interface
   for that technology itself: derived from the operations the target APIs share, kept minimal,
   and validated against more than one provider before it is called standard. The tier is never
@@ -53,7 +57,7 @@ assumed. Each service's documentation classes its technology and states, in one 
 changes when the provider does.
 
 - **Interchangeable** — moving providers is a configuration change. The application exercises
-  the service only through the standard tier. Secrets, logging sinks, the common operations of
+  the service only through the standard tier: secrets, logging sinks, the common operations of
   object storage, token verification, caches, model chat APIs.
 - **Interchangeable with review** — moving providers is a configuration change plus a review of
   the behavior the common API leaves unstated: message ordering and delivery guarantees in a

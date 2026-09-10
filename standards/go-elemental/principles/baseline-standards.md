@@ -14,7 +14,7 @@ services, the template, the reference — at the call sites that compose the lib
 
 The rule sharpens the [service-tiers](../../../principles/service-tiers.md) discipline with a
 question of ownership: the standard tier is defined by the external standard (ISO SQL, OAuth
-2.0 and OIDC, OpenTelemetry's conventions), and nothing above it that is merely *ours* — a
+2.0 and OIDC, OpenTelemetry's conventions), and nothing above it that is merely ours — a
 column name, an identifier format, a naming convention — may harden into the library's
 contract. A library fixes mechanisms; the consumer's schema and conventions bind where the
 consumer composes it.

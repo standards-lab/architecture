@@ -66,15 +66,24 @@ lint runs before a commit, the plan is surfaced for review, the apply is a step.
 extension needs behavior the tooling lacks, the tooling gains a command. One process lives in
 one place, and an extension that reimplements a check is a second source of truth that drifts.
 
-## When work is offloaded to another model
+## What tooling buys when a model executes a skill
 
-Work moves from the agent to a local or specialized model when it is structured, repetitive,
-and schema-validated, never because the agent is assumed weak at it. The gains are cost,
-locality, and determinism for a fixed transformation; quality-sensitive generation stays with
-the stronger model. The offload is itself a tool: a fixed prompt template, an endpoint, and
-output validated against the schema before it is used, so the agent orchestrates and never
-handles the generated content. Rollups, reformatting to a template, and drafts from a fixed
-structure are the candidates.
+A skill built with a full tooling layer beneath it — the schema, the lint, the scaffold, the
+plan/apply commands this principle asks for — encodes most of the judgment a model would
+otherwise have to reconstruct from prose alone. The model reads the skill, runs the tool, and
+resolves what the tool reports; it does not have to form its own strategy for satisfying a
+requirement stated only in words. This is why a well-tooled skill does not need the strongest
+available model driving its execution: the tooling has already done the reasoning that would
+otherwise fall to the model.
+
+A separate case is offloading generation itself, not judgment, to another model: a rollup, a
+reformat to a fixed template, a draft from a fixed structure. That moves to a local or
+specialized model only when the work is structured, repetitive, and schema-validated — never
+because the acting model is assumed weak at it. The gains there are cost, locality, and
+determinism for a fixed transformation; quality-sensitive generation stays with the stronger
+model. The offload is itself a tool: a fixed prompt template, an endpoint, and output validated
+against the schema before it is used, so the orchestrating agent never handles unvalidated
+generated content directly.
 
 ## How much custom code a domain carries
 

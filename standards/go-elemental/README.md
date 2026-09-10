@@ -17,8 +17,8 @@ dependency surface, expressing the architecture's supply-chain purpose in its st
 ## The dependency line
 
 The standard library first, and at most packages as idiomatic and stable as the standard library
-itself (`golang.org/x/…`, `google/uuid`, and the like). No frameworks; raw drivers and plain SQL
-over ORMs; a web-platform-native client. Vendor libraries are isolated in provider sub-modules
+itself (`golang.org/x/…`, `google/uuid`, and the like). No frameworks. Raw drivers and plain SQL
+over ORMs. A web-platform-native client. Vendor libraries are isolated in provider sub-modules
 that pin their own SDKs. A module may enhance the line; go-core admits the standard
 library alone.
 

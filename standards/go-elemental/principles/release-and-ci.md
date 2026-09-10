@@ -66,8 +66,15 @@ releases in the repositories above it, each pinning the versions it validated ag
 
 ## CI
 
-Every repository runs `go vet`, a `gofmt -l` formatting check, `go mod tidy -diff`,
-`go test -race`, and golangci-lint on every push. Tool versions are pinned — the Go toolchain
+Every repository runs, on every push:
+
+- `go vet`
+- a `gofmt -l` formatting check
+- `go mod tidy -diff`
+- `go test -race`
+- golangci-lint
+
+Tool versions are pinned — the Go toolchain
 and the golangci-lint version, in CI and in mise alike — so the gate is reproducible and moves
 only by a deliberate bump. The variants:
 
