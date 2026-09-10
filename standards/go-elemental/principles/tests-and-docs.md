@@ -86,4 +86,7 @@ Each package's documentation states its API.
 
 Production source is written without doc comments; the agent writes godoc. Each package has
 exactly one `doc.go` containing only the package comment, and that comment is the authoritative
-description of the package's API.
+description of the package's API. A short method that exists only to satisfy a standard
+library interface — `Error() string` on a type whose doc comment already states what the error
+means, `String() string` on a `Stringer` — carries no comment of its own; Go convention leaves
+these to speak for themselves.
