@@ -16,12 +16,12 @@ named readiness reported to the probes.
 
 The composition root traps signals and derives the root context; it passes that context to the
 lifecycle coordinator's blocking run call, the one call that owns the sequence. go-core's
-`process` package holds this pre-infrastructure sequence — the signal-derived root context,
+`process` package holds this pre-infrastructure sequence (the signal-derived root context,
 failure and usage reporting before a logger exists, and the exit-code convention the reporters
-return — so it cannot drift between a program's binaries. A subsystem
-with a place in the process's dependency order is declared as a staged service — its name, its
-stage, its startup, shutdown, and readiness check in one declaration — while process-level
-callbacks register as hooks and monitors. Nothing executes before the run begins, and the
+return), so it cannot drift between a program's binaries. A subsystem
+with a place in the process's dependency order is declared as a staged service, naming its
+name, its stage, its startup, shutdown, and readiness check in one declaration, while
+process-level callbacks register as hooks and monitors. Nothing executes before the run begins, and the
 coordinator installs no signal handlers of its own.
 
 Not every composition-root layer registers a staged service. A layer with no resource and

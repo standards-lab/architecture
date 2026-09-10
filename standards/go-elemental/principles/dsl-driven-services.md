@@ -21,7 +21,7 @@ arguments, and the provider boundary is an interface over those operations. The
 it stands for those services.
 
 A DSL-driven service keeps its expressive content in a language the host cannot type-check.
-SQL is one; so are the graph query languages Cypher and Gremlin, a search engine's query
+SQL is one. So are the graph query languages Cypher and Gremlin, a search engine's query
 language, KQL, PromQL, and the policy languages Rego and Cedar. The service's operations are
 trivial, execute and query, and all the meaning is in the text. Forcing such a service into the
 protocol-driven pattern produces a large host-language interface standing in for a language
@@ -43,8 +43,13 @@ The host-language layer exists only for what the language cannot do on its own:
 5. It owns the session or transaction boundary.
 
 Every pattern the domain layer needs is a pattern in the language with a small amount of host
-code around it: a collection read with dynamic filters, sort, and paging; a single record by
-unique constraint; a mutation with side effects across tables in one transaction. A new pattern
+code around it:
+
+- a collection read with dynamic filters, sort, and paging
+- a single record by unique constraint
+- a mutation with side effects across tables in one transaction
+
+A new pattern
 is a convention with two halves. The first is a shape in the language, a file layout, a naming
 rule, a header, that a reviewer or a lint can check. The second, only where needed, is a host
 function that takes statements the consumer wrote. Most patterns need no function: an upsert,

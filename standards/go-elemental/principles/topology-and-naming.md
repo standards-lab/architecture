@@ -21,8 +21,14 @@ changes.
 - **Application SDKs** — `go-<application>-sdk`: `go-web-sdk`. The `-sdk` suffix marks a
   development kit and appears on no other tier.
 - **Infrastructure libraries** — `go-<technology>`, named for the technology the library
-  presents as a service: `go-database`; `go-auth`, `go-storage`, `go-observability`,
-  `go-messaging`, `go-ai` as each arrives. A provider sub-module is a nested directory named for
+  presents as a service, starting with `go-database`. The rest arrive in turn:
+  - `go-auth`
+  - `go-storage`
+  - `go-observability`
+  - `go-messaging`
+  - `go-ai`
+
+  A provider sub-module is a nested directory named for
   the target API or system, never the driver it wraps: `postgres`, not `pgx`.
 - **Templates** — the application SDK's name with `-template`: `go-web-sdk-template`.
 - **Reference architectures** — named for the application built on the SDK: `go-web-service`.

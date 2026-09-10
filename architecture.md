@@ -12,16 +12,16 @@ and the rules that bind them, independent of language. What the elements are and
 relate is defined here; how each element is implemented emerges at its first consumer and is
 documented in the repository that builds it.
 
-The architecture's purpose is optimizing supply-chain boundaries, and a minimal, deliberate
-dependency surface is one of its core principles — not a posture its standards choose
-privately. The boundary works in two dimensions: it mitigates what a dependency admits into the
+The architecture's purpose is optimizing supply-chain boundaries. A minimal, deliberate
+dependency surface is one of its core principles, not a posture its standards choose privately.
+The boundary works in two dimensions: it mitigates what a dependency admits into the
 architecture, and it establishes the clean maintenance boundaries that keep capabilities
-flexible, scalable, and maintainable for the long haul — a handful of deliberately sourced
+flexible, scalable, and maintainable for the long haul. A handful of deliberately sourced
 dependencies can be held pinned and current; fifty cannot. The
 [minimal-footprint principle](principles/minimal-footprint.md) states this purpose in
 principle form; an implementing standard draws its own dependency line as an enhancement of
-it, tightening and never loosening. A framework-heavy standard in the same language would not
-be a competing implementation of Elemental — it would not implement Elemental at all.
+it, tightening and never loosening. A framework-heavy standard in the same language is not a
+competing implementation of Elemental; it does not implement Elemental at all.
 
 The architecture keeps two inheritances: the separations of domain-driven design and the
 query/command operation model of CQRS. It deliberately drops the vocabulary DDD accumulated

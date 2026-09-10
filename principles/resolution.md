@@ -18,8 +18,8 @@ written over `net`, `net` over `syscall`; a package that needs an HTTP client us
 neither a framework above it nor `syscall` beneath it. Each layer that reaches lower wraps that
 reach and presents a coarser interface to the layer above.
 
-Interfacing with an external technology — a database engine, an identity provider, an object
-store, a message broker — follows the same rule. The organization's infrastructure libraries
+Interfacing with an external technology (a database engine, an identity provider, an object
+store, a message broker) follows the same rule. The organization's infrastructure libraries
 offer each technology at two resolutions ([service tiers](service-tiers.md)), and a consumer
 interfaces at the resolution its purpose requires. The libraries are layered so both resolutions
 are reachable, and the software that consumes them is layered so the finer resolution never

@@ -20,7 +20,7 @@ extensions, and adding an extension never means editing a command.
 
 ## Worked example
 
-marathon's five-stage pipeline — locate, start, settle, execute, conclude — is
+marathon's five-stage pipeline (locate, start, settle, execute, conclude) is
 [`mechanics/pipeline.md`](https://github.com/standards-lab/claude-plugins/blob/main/plugins/marathon/skills/marathon/mechanics/pipeline.md);
 its five universal hooks (`on-start`, `on-execute`, `on-commit`, `on-reset`, `on-close`) fire per
 [`mechanics/hooks.md`](https://github.com/standards-lab/claude-plugins/blob/main/plugins/marathon/skills/marathon/mechanics/hooks.md).
