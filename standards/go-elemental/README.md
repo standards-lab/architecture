@@ -60,6 +60,7 @@ enhances, and its package documentation states its API.
 |------|------------|---------|
 | Core SDK | [go-core](https://github.com/standards-lab/go-core) | The common primitives every Go Elemental application type uses: layered configuration, the process lifecycle, logging, and the process sequence with its integration toolkit. |
 | Infrastructure libraries | [go-database](https://github.com/standards-lab/go-database) | The SQL infrastructure service: the connection pool with its configuration, lifecycle, and readiness, the database admin service, and the PostgreSQL provider as a sub-module. |
+| Infrastructure libraries | [go-observability](https://github.com/standards-lab/go-observability) | The observability infrastructure service: OpenTelemetry configuration and process lifecycle, the trace-correlating log handler, HTTP server middleware, and the request-ID source function, with the OTLP exporters as a sub-module. |
 | Application SDKs | [go-web-sdk](https://github.com/standards-lab/go-web-sdk) | The SDK for Go Elemental web services: the server, routing, problem responses, paginated reads, the probes, middleware, and the integration toolkit. |
 | Templates | [go-web-sdk-template](https://github.com/standards-lab/go-web-sdk-template) | Scaffolds an initial Go Elemental web service, engine-free, with the composition root as one file per layer and the integration tier in place. |
 | Reference architectures | [go-web-service](https://github.com/standards-lab/go-web-service) | The holistic Go Elemental web service reference, grown in documented layers on the declared stack; versionless until its 1.0. |
@@ -70,8 +71,8 @@ libraries consume: authored `.sql` files made dynamic and composable, with the P
 dialect and the conventions linter as sub-modules. Any Go project can adopt it on its own, and
 its guide lives with it.
 
-Additional infrastructure libraries, for auth, storage, observability, messaging, and AI, are
-created as the reference architecture integrates each technology.
+Additional infrastructure libraries, for auth, storage, messaging, and AI, are created as the
+reference architecture integrates each technology.
 
 ## Derived standards
 
