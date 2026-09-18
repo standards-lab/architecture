@@ -9,8 +9,10 @@ level: go-elemental
 
 Go Elemental's dependency line: the standard library first, and at most packages as idiomatic and
 stable as the standard library itself (`golang.org/x/…`, `google/uuid`, and the like). No
-frameworks. Vendor SDKs and database drivers enter only through provider sub-modules that pin
-them, so importing a base module compiles no vendor code.
+frameworks. A vendor SDK, a database driver, or any other dependency whose weight or correctness
+surface the rest of a module should not carry enters only through a sub-module that pins it — a
+provider in an infrastructure library, a capability module in an application SDK — so importing a
+base module compiles none of it.
 
 This line bounds dependency weight. Which packages may import a provider at all is the separate
 import-boundary rule of the [service tiers](../../../principles/service-tiers.md) principle.
@@ -23,9 +25,12 @@ import-boundary rule of the [service tiers](../../../principles/service-tiers.md
 - **Infrastructure libraries** — a base module depends on the standard library and go-core.
   Each provider is a module of its own whose `go.mod` pins its driver, so a consumer that needs
   only the standard tier never pulls a driver.
-- **Application SDKs** — the standard library and go-core. An application SDK has no providers:
-  its standard tier is the technology's common standard over the transport the platform already
-  provides, so there is no vendor library to isolate.
+- **Application SDKs** — the base module depends on the standard library and go-core. An
+  application SDK has no providers: its standard tier is the technology's common standard over
+  the transport the platform already provides. It may still source a library whose correctness
+  depends on a specification or a threat model; that library is pinned in a capability
+  sub-module of its own, never the base module, so a consumer that does not need the capability
+  compiles none of it.
 - **Templates** — go-core and the template's one application SDK, at pinned releases, and
   nothing else. A template is engine-free: no data engine declared, no provider imported; a
   generated application selects providers in its own composition root.
