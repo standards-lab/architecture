@@ -20,6 +20,10 @@ changes.
 - **Core SDK** — `go-core`.
 - **Application SDKs** — `go-<application>-sdk`: `go-web-sdk`. The `-sdk` suffix marks a
   development kit and appears on no other tier.
+
+  A capability sub-module is a nested directory named for the concern, in lower-case words
+  joined by hyphens, never for the library it wraps: `rate-limit`, not `httprate`. Its package
+  name is that name with the hyphens removed: `ratelimit`.
 - **Infrastructure libraries** — `go-<technology>`, named for the technology the library
   presents as a service, starting with `go-database`. The rest arrive in turn:
   - `go-auth`
@@ -35,8 +39,12 @@ changes.
 
 ## Module layout per tier
 
-- A core SDK or application SDK repository is one Go module rooted at the repository, with no
-  sub-modules. Packages keep their own short names (`config`, `lifecycle`, `logging`; `web`,
+- A core SDK repository is one Go module rooted at the repository, with no sub-modules. An
+  application SDK repository is one base module rooted at the repository, with a sub-module for
+  each capability whose third-party dependency the rest of the module should not compile:
+  `go-web-sdk`'s `middleware/rate-limit`, which carries its HTTP rate-limiting library. These are
+  not providers — an application SDK has none, and nothing is swapped — and the base module never
+  imports one. Packages keep their own short names (`config`, `lifecycle`, `logging`; `web`,
   `middleware`), so the import path names the repository and the identifier in code stays the
   package's: `web.Server`, `database.New`.
 - An infrastructure library is one base module rooted at the repository, presenting the standard
@@ -83,6 +91,7 @@ applications, and have no composition root of their own.
 ## Release tags
 
 - A module rooted at the repository is tagged `v<semver>`.
-- A nested sub-module is tagged with its directory as prefix: `postgres/v0.1.0`,
-  `template/v0.1.0`. The prefix is a resolution requirement: the Go module proxy resolves a
-  subdirectory module's versions from tags prefixed with exactly that subdirectory.
+- A nested sub-module is tagged with its full path from the repository root as prefix:
+  `postgres/v0.1.0`, `template/v0.1.0`, `middleware/rate-limit/v0.1.0`. The prefix is a
+  resolution requirement: the Go module proxy resolves a subdirectory module's versions from
+  tags prefixed with exactly that subdirectory, at any depth.
