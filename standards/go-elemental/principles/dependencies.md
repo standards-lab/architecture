@@ -50,13 +50,14 @@ supplies the matchers that map the database library's error types to HTTP status
 infrastructure library costs the SDK nothing and its errors are one more matcher.
 
 HTTP middleware composes the same way. A library with no HTTP concern supplies a collaborator,
-a logger for one, and the transport's middleware uses it. A library whose concern is HTTP-shaped,
-such as tracing or token verification, exposes its middleware as `func(http.Handler)
-http.Handler`, built from `net/http` types alone. That is structurally the web SDK's
-`web.Middleware`, so it composes into any service built on the SDK, and the library never imports
-the SDK. go-observability's `NewMiddleware` is the worked case. This works because every layer
-builds against the standards and the standard library, which every layer above depends on too:
-that shared base is what lets a lower layer plug into a higher one without depending on it.
+such as a logger, and the transport's middleware uses it. A library whose concern is
+HTTP-shaped, such as tracing or token verification, exposes its middleware as a
+`func(http.Handler) http.Handler` built from `net/http` types alone. That type is structurally
+the web SDK's `web.Middleware`, so the middleware composes into any service built on the SDK
+while the library never imports the SDK. go-observability's `NewMiddleware` is the worked case.
+The arrangement works because every layer builds on the standards and the standard library,
+which every layer above depends on too. A lower layer plugs into a higher one through those
+shared types without depending on it.
 
 ## A provider is selected by construction
 

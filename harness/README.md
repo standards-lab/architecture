@@ -15,7 +15,7 @@ Standing outside the software tiers does not make it peripheral: agentic develop
 the architecture strategy itself, and the harness's programming standards and workflow
 integrations are first-class deliverables of the organization.
 
-The worked examples are the harness's own artifacts:
+The worked examples come from the harness's own artifact,
 [claude-plugins](https://github.com/standards-lab/claude-plugins), the plugin marketplace whose
 marathon workflow established most of these conventions.
 

@@ -15,9 +15,10 @@ belongs here and how a page arrives.
 
 ## Site hosting
 
-Planned: `backlog.docs-site` in the workspace roadmap carries it.
+Site hosting is planned; `backlog.docs-site` in the workspace roadmap carries it.
 
-## Notes
+## Notes in this directory
 
-- Landed for a page: `dependency-sourcing.md`, `promote-on-fit.md`, and `testing-harness.md`.
-- Ideas: `entrypoint-composition-split.md` and `sql-meta-language.md`.
+- `dependency-sourcing.md`, `promote-on-fit.md`, and `testing-harness.md` have landed here for a
+  session to turn into pages.
+- `entrypoint-composition-split.md` and `sql-meta-language.md` hold ideas.

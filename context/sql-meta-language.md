@@ -1,7 +1,7 @@
 # The SQL meta language
 
-Unscheduled R&D beyond the v1 path, cited by `backlog.sql-meta-language` in the workspace
-roadmap. sqlate's authored SQL files are the surface it sits above.
+This note describes a provider-agnostic SQL meta language, unscheduled R&D beyond the v1 path.
+`backlog.sql-meta-language` in the workspace roadmap cites it.
 
 ## The first phase exists
 
