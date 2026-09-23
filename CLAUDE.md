@@ -16,10 +16,10 @@ source, and an optional `docs/` directory its README indexes. A page here that r
 repository's implementation is a defect, reduced to the principle it states or removed. The
 catalog names each repository with a description and a link and goes no deeper.
 
-A page arrives by promotion and only by promotion: a concept in the repository that owns the
-knowledge, a design note once it settles, and a page here once the design has generalized past
-that one repository. A member's `close` or `review` lands the generalized note as a concept in
-this repository's `context/`, and a session here authors the page.
+A page arrives only by promotion: a note in the repository that owns the knowledge, once
+validated work proves it and it has generalized past that one repository, becomes a page here.
+A member repository's `close` or `review` lands the note in this repository's flat `context/`
+directory, and a session here authors the page.
 
 A repository that tightens a principle states that enhancement beside its link to the principle,
 in its README's Standard section. A lower level enhances the principle it derives from and

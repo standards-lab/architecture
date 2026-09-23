@@ -1,11 +1,7 @@
 # The SQL meta language
 
-Captured 2026-08-25, when go-database's Go statement AST was the runtime half a compiler
-would target; reframed 2026-08-31 under the DSL strategy (standards-lab
-`context/design/dsl-driven-services.md`), which retired that AST for authored SQL files, and
-again 2026-09-03 when the `v1.data.sql.prototype` experiment built the first phase.
-Unscheduled R&D beyond the v1 path; `backlog.sql-meta-language` in the workspace roadmap
-cites this concept and narrows to what remains.
+This note describes a provider-agnostic SQL meta language, unscheduled R&D beyond the v1 path.
+`backlog.sql-meta-language` in the workspace roadmap cites it.
 
 ## The first phase exists
 
@@ -35,7 +31,7 @@ category paper over the gap by hiding SQL rather than composing it.
 
 Nobody has combined: a SQL-compliant surface, schema-typed checking, composable definitions,
 language-neutral host bindings, and an explicit standard/native tier split. The last item is
-the organization's own contribution — the [service tiers](../../principles/service-tiers.md)
+the organization's own contribution — the [service tiers](../principles/service-tiers.md)
 principle as language design — and it is what the existing attempts most conspicuously lack.
 
 ## The idea
@@ -118,7 +114,7 @@ that builds the project. This concept page then decays to a pointer.
 ## Open questions
 
 - Surface syntax: strict ISO SQL plus a module/definition layer, or a conservative superset —
-  and how parameters and fragments are declared in it. Partially settled 2026-08-28: fragment
+  and how parameters and fragments are declared in it. Decided: fragment
   references in a query file stay SQL-legal. A reusable definition — a shared projection, say —
   is declared in view or table-valued-function syntax and referenced the way SQL references
   one; the compiler resolves the name against the fragment set and inlines it at compile time

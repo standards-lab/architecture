@@ -15,12 +15,9 @@ Standing outside the software tiers does not make it peripheral: agentic develop
 the architecture strategy itself, and the harness's programming standards and workflow
 integrations are first-class deliverables of the organization.
 
-The worked examples are the harness's own artifacts:
+The worked examples come from the harness's own artifact,
 [claude-plugins](https://github.com/standards-lab/claude-plugins), the plugin marketplace whose
-marathon workflow established most of these conventions, and the user scope, `~/.claude` — kept
-in a source-controlled repository and symlinked into place;
-[claude-settings](https://github.com/JaimeStill/claude-settings) is an example of such a
-user-scope repository.
+marathon workflow established most of these conventions.
 
 The harness diverges deliberately from go-elemental's changelog convention: a plugin's
 `CHANGELOG.md` headings carry no dates and no link definitions — dates and release links live

@@ -47,9 +47,17 @@ composition happens in the application: the SDK exposes an extension point, and 
 application declares the policy at its composition root. The web SDK's error writing is the
 worked case: the SDK defines the error-returning handler and the writer, and the application
 supplies the matchers that map the database library's error types to HTTP statuses, so a new
-infrastructure library costs the SDK nothing and its errors are one more matcher. The same
-direction places HTTP middleware in the transport: a transport-agnostic library supplies the
-collaborator, a logger for one, and never returns an HTTP type.
+infrastructure library costs the SDK nothing and its errors are one more matcher.
+
+HTTP middleware composes the same way. A library with no HTTP concern supplies a collaborator,
+such as a logger, and the transport's middleware uses it. A library whose concern is
+HTTP-shaped, such as tracing or token verification, exposes its middleware as a
+`func(http.Handler) http.Handler` built from `net/http` types alone. That type is structurally
+the web SDK's `web.Middleware`, so the middleware composes into any service built on the SDK
+while the library never imports the SDK. go-observability's `NewMiddleware` is the worked case.
+The arrangement works because every layer builds on the standards and the standard library,
+which every layer above depends on too. A lower layer plugs into a higher one through those
+shared types without depending on it.
 
 ## A provider is selected by construction
 
