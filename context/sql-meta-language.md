@@ -31,7 +31,7 @@ category paper over the gap by hiding SQL rather than composing it.
 
 Nobody has combined: a SQL-compliant surface, schema-typed checking, composable definitions,
 language-neutral host bindings, and an explicit standard/native tier split. The last item is
-the organization's own contribution — the [service tiers](../../principles/service-tiers.md)
+the organization's own contribution — the [service tiers](../principles/service-tiers.md)
 principle as language design — and it is what the existing attempts most conspicuously lack.
 
 ## The idea
