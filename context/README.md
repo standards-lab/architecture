@@ -15,4 +15,9 @@ belongs here and how a page arrives.
 
 ## Site hosting
 
-Deferred: `backlog.docs-site` in the workspace roadmap carries it.
+Planned: `backlog.docs-site` in the workspace roadmap carries it.
+
+## Notes
+
+- Landed for a page: `dependency-sourcing.md`, `promote-on-fit.md`, and `testing-harness.md`.
+- Ideas: `entrypoint-composition-split.md` and `sql-meta-language.md`.

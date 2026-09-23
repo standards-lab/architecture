@@ -10,7 +10,7 @@ encapsulated composition root that does the actual wiring and never executes pas
 it (`standards/go-elemental/principles/topology-and-naming.md`'s "Application-layer import
 direction").
 
-The idea, raised while reviewing that addition: generalize the split to the architecture level.
+The idea: generalize the split to the architecture level.
 Every application's entrypoint is minimal — process-level concerns only, nothing else. Every
 application has one composition root beneath it, encapsulated so nothing above the entrypoint
 reaches into it directly and nothing below it reaches back up. What sits below the composition
