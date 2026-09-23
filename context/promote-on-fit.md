@@ -2,7 +2,7 @@
 
 A pattern proven in the reference service promotes outward, into the SDKs, the infrastructure
 libraries, the template, and the standard, so the generated baseline never drifts from the
-reference. The note landed from the coordinator for a page here.
+reference.
 
 The criterion is fit, not a count of consumers. A piece promotes when it is expressed in the
 lower layer's terms and depends on nothing above it. A second consumer confirms the shape but

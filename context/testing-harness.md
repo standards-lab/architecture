@@ -2,7 +2,7 @@
 
 This note states the rules an integration harness follows. They come from the stalls the
 reference service's first suite hit, and go-core's `processtest` and go-web-sdk's `webtest`
-implement them. The note landed from the coordinator for a page here.
+implement them.
 
 The harness runs the service as its binary and drives it only through production surfaces:
 configuration by environment variables, the API and the admin surface for state, the network

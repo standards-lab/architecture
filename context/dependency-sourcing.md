@@ -2,7 +2,7 @@
 
 This note states when the organization builds a capability itself, when it sources one, and how
 a sourced dependency stays within a repository's dependency line. The rule applies at every
-layer. The note landed from the coordinator for a page here.
+layer.
 
 ## The rule
 

@@ -114,7 +114,7 @@ that builds the project. This concept page then decays to a pointer.
 ## Open questions
 
 - Surface syntax: strict ISO SQL plus a module/definition layer, or a conservative superset —
-  and how parameters and fragments are declared in it. Partly settled: fragment
+  and how parameters and fragments are declared in it. Decided: fragment
   references in a query file stay SQL-legal. A reusable definition — a shared projection, say —
   is declared in view or table-valued-function syntax and referenced the way SQL references
   one; the compiler resolves the name against the fragment set and inlines it at compile time
