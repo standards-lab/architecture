@@ -3,7 +3,7 @@
 The input for the `quality.architecture-diet` task in the workspace roadmap. This repository is
 turning reviewer-facing and pragmatic: a principle stays only if the code expresses it or a check
 enforces it. A repository's `STANDARDS.md` names the pages that apply to it, and only the
-standards reviewer reads them (`claude-plugins/context/marathon-factory.md`). This note records
+standards-reviewer reads them (marathon's `agents/standards-reviewer.md`). This note records
 where the pages and the code disagree today, what is premature or duplicated, and what waits to
 land.
 
@@ -104,3 +104,13 @@ Each was validated in code. The task decides where each one lands, or whether it
 - **Tidy and build without the workspace**: `go mod tidy` and a `GOWORK=off` build for every
   module, which the release-and-ci page already asks for. Confirm each repository's `check`
   runs them.
+
+## Out of date with marathon 0.16
+
+- `harness/` and `CLAUDE.md` describe marathon 0.15's mechanics: the reset file, waves and lanes,
+  stages and checkpoints, and promotion at closeout. `harness/` moves to claude-plugins or goes.
+- `context/promote-on-fit.md` promotes a note once it fits; marathon-architecture 0.3.0 lets a
+  page arrive only from validated code, proposed by `retro` when the principle holds in more than
+  one repository.
+- This repository's `marathon.toml` lacks `check` and `merge`, and its `.gitignore` still lists
+  `.claude/report.md` in place of `.claude/briefs/`.
