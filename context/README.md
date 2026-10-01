@@ -22,3 +22,5 @@ Site hosting is planned; `backlog.docs-site` in the workspace roadmap carries it
 - `adjacent-position.md`, `dependency-sourcing.md`, `promote-on-fit.md`, and `testing-harness.md`
   have landed here for a session to turn into pages.
 - `entrypoint-composition-split.md` and `sql-meta-language.md` hold ideas.
+- `standards-audit.md` holds where the pages and the code disagree, what is premature or
+  duplicated, and the waiting promotion candidates: the input for `quality.architecture-diet`.
