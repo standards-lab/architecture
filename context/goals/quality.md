@@ -79,6 +79,7 @@ slices 9/9 committed · standards ✓ (12 fixes) · spec ✓ (3 gaps closed, re-
 - checks: rejected depguard confinement, a transitive direction/leakage split-check, and a doc.go presence script: hand-written rules are brittle (blobfs's static split-check list is the example), so blobfs's split-check is removed.
 - checks: rejected currency as a marathon extension: it is core to marathon, a language-agnostic PLAN step.
 - checks: rejected CI-gated currency and Dependabot version-update PRs.
+- checks: rejected Renovate in local mode as the currency tool, despite covering every surface in one config: it adds a Node dependency to the stack; the per-repo `scripts/currency.sh` over standard tools stays.
 - checks: in go-web-service and the template, check runs go vet, go fix, and golangci-lint with `-tags integration`, so the integration code is compiled and linted but never run.
 - checks: sqlint keeps each repository's established invocation: sqlate and blobfs run it with the workspace on, go-web-service as `go tool sqlint`.
 - checks: image currency considers only dotted semver tags, because grafana also publishes bare build numbers, and it reports a new major.
