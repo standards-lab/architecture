@@ -1,6 +1,6 @@
 # goal · quality
 
-- **State:** building
+- **State:** brief ready
 - **Task:** architecture-diet
 - **Branch:** architecture-diet
 
