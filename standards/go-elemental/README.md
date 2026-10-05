@@ -16,11 +16,9 @@ dependency surface, expressing the architecture's supply-chain purpose in its st
 
 ## The dependency line
 
-The standard library first, and at most packages as idiomatic and stable as the standard library
-itself (`golang.org/x/…`, `google/uuid`, and the like). No frameworks. Raw drivers and plain SQL
-over ORMs. A web-platform-native client. Vendor libraries are isolated in provider sub-modules
-that pin their own SDKs. A module may enhance the line; go-core admits the standard
-library alone.
+Every Go Elemental module follows one dependency line: bottom-up, no provider in a base, kept
+light. The [Dependencies](principles/dependencies.md) principle states it per tier, with when a
+capability is written in-house and when a library is sourced.
 
 The declared stack of the standard's reference architecture selects one provider per service;
 for SQL that provider is Postgres.
@@ -32,7 +30,8 @@ The conventions every Go Elemental repository shares, enhancing the
 further, stating the enhancement beside its link to the principle.
 
 - [Dependencies](principles/dependencies.md) states the dependency line applied to each
-  repository tier, where vendor libraries are isolated, and how peers compose.
+  repository tier, when a library is sourced and where its weight is isolated, and how peers
+  compose.
 - [Baseline-standard ownership](principles/baseline-standards.md) states that a library takes
   an external standard as its baseline and never hardens organizational convention or policy
   into its contract.

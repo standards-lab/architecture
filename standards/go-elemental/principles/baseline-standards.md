@@ -25,10 +25,14 @@ takes the value as a parameter, the application's configuration supplies it, and
 composition root hands it to each construction site, so per-resource variation is different
 values at different sites.
 
-The worked case is go-database's optimistic-concurrency guard: the mechanism — match by key
-and expected version, increment in the same statement — is standard SQL and belongs to the
-library; the organization's convention of naming that column `version` binds in the service's
-commands and migrations, so the guarded shapes take the column name as input rather than
-assuming it. The same rule holds for go-observability, whose baseline is OpenTelemetry: it
-enables the architecture's use of the standard without hard-coding the architecture's choices
-into it.
+The worked case is sqlate's optimistic-concurrency guard. The mechanism — match by key and
+expected version, advance the version in the same statement, and tell a missing row from a
+version mismatch — is standard SQL and belongs to the library. The organization's convention of
+naming that column `version` binds in the service's commands and migrations, so the guard takes
+the version parameter's name from its caller rather than assuming it:
+`Statement.Guarded(check, version)` and `Returning.Guarded(version, current)` both receive it,
+and go-web-service passes `"version"` where it builds its guards. The policy rule has its worked
+case in go-web-sdk: `ParseQuery` takes the default and maximum page sizes as a `Limits` value
+from its caller, and the service's configuration supplies them. The same rule holds for
+go-observability, whose baseline is OpenTelemetry: it enables the architecture's use of the
+standard without hard-coding the architecture's choices into it.

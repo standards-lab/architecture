@@ -51,7 +51,9 @@ does, as `sqlate` and `blobfs` are.
   together through `go.work` before any tag is cut.
 - A template repository roots its module at `template/`, so generation copies exactly the
   subtree and never the repository's management layer.
-- A reference architecture is a single module and the repository's only releasable artifact.
+- A reference architecture's root module is the repository's only releasable artifact. A tool
+  the repository carries is a nested module of its own, so the tool's dependencies never enter
+  the service's module: `go-web-service`'s `tools/slab`.
 - A package is split from its parent by growth or by dependency weight, never by topic alone: a
   sub-package is earned when its contents are a growth area or when a dependency is heavy enough
   that the rest of the module should not compile it.
