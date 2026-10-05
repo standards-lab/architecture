@@ -8,9 +8,12 @@ level: architecture
 # The composition root
 
 Every application has exactly one composition root: the package where the application assembles
-its dependencies. It constructs the infrastructure services, loads the configuration, wires the
-transport, and declares how they compose. Nothing else in the application constructs a
-dependency; everything else receives its dependencies from the composition root.
+its dependencies. It constructs the infrastructure services, wires the transport, and declares
+how they compose. Nothing else in the application constructs a dependency; everything else
+receives its dependencies from the composition root.
+
+The composition root sits directly beneath the application's entrypoint, its one neighbor above
+it. The entrypoint owns the process; the composition root owns the composition.
 
 ## It declares; it does not execute
 
@@ -31,12 +34,21 @@ declare native use import a provider. The root constructs the provider and passe
 service downward as an ordinary dependency, so every package below it stays provider-free and
 works against the standard tier.
 
-## It owns process entry and exit
+## The entrypoint owns process entry and exit
 
-The composition root owns the signal context and the exit code: it traps the process signals,
-derives the root context, and passes that context to the run call that executes the declared
-composition. Configuration is loaded here and discarded here; subsystems receive values, never
-the configuration itself.
+The entrypoint is minimal: process-level concerns only, nothing else. It traps the process
+signals and derives the root context, loads the configuration, and hands the configuration to
+the composition root. It then passes the root context to the run call that executes the declared
+composition, and exits with the code that call returns. A failure before the run, a
+configuration that does not load or a composition that does not assemble, is reported by the
+entrypoint and becomes its exit code.
+
+The composition root receives the configuration and never loads it; subsystems receive the values
+they need, never the configuration itself. The entrypoint reaches the composition root only through
+its construction and its run call, and nothing below the composition root reaches back up to it.
+Extending an application means editing its composition root; the entrypoint stays untouched. What
+sits below the composition root, the application's domain and infrastructure packages, stays the
+author's decision.
 
 ## It fails loudly, at startup
 

@@ -36,13 +36,15 @@ elements already describe. Features stay informal prose.
 
 Top to bottom:
 
-- **Application**: the deployable unit of a binary software project. The **application layer**
-  owns the infrastructure services and the process lifecycle, assembles the transport, and runs
-  the process. Its [composition root](principles/composition-root.md) is the package where the application
-  assembles its dependencies; it only declares the composition, and execution belongs to the
-  application layer. Application types (a web service, a CLI, a game) share this architecture;
-  they differ in composition-root initialization sequence, runtime cycle, and deployment
-  platform. A web service is an application whose form is a containerized public API.
+- **Application**: the deployable unit of a binary software project. The **application layer** owns
+  the infrastructure services and the process lifecycle, assembles the transport, and runs the
+  process. Its entrypoint is the minimal entry above the composition root: it derives the signal
+  context, loads the configuration, and owns the exit code; it does nothing else. Its [composition
+  root](principles/composition-root.md), beneath the entrypoint, is the package where the
+  application assembles its dependencies; it only declares the composition, and execution belongs to
+  the application layer. Application types (a web service, a CLI, a game) share this architecture;
+  they differ in composition-root initialization sequence, runtime cycle, and deployment platform. A
+  web service is an application whose form is a containerized public API.
 - **Reactor**: an entry point driven by an occurrence from outside the application rather than a
   caller (a subscription, a poll interval, a schedule). It owns the transport connection the
   occurrence arrives on, calls a Domain Service, and runs for the process lifetime: the inbound
