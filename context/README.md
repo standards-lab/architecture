@@ -16,10 +16,7 @@ arrives.
 
 Site hosting is planned; `backlog.docs-site` in the workspace roadmap carries it.
 
-## Notes in this directory
+## Goal records
 
-- `adjacent-position.md`, `dependency-sourcing.md`, `promote-on-fit.md`, and `testing-harness.md`
-  have landed here for a session to turn into pages.
-- `sql-meta-language.md` holds an idea.
-- `standards-audit.md` holds where the pages and the code disagree, what is premature or
-  duplicated, and the waiting promotion candidates: the input for `quality.architecture-diet`.
+`goals/` holds one record per active goal rooted here; the workspace roadmap at the coordinator
+lists the goals.
