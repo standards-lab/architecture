@@ -7,7 +7,7 @@ level: go-elemental
 
 # Lifecycle and context ownership
 
-Every Go Elemental application follows one process lifecycle, hosted by go-core's `lifecycle`
+Every Go Elemental web service follows one process lifecycle, hosted by go-core's `lifecycle`
 package, and one context-ownership convention. The lifecycle realizes the Elemental
 Architecture's infrastructure-service contract in Go: staged startup, reverse-stage drain, and
 named readiness reported to the probes.
