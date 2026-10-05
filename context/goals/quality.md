@@ -153,7 +153,7 @@ Door          two-way: prose and configuration on branches, revertable;
 
 ## Progress
 
-slices 7/8 committed · standards — · spec — · editor —
+slices 8/8 committed · standards — · spec — · editor —
 
 ## Decisions
 
@@ -240,3 +240,4 @@ slices 7/8 committed · standards — · spec — · editor —
 - standards: go-web-sdk, go-storage and go-web-service STANDARDS.md point to the timeouts page; go-web-sdk's README "organization's markers" points to the dependencies sourcing section.
 - claude-plugins · CLAUDE.md and context/README.md: stop calling the repository "the harness level of the organization's reference architecture"; architecture-diet removed that level.
 - standards: go-core `process/doc.go` says "a composition root composes its run function from it"; restate it as the entrypoint, per architecture-diet's composition-root page.
+- coordinator · notes: `service-organization.md` cites `architecture.md`'s sinking rule and `principles/independent-releases.md` instead of the culled `architecture/context/promote-on-fit.md`; `auth-strategy.md` and `cli-applications.md` cite the sourcing section of `architecture/standards/go-elemental/principles/dependencies.md` instead of `dependency-sourcing.md`; v1.middleware's summary prose drops "(dependency-sourcing.md)" for that page.
