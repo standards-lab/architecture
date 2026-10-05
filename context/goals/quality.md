@@ -64,7 +64,7 @@ Door          two-way: no tags pushed; every repo change is a revertable file
 
 ## Progress
 
-slices 5/9 committed (go-core, sqlate, go-database, go-web-sdk, go-observability) · standards — · spec — · editor —
+slices 8/9 committed (all but go-web-service) · standards — · spec — · editor —
 
 ## Decisions
 
