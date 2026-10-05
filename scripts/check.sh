@@ -54,8 +54,8 @@ done
 
 # Every page opens with the front matter README.md's "Page metadata" section requires: key,
 # name, and type on every page, plus the fields its type requires. The context/ notes and
-# goal records are marathon's working notes, not pages, and CLAUDE.md is agent instructions,
-# so neither carries front matter.
+# goal records are marathon's working notes, not pages, CLAUDE.md is agent instructions, and
+# STANDARDS.md is the standards-reviewer's judgement calls, so none of them carries front matter.
 # A block that opens with --- on the first line and never closes is not front matter.
 frontmatter() {
   awk 'NR == 1 { if ($0 != "---") exit; next } $0 == "---" { closed = 1; exit } { block = block $0 "\n" }
@@ -64,7 +64,7 @@ frontmatter() {
 
 for file in "${markdown[@]}"; do
   case "$file" in
-    context/* | CLAUDE.md) continue ;;
+    context/* | CLAUDE.md | STANDARDS.md) continue ;;
   esac
   fields=$(frontmatter "$file")
   if [ -z "$fields" ]; then
