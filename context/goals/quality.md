@@ -206,7 +206,7 @@ slices 8/8 committed · standards ✓ (b2936ea) · spec — · editor —
 - architecture-diet: harness/ leaves the architecture layer; tool-based-skills moves to claude-plugins' context as a planning note in this task (claude-plugins joins the task, architect's call); the other seven pages are deleted, since marathon 0.18's own files express what still holds.
 - architecture-diet: the composition root is restated as practised (a minimal entrypoint owns signals, config load and exit; the composition root declares), absorbing backlog goal entrypoint-composition-split.
 - architecture-diet: "entrypoint" is prose inside the Application element, not a sixth element.
-- architecture-diet: Events cut until v1.messaging builds emission; Reactor stays (the sweeper expresses it).
+- architecture-diet: Events cut until v1.messaging builds emission; Reactor stays.
 - architecture-diet: derived standards, the external catalog, re-expression and the `derives` field cut; dotnet-mirror and graduation keep that intent.
 - architecture-diet: adjacency lands for sqlate and blobfs; the shipped-schema amendment is culled until a second shipper exists.
 - architecture-diet: dependency sourcing lands as a section of Go Elemental dependencies.
@@ -219,6 +219,12 @@ slices 8/8 committed · standards ✓ (b2936ea) · spec — · editor —
 - architecture-diet: standards-audit.md culled at task end, making its update pending edit moot.
 - architecture-diet: the check is a bash script for links and front matter; rejected lychee (a pinned tool and currency surface for two checks bash covers).
 - architecture-diet: merge is plain `gh pr merge --merge --delete-branch` with no CI, since `gh pr checks` exits 1 with no checks; rejected a CI workflow (action pins, a currency surface).
+
+- architecture-diet: escalation 1: the entrypoint-loads-configuration rule is scoped to services; slab's composition root builds its config from flags. slab will implement the CLI architecture, which leans toward startup rooted at the command level, so each command takes only its own startup dependencies.
+- architecture-diet: escalation 2: Reactor is broadened (architect, per messaging.md's source-agnostic reactor contract): any process-lifetime entry point the coordinator runs, driven by an occurrence (subscription, interval, demand); it often dispatches to a Domain Service, and go-web-service's sweeper is one.
+- architecture-diet: escalation 3: doc.go inventories stay a rule; the standards task brings the partial packages to it.
+- architecture-diet: escalation 4: go-storage and blobfs got the `main` ruleset the other seven repositories carry (PR required, no deletion, no force push); blobfs now merges by merge commit only and deletes merged branches. release-and-ci names no exceptions.
+- architecture-diet: escalation 5: cut "libraries reach their first stable major together"; no code expresses it, and graduation holds the intent.
 
 ## Pending edits
 
@@ -244,3 +250,6 @@ slices 8/8 committed · standards ✓ (b2936ea) · spec — · editor —
 - standards: go-web-service's and blobfs/postgres's currency scripts report `tool` directives (sqlint), which their indirect-requirement filter hides today, as rolling-currency's developer-tools coverage states.
 - standards: sqlate's `postgres/CHANGELOG.md` and `sqlint/CHANGELOG.md` gain an `[Unreleased]` section and link definitions for their latest headings (Keep a Changelog, per release-and-ci).
 - standards: go-observability's `otlp` sub-module requires go-core v0.4.1 while its base is on v0.5.0; bring it current.
+- standards: complete the doc.go inventories in sqlate's query, migrate, header, sqlint and sqltest packages, go-observability's otlp, and go-web-service's tools/slab; give blobfs's data/datatest a doc.go.
+- standards: go-web-service's README stops calling the sweeper an exception to the Reactor ("calls a Domain Service ... so it is not one"), and the template's README stops requiring a reactor to dispatch to a domain service, per the broadened Reactor.
+- coordinator · roadmap: goal cli's context or summary records that slab implements the CLI architecture, leaning toward startup rooted at the command level.
