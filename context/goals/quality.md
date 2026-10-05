@@ -64,7 +64,7 @@ Door          two-way: no tags pushed; every repo change is a revertable file
 
 ## Progress
 
-slices 0/9 committed · standards — · spec — · editor —
+slices 1/9 committed (go-core) · standards — · spec — · editor —
 
 ## Decisions
 
