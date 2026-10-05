@@ -13,23 +13,27 @@ it. The organization's conventions are codified only in the layers the organizat
 services, the template, the reference — at the call sites that compose the library.
 
 The rule sharpens the [service-tiers](../../../principles/service-tiers.md) discipline with a
-question of ownership: the standard tier is defined by the external standard (ISO SQL, OAuth
-2.0 and OIDC, OpenTelemetry's conventions), and nothing above it that is merely ours — a
-column name, an identifier format, a naming convention — may harden into the library's
-contract. A library fixes mechanisms; the consumer's schema and conventions bind where the
-consumer composes it.
+question of ownership: the standard tier is defined by the external standard (ISO SQL, the HTTP
+RFCs, OpenTelemetry's conventions), and nothing above it that is merely ours — a column name, an
+identifier format, a naming convention — may harden into the library's contract. A library
+fixes mechanisms; the consumer's schema and conventions bind where the consumer composes it.
 
-The rule extends to policy. A library ships no policy numbers: a default page size, a maximum
-request size, a timeout the application should choose. Such a value is application policy,
-and a library claiming one would put policy where no consumer can answer for it. The library
-takes the value as a parameter, the application's configuration supplies it, and the
-composition root hands it to each construction site, so per-resource variation is different
-values at different sites.
+The rule extends to policy. A library ships no policy the application must own: no default
+page size and no maximum request size. Such a value is application policy, and a library
+claiming one would put policy where no consumer can answer for it. The library takes the value
+as a parameter, the application's configuration supplies it, and the composition root hands it
+to each construction site, so per-resource variation is different values at different sites.
+Where a library's configuration block defaults an operational bound, such as a timeout or a
+pool size, the default is a starting point the application's configuration overrides.
 
-The worked case is go-database's optimistic-concurrency guard: the mechanism — match by key
-and expected version, increment in the same statement — is standard SQL and belongs to the
-library; the organization's convention of naming that column `version` binds in the service's
-commands and migrations, so the guarded shapes take the column name as input rather than
-assuming it. The same rule holds for the libraries to come: go-auth's baseline is OAuth 2.0
-and OIDC, go-observability's is OpenTelemetry, and each enables the architecture's use of the
-standard without hard-coding the architecture's choices into it.
+The worked case is sqlate's optimistic-concurrency guard. The mechanism — match by key and expected
+version, advance the version in the same statement, and tell a missing row from a version mismatch —
+is standard SQL and belongs to the library. The organization's convention of naming that column
+`version` binds in the service's commands and migrations, so the guard takes the version parameter's
+name from its caller rather than assuming it: `Statement.Guarded(check, version)` and
+`Returning.Guarded(version, current)` both receive it, and go-web-service passes `"version"` to
+`Statement.Guarded` where it builds its guards. The policy rule has its worked case in go-web-sdk:
+`ParseQuery` takes the default and maximum page sizes as a `Limits` value from its caller, and the
+service's configuration supplies them. The same rule holds for go-observability, whose baseline is
+OpenTelemetry: it enables the architecture's use of the standard without hard-coding the
+architecture's choices into it.

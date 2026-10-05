@@ -14,28 +14,26 @@ layout of each tier. The tiers themselves are defined by the organizational
 ## Repository names
 
 A repository is named for its language and its tier, so the name states what a reader will find
-and where it belongs. The language prefix is the only part a re-expression in another language
-changes.
+and where it belongs.
 
 - **Core SDK** — `go-core`.
 - **Application SDKs** — `go-<application>-sdk`: `go-web-sdk`. The `-sdk` suffix marks a
-  development kit and appears on no other tier.
+  development kit and ends no other tier's name.
 
   A capability sub-module is a nested directory named for the concern, in lower-case words
   joined by hyphens, never for the library it wraps: `rate-limit`, not `httprate`. Its package
   name is that name with the hyphens removed: `ratelimit`.
 - **Infrastructure libraries** — `go-<technology>`, named for the technology the library
-  presents as a service, starting with `go-database`. The rest arrive in turn:
-  - `go-auth`
-  - `go-storage`
-  - `go-observability`
-  - `go-messaging`
-  - `go-ai`
+  presents as a service: `go-database`, `go-storage`, `go-observability`.
 
-  A provider sub-module is a nested directory named for
-  the target API or system, never the driver it wraps: `postgres`, not `pgx`.
+  A provider sub-module is a nested directory named for the target API or system, never the
+  driver it wraps: `postgres`, not `pgx`.
 - **Templates** — the application SDK's name with `-template`: `go-web-sdk-template`.
 - **Reference architectures** — named for the application built on the SDK: `go-web-service`.
+
+An [adjacent library](../../../principles/repository-topology.md#adjacent-libraries) belongs to
+no tier, so it takes no `go-` prefix: it presents no one technology and is named for what it
+does, as `sqlate` and `blobfs` are.
 
 ## Module layout per tier
 
@@ -53,7 +51,9 @@ changes.
   together through `go.work` before any tag is cut.
 - A template repository roots its module at `template/`, so generation copies exactly the
   subtree and never the repository's management layer.
-- A reference architecture is a single module and the repository's only releasable artifact.
+- A reference architecture's root module is the repository's only releasable artifact. A tool
+  the repository carries is a nested module of its own, so the tool's dependencies never enter
+  the service's module: `go-web-service`'s `tools/slab`.
 - A package is split from its parent by growth or by dependency weight, never by topic alone: a
   sub-package is earned when its contents are a growth area or when a dependency is heavy enough
   that the rest of the module should not compile it.
@@ -61,8 +61,9 @@ changes.
 ## Application-layer import direction
 
 Every Go Elemental application — whatever its type — divides into three tiers with one import
-direction: `cmd/*` imports only `internal/*`, `internal/*` is the composition root and may import
-any root-level package, and nothing at the root level imports `internal/*`. A `cmd/*` binary is
+direction: `cmd/*` imports only `internal/*` and go-core's `process` package, which owns the
+signal context and the exit path; `internal/*` is the composition root and may import any
+root-level package; and nothing at the root level imports `internal/*`. A `cmd/*` binary is
 initialization alone: it constructs the application from `internal/*` and never reaches past it.
 `internal/*`'s own layers import each other and the root-level packages that make up the
 application's domain and infrastructure, but the reverse never happens — a root-level package
@@ -77,16 +78,19 @@ review and package documentation, not by the compiler.
 The composition root, `internal/app`, is laid out as one file per layer of the architecture:
 one file constructs the infrastructure services, one the administrative services and their
 mount, one the domain services and their mount, one the reactors, with the list of mounts and
-the middleware stack each a file of their own. Each layer file constructs its layer and owns
-its mount, so the package's file list is the architecture's layer list, and extending the
-application means editing a layer file's body while the signatures, the entrypoint, and the
-run method stay untouched. A package that the layers share and that must not import the
-composition root, the application's database infrastructure for one, lives at the root level.
+the middleware stack each a file of their own. Beside them, `app.go` holds the construction and
+the run method, and `stages.go` the stage table the layer files register on; a layer the
+application adds, such as go-web-service's telemetry, is one more file. Each layer file
+constructs its layer and owns its mount, so the layer files are the architecture's layer list,
+and extending the application means editing a layer file's body while the signatures, the
+entrypoint, and the run method stay untouched. A package that the layers share and that must not
+import the composition root, the application's database infrastructure for one, lives at the root
+level.
 
 This is an Application-layer principle, independent of application type: a web service's
-`internal/app` is one realization, and a CLI or a worker composes its own `internal/app` the
-same way. It does not apply to a core SDK or an application SDK, which are libraries, not
-applications, and have no composition root of their own.
+`internal/app` is one realization, and a CLI composes its own `internal/app` the same way. It
+does not apply to a core SDK or an application SDK, which are libraries, not applications, and
+have no composition root of their own.
 
 ## Release tags
 

@@ -7,86 +7,102 @@ level: go-elemental
 
 # Tests and documentation
 
-Testing runs in two tiers. The unit tier runs on every pull request, for every layer, and
-touches no service, network, or disk. The integration tier runs the composed service black-box
-through its API against the service's own compose stack, on merge. Each tier has its own
-contract, stated below.
+Testing runs in two tiers. The unit tier is what each repository's check runs: hermetic,
+black-box, on every pull request. The integration and acceptance suites run a real process or
+a real engine, each behind its own task or CI job. A test proves a behavior only if it can
+fail; marathon's standards-reviewer names the ways a green test lies,
+[tautological, structure-sensitive, or unable to fail](https://github.com/standards-lab/claude-plugins/blob/main/plugins/marathon/agents/standards-reviewer.md),
+and rewrites or deletes such a test.
 
-## The unit tier: co-located, black-box, hermetic
+## The unit tier: black-box and hermetic
 
-Unit tests are `{file}_test.go` files co-located with the source they cover, in an external
-test package (`package <pkg>_test`). They exercise only the public API; private infrastructure
-is covered transitively through the public entry points that use it.
+Every test lives in an external test package (`package <pkg>_test`), co-located with the
+source it covers, and drives only the package's exported API; unexported code is covered
+through the exported entry points that use it. The one white-box file allowed is
+`export_test.go`, and it exists only to export a hook that injects a clock or a probe the API
+cannot reach deterministically; the tests that use the hook stay in the external package.
+Check enforces the rule: every repository's golangci-lint configuration enables the
+`testpackage` linter with its skip regexp narrowed to `export_test\.go`.
 
-Unit tests are hermetic: `go test -race ./...` passes with no service running, and needing no
-external service is the tier's contract rather than a limit under review. Fakes, scripted
-drivers, and port-0 listeners are how a package proves its behavior here. The tier is also the
-home of every cheap gate that needs no container: a per-module build with the workspace file
-disabled, so a broken version pin fails CI, and the SQL conventions lint. Each tier of
-repository reaches hermeticity its own way:
+The tier is hermetic: `go test -race ./...` passes with no service running. A package proves
+its behavior with fakes, scripted drivers, and loopback listeners:
 
-- **Infrastructure libraries** substitute the engine below the standard interface with a
-  scripted `database/sql` driver that can prepare statements, so prepare-based verification
-  is provable on this tier. Provider tests assert construction, which performs no I/O.
-- **Application SDKs** exercise handlers through recorded requests with no listener; a test
-  that must listen binds port 0 and reads the assigned port back, never a fixed port.
-- **Templates and reference architectures** run their race suite against the composed baseline
-  the same way, with the readiness probes as the observable surface, and prove their
-  integration harness on this tier against loopback stand-ins.
+- **SQL libraries** run over sqlate's `sqltest`, a scripted `database/sql` driver that
+  supports prepare and fails where a real driver would, so prepare-based verification is
+  provable on this tier.
+- **Providers** may drive a loopback test server on port 0. go-database's postgres provider
+  tests drive a startup exchange with an in-test `pgproto3` server, asserting the user,
+  database, and password the provider sends over TCP, and the database over a Unix socket.
+- **Handlers** run through recorded requests with no listener; a test that must listen binds
+  port 0 and reads the assigned port back, never a fixed port.
 
 A test helper stays in its test package until more than one test package needs it; then it is
-hoisted into a module-private `internal/<pkg>test` package, following the standard library's
-`httptest`/`fstest` naming. Nothing in it is API.
+hoisted into a `<pkg>test` package, following the standard library's `httptest` and `fstest`
+naming, under `internal/` unless another module's tests consume it.
 
-## The integration tier: the composed service, black-box, on merge
+## Integration and acceptance suites, and where each runs
 
-The integration suite is marked by one build tag, `//go:build integration`, and lives in the
-application's root-level `integration` package. It runs the composed service as the binary
-against the service's own compose stack, the same compose definition a developer runs, booted
-as an isolated compose project on its own port and torn down with its volume when the run
-ends. The suite exercises the service only through its API and drives it only through production
-surfaces:
+Each suite that needs a real process or engine sits behind a build tag or an environment
+variable, so the unit tier never reaches it:
 
-- configuration by environment variable
-- the API and the admin mount for state control
-- the network for fault injection
-- signals and the exit code for lifecycle
+- **sqlate's and blobfs's postgres suites** (`-tags integration`, in the `postgres`
+  sub-module) prove the engine claims against PostgreSQL. `mise run integration` runs them
+  against the database the repository's DSN variable names, and `mise run acceptance` brings
+  up the compose stack, runs them (and, in blobfs, the composition example), and resets the
+  stack whatever the result. They run on a developer's machine; no CI job runs them, and the
+  check neither compiles nor runs them.
+- **go-storage's azureblob acceptance tests** run the storage conformance suite against a real
+  service when `AZUREBLOB_TEST_ENDPOINT` names one, and skip otherwise. CI's `acceptance` job
+  runs them against an Azurite container on every pull request into `main` and every push to
+  it; no task runs them locally.
+- **The template's and go-web-service's integration tier** (`-tags integration`, in the
+  root-level `integration` package) runs the built service as a subprocess, black-box,
+  through its API. Each repository's `mise run integration` task and CI `integration` job run
+  it, the job on push to `main` and on manual dispatch. go-web-service's task and job boot its
+  compose stack under Docker as an isolated project on its own ports and tear it down with its
+  volumes; the template is engine-free and runs the suite against the binary alone. The check
+  vets, fixes, and lints the suite with the integration tag, so it always compiles, but runs
+  only the unit tier.
 
+The integration tier drives the service only through production surfaces: configuration by
+environment variable, the API and the admin mount for state, the network for faults, and
+signals and the exit code for lifecycle. It observes through the same surfaces, plus the log
+for what only the log records and, in go-web-service, the object store read beneath the API.
 Nothing in the runtime exists for the tests' sake.
 
-The tier runs on push to `main` and on manual dispatch, below the per-pull-request rate by
-design, and a release is cut only from a `main` whose integration run has passed
-([releases and CI](release-and-ci.md)).
+### Integration toolkits and harness rules
 
-Integration testing is an application-layer concern. Layers below the application stay on the
-unit tier, because the composed application is where a library's claim meets a real engine: a
-black-box test that creates a duplicate record and receives a 409 proves the authored SQL, the
-driver, the error classification, the matcher, and the handler at once. Two consequences
-follow. A library claim the service's API can express moves up into the service's suite. A
-library claim only a real engine proves and the API cannot express, such as a dirty migration
-history, is a session-time acceptance proof: demonstrated against a real engine in the session
-that lands the claim, recorded in that session's notes, and not re-proven in CI.
+A library whose infrastructure an integration suite exercises ships the toolkit beside it.
+go-core's `process/processtest` runs a program as its binary and drives it through its output,
+its signals, and its exit code; go-web-sdk's `webtest` is the client a suite drives a running
+service through. Both suites build their harness on them, and the harnesses follow these rules:
 
-A capability enters the integration suite only when its API surface is complete enough to
-exercise it end to end. A later backing service joins the compose stack when its service layer
-is testable through the API, not when its library lands.
+- **A stall is a finding, never a sleep.** Every wait is a poll on an observable condition,
+  bounded by `processtest.Failsafe` or a multiple of it, and a wait that runs out fails the test.
+- **Readiness through the API.** A harness waits for a process to be ready by polling its
+  probe, never by reading its output.
+- **One connection per client.** `webtest`'s client holds one connection per host, so the
+  service's graceful shutdown never waits on an idle second connection.
+- **Interrupt before kill.** Stopping a process sends an interrupt and kills only a process
+  that has not exited within the bound.
+- **Faults at the network.** `processtest`'s forwarder relays a backing service over loopback,
+  and go-web-service's outage cases sever it, so a fault is indistinguishable from an outage.
+- **Output captured on failure.** Every process's output is captured; `processtest` includes
+  it in each failure it reports, and go-web-service's harness logs it for any failed test.
+- **The harness proves itself on the unit tier.** `processtest` carries unit tests against a
+  stand-in program, `webtest` against an `httptest` server, and go-web-service's state helpers are
+  tested against an `httptest` server; the template's harness is untagged, so the unit tier
+  type-checks it on every pull request.
 
-## Integration toolkits ship beside the libraries
-
-A library whose infrastructure an integration suite exercises ships its integration toolkit
-beside it, the way a scripted driver ships beside a SQL library for the unit tier. The core
-SDK's `process/processtest` package runs a program as the binary and drives it through the
-interfaces a terminal or an orchestrator uses: its output, its signals, and its exit code. The
-web SDK's `webtest` package is the client a
-black-box suite drives a running service through. The template ships the wiring engine-free,
-its `integration` package, task, and CI job, and a generated service adds its compose stack.
-Each package's documentation states its API.
+Toolkit mechanics, such as dropping the race runtime's exit sleep from a launched binary, stay
+with the toolkit's own code and documentation.
 
 ## doc.go and godoc
 
-Production source is written without doc comments; the agent writes godoc. Each package has
-exactly one `doc.go` containing only the package comment, and that comment is the authoritative
-description of the package's API. A short method that exists only to satisfy a standard
-library interface — `Error() string` on a type whose doc comment already states what the error
-means, `String() string` on a `Stringer` — carries no comment of its own; Go convention leaves
-these to speak for themselves.
+Each API package has one `doc.go` holding only the package comment, and that comment is the
+authoritative description of the package's API. It inventories every exported identifier with
+a one-clause role and points to the symbols for the rest; each contract is stated once, on its
+symbol's own doc comment. Production symbols carry doc comments. A short method that exists only
+to satisfy a standard library interface, `Error() string` on a type whose comment already says
+what the error means or `String() string` on a `Stringer`, needs no comment of its own. Whether
+an inventory is complete is the reviewer's judgement; no check enforces it.

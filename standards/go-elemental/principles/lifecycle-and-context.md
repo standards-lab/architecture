@@ -7,22 +7,25 @@ level: go-elemental
 
 # Lifecycle and context ownership
 
-Every Go Elemental application follows one process lifecycle, hosted by go-core's `lifecycle`
+Every Go Elemental web service follows one process lifecycle, hosted by go-core's `lifecycle`
 package, and one context-ownership convention. The lifecycle realizes the Elemental
 Architecture's infrastructure-service contract in Go: staged startup, reverse-stage drain, and
 named readiness reported to the probes.
 
-## The composition root owns the signal context
+## The entrypoint owns the signal context
 
-The composition root traps signals and derives the root context; it passes that context to the
-lifecycle coordinator's blocking run call, the one call that owns the sequence. go-core's
-`process` package holds this pre-infrastructure sequence (the signal-derived root context,
-failure and usage reporting before a logger exists, and the exit-code convention the reporters
-return), so it cannot drift between a program's binaries. A subsystem
-with a place in the process's dependency order is declared as a staged service, naming its
-name, its stage, its startup, shutdown, and readiness check in one declaration, while
-process-level callbacks register as hooks and monitors. Nothing executes before the run begins, and the
-coordinator installs no signal handlers of its own.
+The application's entrypoint, the minimal binary above the [composition
+root](../../../principles/composition-root.md), traps signals, derives the root context, and owns
+the exit code; a web service's entrypoint also loads the configuration, which its composition root
+never does. The web service's entrypoint passes the root context to the composition root's run
+call, which hands it to the lifecycle coordinator's blocking run call, the one call that owns the
+sequence. go-core's `process` package holds this pre-infrastructure sequence (the signal-derived
+root context, failure and usage reporting before a logger exists, and the exit-code convention the
+reporters return), so it cannot drift between a program's binaries. A subsystem with a place in the
+process's dependency order is declared as a staged service, naming its name, its stage, its startup,
+shutdown, and readiness check in one declaration, while process-level callbacks register as hooks
+and monitors. Nothing executes before the run begins, and the coordinator installs no signal
+handlers of its own.
 
 Not every composition-root layer registers a staged service. A layer with no resource and
 nothing that runs, such as the Elemental Architecture's Domain Service composition, declares
@@ -31,12 +34,13 @@ none and imports no part of this package: there is nothing in it to stage.
 ## The wiring rule
 
 A defect the composition root wires panics at construction, with the fix named: an
-unfinalized configuration, a missing pool, a malformed route prefix, a duplicate pattern, a
-registration after the router is sealed or after the coordinator has run. No runtime
-condition produces such a defect and no caller can recover from it sensibly, and the
-composition root is written once and runs at boot, so a loud failure there beats a silent one
-in production. A defect in configuration content, a reserved connection option or an invalid
-value, returns an error from the constructor that reads it, because configuration is input.
+unfinalized configuration, a missing pool, a malformed route prefix, a duplicate mount or
+service, a group modified after its module is built, a registration after the coordinator has
+run. No runtime condition produces such a defect and no caller can recover from it sensibly, and
+the composition root is written once and runs at boot, so a loud failure there beats a silent
+one in production. A defect in configuration content, a reserved connection option or an invalid
+value, returns an error from the call that reads it, the configuration's finalize step or the
+provider's constructor, because configuration is input.
 
 ## Cold start, hot start, drain
 

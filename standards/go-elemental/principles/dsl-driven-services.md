@@ -14,11 +14,10 @@ only what the language cannot do on its own.
 
 ## The two categories of infrastructure service
 
-A protocol-driven service keeps its expressive content in the host language. Authentication,
-object storage, and messaging are protocol-driven: the consumer calls operations with typed
-arguments, and the provider boundary is an interface over those operations. The
-[service tiers](../../../principles/service-tiers.md) principle describes that boundary, and
-it stands for those services.
+A protocol-driven service keeps its expressive content in the host language. Object storage
+is protocol-driven: the consumer calls operations with typed arguments, and the provider
+boundary is an interface over those operations. The
+[service tiers](../../../principles/service-tiers.md) principle describes that boundary.
 
 A DSL-driven service keeps its expressive content in a language the host cannot type-check.
 SQL is one. So are the graph query languages Cypher and Gremlin, a search engine's query
@@ -76,9 +75,10 @@ and vulnerability history, which no other infrastructure service carries.
 The standard makes the language the portable artifact. Authored SQL ports by editing SQL. The
 library axis collapses to the standard library's `database/sql` package and one driver, the
 same shape the protocol-driven services have. The dialect axis is handled by discipline: each
-file declares its tier, standard or native, a native file names the engine feature it uses and
-how another engine expresses it, and a lint enforces the declarations in CI. The native files
-of a repository are its complete port list.
+statement and pattern file declares its tier, standard or native, a native file names the engine
+feature it uses and how another engine expresses it, and a lint enforces the declarations in CI.
+The native files of a repository and its migrations, which are engine DDL by nature, are its
+complete port list.
 
 Portability by discipline is a deliberate trade, and the standard states it as one. The
 alternative, portability by construction through a builder that rejects an unsupported feature
@@ -101,10 +101,11 @@ already does.
 The conventions below are the standard's, followed by every repository that authors SQL and
 stated by none of them alone:
 
-- Every file declares its tier in its header, standard or native. A native file names the
-  engine feature it uses and how another engine expresses the same effect, so the native files
-  of a repository are its complete port list, found by one search. The conventions linter
-  refuses a standard file that uses a form the engine declares native.
+- Every statement and pattern file declares its tier in its header, standard or native. A
+  native file names the engine feature it uses and how another engine expresses the same effect,
+  so the native files are found by one search; with the migrations, which carry no tier, they
+  are a repository's complete port list. The conventions linter refuses a standard file that
+  uses a form the engine declares native.
 - A statement is named for its operation, never for its SQL verb. The file, the store method,
   the service method, and the route share one name.
 - A command's validation belongs to the domain's entity. Existence and uniqueness belong to

@@ -36,23 +36,31 @@ elements already describe. Features stay informal prose.
 
 Top to bottom:
 
-- **Application**: the deployable unit of a binary software project. The **application layer**
-  owns the infrastructure services and the process lifecycle, assembles the transport, and runs
-  the process. Its [composition root](principles/composition-root.md) is the package where the application
-  assembles its dependencies; it only declares the composition, and execution belongs to the
-  application layer. Application types (a web service, a CLI, a game) share this architecture;
-  they differ in composition-root initialization sequence, runtime cycle, and deployment
-  platform. A web service is an application whose form is a containerized public API.
-- **Reactor**: an entry point driven by an occurrence from outside the application rather than a
-  caller (a subscription, a poll interval, a schedule). It owns the transport connection the
-  occurrence arrives on, calls a Domain Service, and runs for the process lifetime: the inbound
-  counterpart to the application layer's transport, which a caller drives instead. A Reactor is
-  not a Domain Service; it dispatches to one.
+- **Application**: the deployable unit of a binary software project. The **application
+  layer** owns the infrastructure services and the process lifecycle, assembles the transport,
+  and runs the process. Its entrypoint is the minimal entry above the composition root: it
+  derives the signal context, hands it to the composition root's run call, and exits with the
+  code that call returns. A web service's entrypoint also loads the configuration and hands it to
+  the composition root, which never loads it. Its
+  [composition root](principles/composition-root.md), beneath the entrypoint, is the package
+  where the application assembles its dependencies; it declares the composition, and its run call
+  hands that declaration to the application layer's lifecycle, which executes it. Application
+  types (a web service, a CLI, a game) share this architecture; they differ in composition-root
+  initialization sequence, runtime cycle, and deployment platform. A web service is an
+  application whose form is a containerized public API.
+- **Reactor**: an entry point the lifecycle coordinator runs for the process lifetime, driven by an
+  occurrence rather than a caller (a subscription, an interval, a wake on demand). It owns what the
+  occurrence arrives on: the inbound counterpart to the application layer's transport, which a
+  caller drives instead. A Reactor commonly dispatches to a Domain Service, but a background
+  worker the application runs for the process lifetime is a Reactor too: go-web-service's
+  sweeper, woken on demand, on an interval, and at startup, is one. A Reactor is not a Domain
+  Service.
 - **Infrastructure Services**: the process-level services an application is composed on, such as
-  the logger, the database, storage, and auth. Their APIs are defined outside the application,
-  and they are distinct from domain services. They follow a uniform lifecycle contract: ordered
-  startup, reverse-order drain, readiness checks feeding the probes. Each is constructed and
-  registered once, declaratively, in the composition root.
+  the logger, the database, and storage. Their APIs are defined outside the application,
+  and they are distinct from domain services. A service that holds a resource follows a uniform
+  lifecycle contract: ordered startup, reverse-order drain, a readiness check feeding the probes.
+  Each is constructed once, declaratively, in the composition root, and registered there when it
+  has a lifecycle.
 - **Domain Service**: the public interface the application presents over a domain. A
   **domain** is a composition of one or more Entities around a **root Entity**, the Entity the
   domain's other Entities depend on and the one whose identity the domain's records carry. An
@@ -67,16 +75,6 @@ Top to bottom:
   defines its intrinsic capability, and the Domain Service decides what of that capability is
   exposed.
 
-**Events** are the architecture's single cross-system mechanism, and they are not a layer in the
-element stack: an event tells a system outside the domain that a mutation committed. The
-architecture defines emission only; delivery guarantees belong to the messaging system that
-receives the event. This is the [service tiers](principles/service-tiers.md) pattern
-applied to eventing. Events are never used inside the application: an internal cascade is a
-transactional command cascade through entity operations. The same is true on the inbound side: a
-Reactor consuming an event from another system is not an exception to it. The event stops being
-one at the process boundary; what crosses is the occurrence that triggers a Domain Service call,
-the same as any other Reactor source.
-
 ## The rules
 
 - **An element's primitives keep the language's idiomatic terms.** The architecture invents no
@@ -90,11 +88,11 @@ the same as any other Reactor source.
   Domain Service of the domain whose root owns the transaction, which composes the other
   entities' operations within it, its own Entities and another domain's alike.
 - **Dependencies flow downward through the elements.** The application layer depends on
-  everything it assembles; a Reactor depends on the infrastructure connection it owns and the
-  Domain Service it calls; domain services depend on their Entity and the infrastructure services
-  they use; entities depend on nothing above themselves. This is the organizational
-  [downward-dependency principle](principles/downward-dependencies.md), ordered by the
-  elements.
+  everything it assembles; a Reactor depends on what its occurrence arrives on and on the
+  Domain Service or infrastructure service it drives; domain services depend on their Entity and
+  the infrastructure services they use; entities depend on nothing above themselves. This is the
+  organizational [downward-dependency principle](principles/downward-dependencies.md), ordered by
+  the elements.
 - **A proven pattern sinks to the lowest level at which it is generic.** A pattern is proven in
   application code first, then graduates: to the application SDK when it is specific to the
   application type, to the core SDK when it is generic across application types. The template
@@ -123,6 +121,14 @@ and never loosen it:
   dependency rule between them.
 - [The composition root](principles/composition-root.md) — the one package where an application
   assembles and declares its composition.
+- [Rolling currency](principles/rolling-currency.md) — every chosen version is pinned and the
+  latest release.
+- [Validation-first layering](principles/validation-first.md) — each scope validates what it owns
+  before its first effect.
+- [Context architecture](principles/context-architecture.md) — every contextual detail has one
+  authoritative home.
+- [A standalone tool beside the library](principles/tool-beside-library.md) — an operator's use
+  case ships as a command beside the library.
 
 ## A note on "Domain Service"
 
