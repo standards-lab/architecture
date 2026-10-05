@@ -1,8 +1,8 @@
 # goal · quality
 
-- **State:** handoff
-- **Task:** honest-tests
-- **Branch:** honest-tests
+- **State:** idle
+- **Task:** none
+- **Branch:** none
 
 ## Tasks
 
@@ -89,15 +89,6 @@ Door          two-way: every change is a revertable test or lint-config
 ```
 
 
-## Handoff
-
-merge: the session brief was accepted and every branch is published; merge was blocked by this
-session's permission mode. Merge in order once checks pass: go-core #16, sqlate #14,
-go-database #27, go-web-sdk #35, go-observability #4, go-storage #11, blobfs #7,
-go-web-sdk-template #23, go-web-service #36, then architecture #28 (no `[remote] merge`
-configured here). Then switch each repository to main, pull, delete the local `honest-tests`
-branch, delete `.claude/briefs/quality.md`, and set State idle, Task and Branch none, dropping
-this section, as a bookkeeping commit on main.
 
 ## Decisions
 
