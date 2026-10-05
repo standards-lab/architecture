@@ -1,8 +1,8 @@
 # goal · quality
 
-- **State:** idle
-- **Task:** none
-- **Branch:** none
+- **State:** building
+- **Task:** architecture-diet
+- **Branch:** architecture-diet
 
 ## Tasks
 
@@ -11,84 +11,149 @@
 3. [ ] architecture-diet
 4. [ ] standards
 
-## Task brief · honest-tests
+## Task brief · architecture-diet
 
 ```
-Problem       The nine code repos' suites pass, but a green check proves
-              less than it claims: tests restate constants, read
-              unexported fields, struct shapes and SDK option structs, or
-              only construct; 29 white-box *_internal_test files bypass
-              the exported API. A suite that can't fail can't guard the
-              API it documents.
-Behaviors     1. Every test in the nine repos lives in its package's
-                 external test package and drives only the exported API.
-                 No *_internal_test file remains. The one white-box file
-                 is export_test, and only to export a hook that injects a
-                 clock or probe the API can't reach deterministically;
-                 the tests that use the hook stay black-box.
-              2. check fails on any white-box test file other than
-                 export_test: testpackage's skip regexp narrows to
-                 export_test in all nine repos, reversing the checks
-                 Decision that allowed the _internal_test suffix.
-              3. No test lies. A whole-suite review finds no test that is
-                 tautological (restates a constant or the implementation),
-                 structure-sensitive (reflects on struct shape or tags,
-                 reads unexported or SDK fields, asserts concrete types,
-                 counts implementation calls, hard-codes inventory sizes),
-                 or unable to fail (only constructs, or mocks away the
-                 failure that matters).
-              4. A lying test whose behavior the package's doc.go or
-                 README states is rewritten at the exported seam; it is
-                 deleted only when another test already proves that
-                 behavior. No documented behavior loses its last test.
-              5. The only guard test kept is blobfs's sha256 pin on
-                 released migrations, now read through the exported
-                 migration set. Startup stage order (template,
-                 go-web-service) is proved through observable startup
-                 order, and blobfs entity NULL handling through a scan on
-                 sqlate's scripted driver, or each is deleted where
-                 another test already covers it.
-              6. Each repo's integration and acceptance suites are judged
-                 with the same rules and pass under Docker through the
-                 repo's own integration or acceptance task. check stays
-                 unit-only.
-              7. go-web-service runs the collector image 0.162.0, and its
-                 currency exits 0.
-Test seams    `mise run check` per repo (testpackage enforces the
-              black-box rule; the unit suites prove the API), and each
-              repo's integration / acceptance task under Docker
-Slices        Workspace order. In each slice the standards-reviewer
-              profile runs over that scope's whole suite, every test file
-              and not the branch diff, with Behaviors 1-6 as its rules. It
-              rewrites or deletes, commits, and the slice is done when the
-              scope has no white-box file beyond allowed export_test
-              hooks, check passes, and the scope's integration or
-              acceptance task passes where it has one. The end-of-task
-              diff review then runs as usual.
-              1 go-web-service collector upgrade (compose image 0.162.0;
-                currency and check pass)
-              2 go-core   3 sqlate   4 go-database   5 go-web-sdk
-              6 go-observability   7 go-storage (Azurite acceptance)
-              8 blobfs (acceptance)   9 go-web-sdk-template (integration)
-              Slices 2-9 each narrow that repo's testpackage regexp.
-              10 go-web-service: the service
-              11 go-web-service: its integration suite (run isolated)
-              12 go-web-service: tools/slab, then narrow testpackage for
-                 the whole repo
-Out of scope  Coverage of any kind (no threshold, no before/after
-              figures); mutation testing; production-code changes beyond
-              a clock or probe hook an export_test reaches (any other
-              need escalates); the architecture repo beyond this record
-              (tests-and-docs changes go to architecture-diet);
-              STANDARDS.md, CLAUDE.md and the marathon.toml currency key
-              (standards); releases and tags; integration tests in check
-              or CI changes.
-Door          two-way: every change is a revertable test or lint-config
-              file on a branch, plus one compose image tag; no tags
-              pushed.
+Problem       The architecture layer is what each STANDARDS.md will point
+              the standards-reviewer at, yet it prescribes more than the
+              code does: pages contradict the code (who owns the signal
+              context, a lint step that doesn't exist, doc comments, the
+              guard's home, CI shape), describe speculation (events,
+              derived standards, worker SDKs, unbuilt libraries), hold a
+              harness level written for marathon 0.15, and leave validated
+              cross-repo rules (adjacency, sourcing, harness rules, doc.go
+              inventories, timeouts) stranded in notes. The repository
+              also lacks marathon 0.16's check, merge and briefs
+              conventions. The standards task points into this layer
+              next, so it must be trimmed first.
+Repos         claude-plugins, architecture
+Behaviors     1. Every page, kept or new, states only what merged code in
+                 the nine code repositories expresses or a check
+                 enforces; the end-of-task review can name the code
+                 behind each claim.
+              2. The architecture repository's check fails when any
+                 relative link in its markdown doesn't resolve, or when a
+                 page's front matter lacks the keys the root README's
+                 schema requires for its type. It passes on the finished
+                 tree.
+              3. The architecture repository's marathon configuration
+                 names that check and the merge command
+                 `gh pr merge --merge --delete-branch`, with no ci key;
+                 session briefs are git-ignored and the retired report
+                 file isn't listed.
+              4. The harness level is gone from the architecture
+                 repository: no harness pages, no harness row or section
+                 in the root README, no harness mention in the
+                 context-architecture principle, CLAUDE.md or the context
+                 orientation. Tool-based skills lives on as a planning
+                 note in claude-plugins' context, framed as planned work
+                 for v1.harness.tooling, listed in its orientation map;
+                 claude-plugins' marathon-extraction note cites it there;
+                 claude-plugins' check passes.
+              5. The architecture says, as practised, that an
+                 application's entrypoint derives the signal context,
+                 loads configuration and owns the exit code, and that its
+                 composition root beneath it only declares the
+                 composition. The Application element, the
+                 composition-root principle and Go Elemental's
+                 lifecycle-and-context agree; "entrypoint" is prose in
+                 Application, and the element list stays at five; the
+                 entrypoint/composition-root split note is gone.
+              6. No page describes event emission, derived or
+                 re-expressed standards, the external catalog, or a
+                 derives front-matter field; no page names a worker SDK,
+                 a reference-architecture variant, or go-auth,
+                 go-messaging or go-ai. The command-line SDK tier stays;
+                 the Reactor element stays.
+              7. Repository topology names an adjacent position for
+                 standalone libraries outside the five tiers; the Go
+                 Elemental catalog lists blobfs beside sqlate as
+                 adjacent; topology-and-naming exempts adjacent libraries
+                 from the go- prefix. No shipped-schema exception is
+                 stated.
+              8. Service tiers names only standards with built code and
+                 calls the import boundary a reviewed discipline, not a
+                 lint step.
+              9. Rolling currency covers container images and leaves
+                 indirect dependencies to the ecosystem's resolver, as
+                 each repository's currency command does.
+              10. Go Elemental's dependencies principle states the line
+                  as "bottom-up, no provider in a base, kept light",
+                  held by discipline, and gains the sourcing rule: when
+                  to write a capability in-house and when to source one,
+                  the markers of a standard library, and how sourced
+                  weight is isolated.
+              11. Baseline-standard ownership's worked case is sqlate's
+                  optimistic-concurrency guard; no unbuilt library is
+                  named.
+              12. Tests and documentation states, as practised: the
+                  black-box rule with the export_test clock-or-probe
+                  allowance, enforced by check through testpackage; the
+                  integration and acceptance suites and where each runs;
+                  provider tests that may drive a loopback port-0
+                  server; a link to marathon's standards-reviewer
+                  definition of a lying test; the integration harness
+                  rules the template's and service's suites follow; and
+                  doc.go as the authoritative API description with an
+                  inventory of every export, each contract stated once
+                  on its symbol. "Written without doc comments" and
+                  "provider tests assert construction" are gone.
+              13. Releases and CI states, as practised: one check per
+                  repository, with currency and upgrade beside it;
+                  release preparation through a pull request; a tag
+                  whose release failed may be deleted and re-pushed at
+                  the same version, while a released tag is never
+                  re-cut. No per-module CI matrix is described.
+              14. A Go Elemental principle "Timeouts and deadlines" (key
+                  timeouts), listed after lifecycle-and-context, states
+                  the four validated rules: tight server timeouts with
+                  size-derived per-route deadlines, a per-try deadline
+                  with an idle read bound, a retry budget inside the
+                  write timeout, and the upload read deadline as the
+                  client's.
+              15. The Go Elemental README points to the dependencies
+                  principle instead of restating the line; the root
+                  README says a page arrives only from validated code;
+                  CLAUDE.md holds navigation pointers only.
+              16. Only goal records remain in the architecture
+                  repository's context; every note this task consumes or
+                  cuts is gone (standards audit, promote on fit, testing
+                  harness, adjacent position, dependency sourcing, SQL
+                  meta language, entrypoint split), and the orientation's
+                  map matches.
+Test seams    Each repository's check (architecture's new script;
+              claude-plugins' scripts/check.sh); the end-of-task
+              standards-reviewer, reading each changed page against the
+              code it cites.
+Slices        No upgrade slice (claude-plugins current; architecture has
+              no currency command). Each slice leaves the checks passing.
+              1 Conventions: the check, marathon configuration, ignore
+                file (B2, B3); passes on today's tree
+              2 Harness level out; tool-based skills note in
+                claude-plugins; CLAUDE.md to pointers; root README
+                validated-code rule (B4, B15 in part)
+              3 Entrypoint and composition root (B5)
+              4 Speculation cut and topology: events, derived standards
+                and catalog, worker SDK and variants, adjacency, service
+                tiers, rolling currency (B6-B9)
+              5 Go Elemental dependencies, baseline standards,
+                topology-and-naming, README pointer (B10, B11, B15)
+              6 Tests and documentation; releases and CI (B12, B13)
+              7 Timeouts page (B14)
+              8 Notes culled; orientation updated (B16)
+Out of scope  Any code repository; STANDARDS.md files and their pointers
+              (standards task); claude-plugins beyond the tool-based
+              skills note, its orientation entry and the
+              marathon-extraction citation; coordinator edits (pending);
+              CI for architecture; a currency command; releases or tags;
+              the shipped-schema exception; new pages beyond timeouts.
+Door          two-way: prose and configuration on branches, revertable;
+              deleted pages stay in git history; no tags.
 ```
 
+## Progress
 
+slices 0/8 committed · standards — · spec — · editor —
 
 ## Decisions
 
@@ -138,9 +203,26 @@ Door          two-way: every change is a revertable test or lint-config
 - honest-tests: go-storage's tests re-run the test binary as a child process to drive the testing.T-taking storagetest suites over broken clients and to observe the SDK's default endpoint through a proxy.
 - honest-tests: tests that assert the SQL text or operation sequence on sqlate's scripted driver stay where the composed SQL or the transaction protocol is the package's documented output.
 
+- architecture-diet: harness/ leaves the architecture layer; tool-based-skills moves to claude-plugins' context as a planning note in this task (claude-plugins joins the task, architect's call); the other seven pages are deleted, since marathon 0.18's own files express what still holds.
+- architecture-diet: the composition root is restated as practised (a minimal entrypoint owns signals, config load and exit; the composition root declares), absorbing backlog goal entrypoint-composition-split.
+- architecture-diet: "entrypoint" is prose inside the Application element, not a sixth element.
+- architecture-diet: Events cut until v1.messaging builds emission; Reactor stays (the sweeper expresses it).
+- architecture-diet: derived standards, the external catalog, re-expression and the `derives` field cut; dotnet-mirror and graduation keep that intent.
+- architecture-diet: adjacency lands for sqlate and blobfs; the shipped-schema amendment is culled until a second shipper exists.
+- architecture-diet: dependency sourcing lands as a section of Go Elemental dependencies.
+- architecture-diet: integration harness rules land in tests-and-docs.
+- architecture-diet: promote-on-fit culled; architecture.md's sinking rule already says fit.
+- architecture-diet: domain-architecture candidates stay out of the layer; only go-web-service expresses them, so they become its STANDARDS.md lines.
+- architecture-diet: doc.go inventory and one-contract-one-home land in tests-and-docs, replacing "written without doc comments".
+- architecture-diet: timeouts land as Go Elemental page `timeouts`, "Timeouts and deadlines", after lifecycle-and-context.
+- architecture-diet: sql-meta-language.md cut; the backlog entry carries the idea.
+- architecture-diet: standards-audit.md culled at task end, making its update pending edit moot.
+- architecture-diet: the check is a bash script for links and front matter; rejected lychee (a pinned tool and currency surface for two checks bash covers).
+- architecture-diet: merge is plain `gh pr merge --merge --delete-branch` with no CI, since `gh pr checks` exits 1 with no checks; rejected a CI workflow (action pins, a currency surface).
+
 ## Pending edits
 
-- architecture-diet: restate `dependencies.md`'s line as "bottom-up, no provider in a base, kept light", held by discipline; drop `service-tiers.md`'s claim that a lint step checks the boundary; update `context/standards-audit.md`'s split-check suggestion and drop its claim that go-web-service has no `.golangci*` file (it has `.golangci.yml`, enabling testpackage, with no depguard rule).
+- architecture-diet: restate `dependencies.md`'s line as "bottom-up, no provider in a base, kept light", held by discipline; drop `service-tiers.md`'s claim that a lint step checks the boundary.
 - standards: each STANDARDS.md points the reviewer to the hierarchy, provider, and doc.go discipline.
 - v1.deployment: Dockerfile base images join each repository's currency.
 - architecture-diet: `standards/go-elemental/principles/release-and-ci.md` still prescribes a per-module CI matrix and omits check, currency, and upgrade; restate it from the practice checks established.
@@ -150,3 +232,9 @@ Door          two-way: every change is a revertable test or lint-config
 - architecture-diet: absorb the `release-and-ci` task into the existing `release-and-ci.md` restatement (release prep via PR; a failed-release tag may be re-pushed at the same version; a released tag is never re-cut).
 - coordinator · roadmap: remove `[goals.quality.tasks.release-and-ci]` from the roadmap.
 - coordinator · roadmap: add backlog goal `slab-json-partial-color`: go-web-service tools/slab `style.JSON` returns partly colored output when the input breaks after the first token, though its comment says any tokenizer error returns the input unchanged; fix the code or the comment.
+- coordinator · roadmap: `[goals.quality]` repos and `[goals.quality.tasks.architecture-diet]` repos add claude-plugins.
+- coordinator · roadmap: v1.harness.tasks.sitrep and .tooling context keys point to `claude-plugins/context/tool-based-skills.md`; v1.harness.tasks.local-models drops "architecture" from its repos.
+- coordinator · notes: `ai-strategy.md` and `ai-hosting.md` cite claude-plugins' tool-based-skills note, not `architecture/harness/`.
+- coordinator · roadmap: remove backlog goal `entrypoint-composition-split` (entry and table); backlog `sql-meta-language` drops its context key; v1.middleware's context replaces `architecture/context/dependency-sourcing.md` with `architecture/standards/go-elemental/principles/dependencies.md`.
+- standards: go-web-service's STANDARDS.md carries the three domain-architecture judgement lines (domain layer as compositional grouping; a capability-named translation file per domain; cross-domain coupling as SQL downward and an injected interface upward) and resolves `context/domain-architecture.md`'s "Promotion candidates".
+- standards: go-web-sdk, go-storage and go-web-service STANDARDS.md point to the timeouts page; go-web-sdk's README "organization's markers" points to the dependencies sourcing section.
