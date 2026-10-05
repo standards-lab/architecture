@@ -153,7 +153,7 @@ Door          two-way: prose and configuration on branches, revertable;
 
 ## Progress
 
-slices 8/8 committed · standards — · spec — · editor —
+slices 8/8 committed · standards ✓ (b2936ea) · spec — · editor —
 
 ## Decisions
 
@@ -239,5 +239,8 @@ slices 8/8 committed · standards — · spec — · editor —
 - standards: go-web-service's STANDARDS.md carries the three domain-architecture judgement lines (domain layer as compositional grouping; a capability-named translation file per domain; cross-domain coupling as SQL downward and an injected interface upward) and resolves `context/domain-architecture.md`'s "Promotion candidates".
 - standards: go-web-sdk, go-storage and go-web-service STANDARDS.md point to the timeouts page; go-web-sdk's README "organization's markers" points to the dependencies sourcing section.
 - claude-plugins · CLAUDE.md and context/README.md: stop calling the repository "the harness level of the organization's reference architecture"; architecture-diet removed that level.
-- standards: go-core `process/doc.go` says "a composition root composes its run function from it"; restate it as the entrypoint, per architecture-diet's composition-root page.
+- standards: go-core `process/doc.go` says "a composition root composes its run function from it"; restate it as the entrypoint, per architecture-diet's composition-root page; likewise `lifecycle/doc.go`'s "a composition root builds" the signal context.
 - coordinator · notes: `service-organization.md` cites `architecture.md`'s sinking rule and `principles/independent-releases.md` instead of the culled `architecture/context/promote-on-fit.md`; `auth-strategy.md` and `cli-applications.md` cite the sourcing section of `architecture/standards/go-elemental/principles/dependencies.md` instead of `dependency-sourcing.md`; v1.middleware's summary prose drops "(dependency-sourcing.md)" for that page.
+- standards: go-web-service's and blobfs/postgres's currency scripts report `tool` directives (sqlint), which their indirect-requirement filter hides today, as rolling-currency's developer-tools coverage states.
+- standards: sqlate's `postgres/CHANGELOG.md` and `sqlint/CHANGELOG.md` gain an `[Unreleased]` section and link definitions for their latest headings (Keep a Changelog, per release-and-ci).
+- standards: go-observability's `otlp` sub-module requires go-core v0.4.1 while its base is on v0.5.0; bring it current.
