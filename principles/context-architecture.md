@@ -13,7 +13,7 @@ of truth from the moment it is written, and it drifts from the moment the origin
 
 The principle governs every layer that carries written context: the architecture and its
 principle pages, each repository's README, documentation, and `CLAUDE.md` file, each project's
-working context, and the harness instructions the organization builds with. It applies the
+working context, and each workflow skill's files. It applies the
 [downward-dependency principle](downward-dependencies.md) to prose: a detail is defined once,
 at the layer whose authority it is, and every other layer refers to that definition by link.
 

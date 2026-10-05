@@ -32,7 +32,6 @@ documents one. Each level below belongs to the level above.
 | Architecture | [`architecture.md`](architecture.md) | The Elemental Architecture: the compositional elements a program is built from and the rules that bind them, independent of language, with its [principles](principles/README.md) |
 | Standards | [`standards/<key>/`](standards/README.md) | Each standard: a technology-specific implementation of the architecture, declaring its own dependency line and the principles its modules share |
 | Modules | The repositories | The worked examples, in three classes: library (the core SDK, application SDKs, and infrastructure libraries), template, and app; each standard's README catalogs its members |
-| Harness | [`harness/`](harness/README.md) | Principles for the agentic infrastructure the organization builds with; outside the hierarchy |
 
 Three terms bind the levels. An **architecture** defines a domain's compositional elements and
 the rules that bind them, independent of any technology. A **standard** implements an
@@ -48,13 +47,6 @@ architecture's.
   Architecture: a complete reference architecture on the Go standard library, with the smallest
   deliberate dependency surface. Its README catalogs its member repositories by tier.
 
-## Harness
-
-The harness stands outside the hierarchy: it governs the agentic infrastructure the
-organization builds its modules with, not the software they contain. Its principles are
-cataloged at [`harness/`](harness/README.md), with the harness repositories as the worked
-examples.
-
 ## Catalog
 
 Implementations that live outside this blueprint, graduated organizations and external
@@ -68,8 +60,9 @@ This repository holds what has generalized past one repository: a principle, a d
 convention. Nothing a reader can infer from a repository's source belongs here. A repository's
 implementation is documented in the repository, in its README, its package documentation, and
 its source, and a page here that restates a repository's implementation is a defect. A page
-arrives by promotion: a concept in the repository that owns it, a design note once it settles,
-and a page here once the design has generalized.
+arrives only from validated code: a principle becomes a page once more than one repository's
+merged code expresses it. A principle no code follows yet stays a note in the repository that
+owns it.
 
 ## Page metadata
 
@@ -84,8 +77,8 @@ type: standard            # index | principle | architecture | standard
 
 Per-type fields:
 
-- `type: principle` — `level`: `architecture`, `harness`, or the key of the standard the
-  principle attaches to.
+- `type: principle` — `level`: `architecture`, or the key of the standard the principle
+  attaches to.
 - `type: architecture` — `status`: `draft` | `active` | `superseded`.
 - `type: standard` — `architecture`: the key of the architecture the standard implements;
   `status` as above; `derives`: the key of the standard it re-expresses, when it does.

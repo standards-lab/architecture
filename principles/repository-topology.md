@@ -31,8 +31,8 @@ and every module repository of a standard belongs to exactly one:
   focused reference architecture, created when a consumer demands it, never a switch inside the
   cohesive one.
 
-The harness repositories (agent tooling) and the organization-context repositories stand outside
-the five tiers.
+The agent-tooling repositories and the organization-context repositories stand outside the five
+tiers.
 
 ## Dependencies run downward, one tier at a time
 
