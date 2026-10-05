@@ -31,7 +31,7 @@ documents one. Each level below belongs to the level above.
 |-------|----------|-----------------|
 | Architecture | [`architecture.md`](architecture.md) | The Elemental Architecture: the compositional elements a program is built from and the rules that bind them, independent of language, with its [principles](principles/README.md) |
 | Standards | [`standards/<key>/`](standards/README.md) | Each standard: a technology-specific implementation of the architecture, declaring its own dependency line and the principles its modules share |
-| Modules | The repositories | The worked examples, in three classes: library (the core SDK, application SDKs, and infrastructure libraries), template, and app; each standard's README catalogs its members |
+| Modules | The repositories | The worked examples, in three classes: library (the core SDK, application SDKs, infrastructure libraries, and adjacent libraries), template, and app; each standard's README catalogs its members |
 
 Three terms bind the levels. An **architecture** defines a domain's compositional elements and
 the rules that bind them, independent of any technology. A **standard** implements an

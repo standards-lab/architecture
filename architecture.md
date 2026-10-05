@@ -39,12 +39,13 @@ Top to bottom:
 - **Application**: the deployable unit of a binary software project. The **application layer** owns
   the infrastructure services and the process lifecycle, assembles the transport, and runs the
   process. Its entrypoint is the minimal entry above the composition root: it derives the signal
-  context, loads the configuration, and owns the exit code; it does nothing else. Its [composition
-  root](principles/composition-root.md), beneath the entrypoint, is the package where the
-  application assembles its dependencies; it only declares the composition, and execution belongs to
-  the application layer. Application types (a web service, a CLI, a game) share this architecture;
-  they differ in composition-root initialization sequence, runtime cycle, and deployment platform. A
-  web service is an application whose form is a containerized public API.
+  context, loads the configuration, hands both to the composition root, and exits with the code the
+  run call returns; it does nothing else. Its [composition root](principles/composition-root.md),
+  beneath the entrypoint, is the package where the application assembles its dependencies; it
+  declares the composition, and its run call hands that declaration to the application layer's
+  lifecycle, which executes it. Application types (a web service, a CLI, a game) share this
+  architecture; they differ in composition-root initialization sequence, runtime cycle, and
+  deployment platform. A web service is an application whose form is a containerized public API.
 - **Reactor**: an entry point driven by an occurrence from outside the application rather than a
   caller (a subscription, a poll interval, a schedule). It owns the transport connection the
   occurrence arrives on, calls a Domain Service, and runs for the process lifetime: the inbound
@@ -52,9 +53,10 @@ Top to bottom:
   not a Domain Service; it dispatches to one.
 - **Infrastructure Services**: the process-level services an application is composed on, such as
   the logger, the database, and storage. Their APIs are defined outside the application,
-  and they are distinct from domain services. They follow a uniform lifecycle contract: ordered
-  startup, reverse-order drain, readiness checks feeding the probes. Each is constructed and
-  registered once, declaratively, in the composition root.
+  and they are distinct from domain services. A service that holds a resource follows a uniform
+  lifecycle contract: ordered startup, reverse-order drain, a readiness check feeding the probes.
+  Each is constructed once, declaratively, in the composition root, and registered there when it
+  has a lifecycle.
 - **Domain Service**: the public interface the application presents over a domain. A
   **domain** is a composition of one or more Entities around a **root Entity**, the Entity the
   domain's other Entities depend on and the one whose identity the domain's records carry. An
@@ -115,6 +117,14 @@ and never loosen it:
   dependency rule between them.
 - [The composition root](principles/composition-root.md) — the one package where an application
   assembles and declares its composition.
+- [Rolling currency](principles/rolling-currency.md) — every chosen version is pinned and the
+  latest release.
+- [Validation-first layering](principles/validation-first.md) — each scope validates what it owns
+  before its first effect.
+- [Context architecture](principles/context-architecture.md) — every contextual detail has one
+  authoritative home.
+- [A standalone tool beside the library](principles/tool-beside-library.md) — an operator's use
+  case ships as a command beside the library.
 
 ## A note on "Domain Service"
 

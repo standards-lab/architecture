@@ -38,10 +38,11 @@ import-boundary rule of the [service tiers](../../../principles/service-tiers.md
   as it, and on another adjacent library below it, never on a tier: sqlate's base takes the
   standard library alone, and blobfs's takes sqlate and `golang.org/x/text`. An engine is a
   sub-module that pins its driver.
-- **Infrastructure libraries** — a base module depends on the standard library, go-core, and
-  the adjacent library it builds on, if any. Each provider is a module of its own whose
-  `go.mod` pins its driver, so a consumer that needs only the standard tier never pulls a
-  driver.
+- **Infrastructure libraries** — a base module depends on the standard library, go-core, the
+  adjacent library it builds on, if any, and what its repository's stated line admits:
+  go-observability's base carries the OpenTelemetry API and SDK, and `otelhttp` as a stated v0
+  exception. Each provider is a module of its own whose `go.mod` pins its driver, so a consumer that
+  needs only the standard tier never pulls a driver.
 - **Application SDKs** — the base module depends on the standard library and go-core. An
   application SDK has no providers: its standard tier is the technology's common standard over
   the transport the platform already provides. A library it sources is pinned in a capability
@@ -50,8 +51,10 @@ import-boundary rule of the [service tiers](../../../principles/service-tiers.md
 - **Templates** — go-core and the template's one application SDK, at pinned releases, and
   nothing else. A template is engine-free: no data engine declared, no provider imported; a
   generated application selects providers in its own composition root.
-- **Reference architectures** — the application SDK, the infrastructure and adjacent libraries
-  it composes, and the providers of its declared stack, each at a pinned release. Provider
+- **Reference architectures** — the application SDK and the capability sub-modules it uses, the
+  infrastructure and adjacent libraries it composes, the standard API an infrastructure library
+  exposes in its contract (go-web-service takes OpenTelemetry's metric SDK beside
+  go-observability), and the providers of its declared stack, each at a pinned release. Provider
   imports are confined to the packages the import boundary declares.
 
 ## Sourcing
@@ -74,20 +77,22 @@ A standard library shows these markers, in rough order of weight:
 5. It solves a specification or a threat model, not a preference. Convenience libraries for
    binding, rendering, or validation are preferences, and preferences stay in-house.
 
-A sourced library enters as a pinned `go.mod` entry, never copied into the tree, and its weight
-is isolated by module: a capability sub-module of an application SDK or a provider sub-module
-of an infrastructure library, which the base module never imports. A repository that admits a
-sourced library states its line beside its link to the standard: the category it admits and
-the library taken under it. A capability that collaborates with an infrastructure service lives
-in that service's library, over standard-library types, never in an application SDK.
+A sourced library enters as a pinned `go.mod` entry, never copied into the tree, and its weight is
+isolated by module: a capability sub-module of an application SDK or a provider sub-module of an
+infrastructure library, which the base module never imports, unless the repository states an
+exception for its base module, as go-observability does for `otelhttp`. A repository that admits a
+sourced library states its line beside its link to the standard: the category it admits and the
+library taken under it. A capability that collaborates with an infrastructure service lives in that
+service's library, over standard-library types, never in an application SDK.
 
 go-web-sdk is the worked case for a capability sub-module. Its README lets a middleware
 sub-module admit a sourced dependency in one category, a specification surface or a threat
 model, under the organization's markers, and keeps cryptography out of the SDK.
 `middleware/rate-limit` takes `github.com/go-chi/httprate` under the threat-model category,
-pinned in its own `go.mod`; the base module requires go-core alone. go-observability is the worked case for a stated exception:
-its README admits `otelhttp`, from a contrib repository that has never released its
-instrumentation modules past v0, as a stated v0 exception that passes every other marker.
+pinned in its own `go.mod`; the base module requires go-core alone. go-observability is the
+worked case for a stated exception: its README admits `otelhttp`, from a contrib repository that
+has never released its instrumentation modules past v0, as a stated v0 exception that passes
+every other marker.
 
 ## Peers compose in the application
 
@@ -119,11 +124,11 @@ import at the composition root and no change to the base module.
 
 ## Integration is structural where it can be
 
-A library integrates with go-core by implementing its contracts rather than by importing more
-of it than it uses. The configuration contract is imported where a module's configuration block
-joins the layered load. Lifecycle integration is structural: a module's start, shutdown, and
-readiness methods match the coordinator's hook signatures, and the composition root registers
-them, so the module itself needs no lifecycle import. Integration is also optional per layer: a
-composition-root layer with nothing that starts, stops, or reports readiness, the Elemental
-Architecture's Domain Service composition among them, registers nothing and needs no lifecycle
-import either.
+A library integrates with go-core by implementing its contracts rather than by importing more of it
+than it uses. The configuration contract is imported where a module's configuration block joins the
+layered load. Lifecycle integration is structural: a module's start, shutdown, and readiness methods
+match the coordinator's hook signatures, and the composition root registers them, so the module
+itself needs no lifecycle import to integrate; go-web-sdk imports it only because its readiness
+probe reports the coordinator's checks. Integration is also optional per layer: a composition-root
+layer with nothing that starts, stops, or reports readiness, the Elemental Architecture's Domain
+Service composition among them, registers nothing and needs no lifecycle import either.

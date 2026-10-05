@@ -38,7 +38,8 @@ where it assembles its dependencies: it constructs the providers, the pools, the
 the configuration, and passes them to the packages that use them. A package that
 interfaces at the native tier wraps that use and presents the standard tier upward: the domain
 package that owns engine-specific SQL exposes plain queries and commands to its callers. Only
-the composition root, the binaries, and packages that declare native use import a provider;
+the composition root, the binaries, and the packages the design documentation declares import a
+provider;
 every other package works against the standard tier and stays provider-free.
 
 The boundary is declared in the application's design documentation and held in review: it is a
@@ -49,8 +50,8 @@ migrations, and the domain packages that declare native use. Nothing has to be d
 
 ## Three classes of technology, by swap cost
 
-How much work moving between providers of a technology requires is declared per service, never
-assumed. Each service's documentation classes its technology and states, in one sentence, what
+How much work moving between providers of a technology requires is declared, never assumed: the
+consuming application's design documentation classes each technology it composes and states what
 changes when the provider does.
 
 - **Interchangeable** — moving providers is a configuration change. The application exercises

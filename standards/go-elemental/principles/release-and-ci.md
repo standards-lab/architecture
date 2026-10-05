@@ -7,15 +7,15 @@ level: go-elemental
 
 # Releases and CI
 
-How Go Elemental repositories are checked, kept current, versioned, and released. Every
-repository releases independently ([independent releases](../../../principles/independent-releases.md));
-this page states the shared mechanics.
+How Go Elemental repositories are checked, kept current, versioned, and released. Every repository
+releases independently ([independent releases](../../../principles/independent-releases.md)); this
+page states the shared mechanics.
 
 ## One check per repository
 
-Each repository has one check, `mise run check`, read-only and deterministic, stopping at the
-first failure. For every module in the repository's module list, with the workspace file
-disabled (`GOWORK=off`), it runs the Go SDK's gates and then golangci-lint:
+Each repository has one check, `mise run check`, read-only and deterministic, stopping at the first
+failure. For every module in the repository's module list, with the workspace file disabled
+(`GOWORK=off`) so a broken version pin fails it, it runs the Go SDK's gates and then golangci-lint:
 
 - `go build ./...`
 - `go vet ./...`
@@ -31,21 +31,23 @@ conventions lint after the loop, and the template and go-web-service vet, fix, a
 ([tests and documentation](tests-and-docs.md)). The template's check runs inside its
 `template/` subtree.
 
-CI runs the same check, so the gate is the one a developer runs. Each repository's CI workflow
-has one `check` job that installs the pinned tools with mise and runs `mise run check`, on
-every pull request and push to `main`; there is no per-module matrix, because the check loops
-over the modules itself. A repository with a suite beyond the unit tier adds a job for it:
+CI runs the same check, so the gate is the one a developer runs. Each repository's CI workflow has
+one `check` job that installs the pinned tools with mise and runs `mise run check`, on every pull
+request into `main` and every push to it; there is no per-module matrix, because the check loops
+over the modules itself. A suite beyond the unit tier that CI runs has a job of its own:
 go-storage's `acceptance` job runs azureblob against Azurite, and the template's and
 go-web-service's `integration` job runs the integration tier on push to `main` and on manual
-dispatch. The Go toolchain and golangci-lint versions are pinned in `mise.toml`, which CI and a
-developer's machine both read, so the gate moves only by a deliberate bump.
+dispatch. sqlate's and blobfs's postgres suites have no job; they run on a developer's machine
+([tests and documentation](tests-and-docs.md)). The Go toolchain and golangci-lint versions are
+pinned in `mise.toml`, which CI and a developer's machine both read, so the gate moves only by a
+deliberate bump.
 
 ## Currency and upgrade
 
 Beside the check, two development-time tasks keep a repository current:
 
 - `mise run currency` runs the repository's `scripts/currency.sh`, which reports every
-  requirement, Go version, tool, and action pin, and where the repository has one, every
+  direct requirement, Go version, tool, and action pin, and where the repository has one, every
   container image tag, that trails its latest release, and exits non-zero when it reports
   any. It reads the network and writes nothing.
 - `mise run upgrade` moves every module's `go` directive to the current Go minor, upgrades its
@@ -65,15 +67,17 @@ Each artifact keeps its own `CHANGELOG.md` in Keep-a-Changelog form: dated headi
 between cuts, and link-reference definitions resolving each bracketed heading to its compare or
 tag URL. There is no umbrella version spanning a base module and its sub-modules.
 
-Each repository's release workflow has one `release` job, triggered by a pushed tag. It derives
-the module's path prefix and changelog from the tag, extracts the matching changelog section,
-and creates the GitHub release; runs for the same tag are serialized.
+Each repository's release workflow has one `release` job, triggered by a pushed tag. A
+repository with sub-modules derives the module's path prefix and changelog from the tag; a
+repository with one artifact names them in the workflow. The job extracts the matching changelog
+section and creates the GitHub release; runs for the same tag are serialized.
 
 Release preparation lands on `main` through a pull request, like any other change: the
 changelog date, metadata edits, and the README brought current with the release's changes. A
 ruleset on `main` requires the pull request in every repository except go-storage and blobfs.
 The tag is pushed only after `main`'s CI run passes, the integration job included where the
-repository has one, so a release never points at a commit that failed CI.
+repository has one, so a release never points at a commit that failed CI. This is practice, not
+a gate: no ruleset requires a status check and the release workflow runs no CI of its own.
 
 A tag whose release failed may be deleted and re-pushed at the same version once the fix is on
 `main`. A released tag is never re-cut: once the module proxy has fetched a version, the
@@ -110,6 +114,6 @@ ships.
 
 Each repository defines its developer tasks in `mise.toml`: `check`, `currency`, and `upgrade`,
 and beside them conveniences such as `test`, `vet`, `fmt`, `tidy`, and `lint`, each wrapping a
-plain Go command, plus `integration` or `acceptance` where the repository has such a suite and
-tasks that start and stop its compose stack. The repository works without mise; the tasks are a
+plain command, plus `integration` or `acceptance` where the repository runs such a suite locally
+and tasks that start and stop its compose stack. The repository works without mise; the tasks are a
 convenience.

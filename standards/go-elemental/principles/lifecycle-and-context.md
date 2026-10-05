@@ -33,12 +33,14 @@ none and imports no part of this package: there is nothing in it to stage.
 ## The wiring rule
 
 A defect the composition root wires panics at construction, with the fix named: an
-unfinalized configuration, a missing pool, a malformed route prefix, a duplicate pattern, a
-registration after the router is sealed or after the coordinator has run. No runtime
+unfinalized configuration, a missing pool, a malformed route prefix, a duplicate mount or
+service, a group modified after its module is built, a registration after the coordinator has
+run. No runtime
 condition produces such a defect and no caller can recover from it sensibly, and the
 composition root is written once and runs at boot, so a loud failure there beats a silent one
 in production. A defect in configuration content, a reserved connection option or an invalid
-value, returns an error from the constructor that reads it, because configuration is input.
+value, returns an error from the call that reads it, the configuration's finalize step or the
+provider's constructor, because configuration is input.
 
 ## Cold start, hot start, drain
 

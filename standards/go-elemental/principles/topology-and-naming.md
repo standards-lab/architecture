@@ -18,7 +18,7 @@ and where it belongs.
 
 - **Core SDK** — `go-core`.
 - **Application SDKs** — `go-<application>-sdk`: `go-web-sdk`. The `-sdk` suffix marks a
-  development kit and appears on no other tier.
+  development kit and ends no other tier's name.
 
   A capability sub-module is a nested directory named for the concern, in lower-case words
   joined by hyphens, never for the library it wraps: `rate-limit`, not `httprate`. Its package
@@ -61,7 +61,8 @@ does, as `sqlate` and `blobfs` are.
 ## Application-layer import direction
 
 Every Go Elemental application — whatever its type — divides into three tiers with one import
-direction: `cmd/*` imports only `internal/*`, `internal/*` is the composition root and may import
+direction: `cmd/*` imports only `internal/*` and go-core's `process` package, which owns the
+signal context and the exit path, `internal/*` is the composition root and may import
 any root-level package, and nothing at the root level imports `internal/*`. A `cmd/*` binary is
 initialization alone: it constructs the application from `internal/*` and never reaches past it.
 `internal/*`'s own layers import each other and the root-level packages that make up the
@@ -77,8 +78,11 @@ review and package documentation, not by the compiler.
 The composition root, `internal/app`, is laid out as one file per layer of the architecture:
 one file constructs the infrastructure services, one the administrative services and their
 mount, one the domain services and their mount, one the reactors, with the list of mounts and
-the middleware stack each a file of their own. Each layer file constructs its layer and owns
-its mount, so the package's file list is the architecture's layer list, and extending the
+the middleware stack each a file of their own. Beside them, `app.go` holds the construction and
+the run method, and `stages.go` the stage table the layer files register on; a layer the
+application adds, such as go-web-service's telemetry, is one more file. Each layer file
+constructs its layer and owns its mount, so the layer files are the architecture's layer list,
+and extending the
 application means editing a layer file's body while the signatures, the entrypoint, and the
 run method stay untouched. A package that the layers share and that must not import the
 composition root, the application's database infrastructure for one, lives at the root level.

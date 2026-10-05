@@ -10,13 +10,14 @@ err() {
   fail=1
 }
 
-# Every markdown file in the repository, outside .git/.
-mapfile -t markdown < <(find . -path ./.git -prune -o -type f -name '*.md' -printf '%P\n' | sort)
+# Every markdown file git tracks or would track: ignored files, such as marathon's session
+# briefs under .claude/briefs/, are not part of the repository.
+mapfile -t markdown < <(git ls-files --cached --others --exclude-standard -- '*.md' | sort)
 
-# Every relative link in the markdown resolves to an existing file or directory. A link with
-# a scheme (https:, mailto:, ...) or a pure #anchor is not a path, and a #fragment is stripped
-# before resolving. Fenced code blocks and inline code spans are illustration, not links, so
-# they are skipped.
+# Every relative link in the markdown, inline or a reference definition, resolves to an
+# existing file or directory. A link with a scheme (https:, mailto:, ...) or a pure #anchor is
+# not a path, and a #fragment is stripped before resolving. Fenced code blocks and inline code
+# spans are illustration, not links, so they are skipped.
 links() {
   awk '
     /^[[:space:]]*(```|~~~)/ { fenced = !fenced; next }
@@ -24,7 +25,12 @@ links() {
     {
       line = $0
       gsub(/`[^`]*`/, "", line)
-      while (match(line, /\]\([^)[:space:]]+/)) {
+      if (match(line, /^ {0,3}\[[^]]+\]:[[:space:]]*[^[:space:]]+/)) {
+        def = substr(line, RSTART, RLENGTH)
+        sub(/^ {0,3}\[[^]]+\]:[[:space:]]*/, "", def)
+        print FNR "\t" def
+      }
+      while (match(line, /\]\(<[^>]*>|\]\([^)[:space:]]+/)) {
         print FNR "\t" substr(line, RSTART + 2, RLENGTH - 2)
         line = substr(line, RSTART + RLENGTH)
       }
@@ -50,8 +56,10 @@ done
 # name, and type on every page, plus the fields its type requires. The context/ notes and
 # goal records are marathon's working notes, not pages, and CLAUDE.md is agent instructions,
 # so neither carries front matter.
+# A block that opens with --- on the first line and never closes is not front matter.
 frontmatter() {
-  awk 'NR == 1 { if ($0 != "---") exit; next } $0 == "---" { exit } { print }' "$1"
+  awk 'NR == 1 { if ($0 != "---") exit; next } $0 == "---" { closed = 1; exit } { block = block $0 "\n" }
+    END { if (closed) printf "%s", block }' "$1"
 }
 
 for file in "${markdown[@]}"; do

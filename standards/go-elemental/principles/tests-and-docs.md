@@ -9,8 +9,8 @@ level: go-elemental
 
 Testing runs in two tiers. The unit tier is what each repository's check runs: hermetic,
 black-box, on every pull request. The integration and acceptance suites run a real process or
-a real engine, each behind its own task and, where CI runs it, its own job. A test proves a
-behavior only if it can fail; marathon's standards-reviewer names the ways a green test lies,
+a real engine, each behind its own task or CI job. A test proves a behavior only if it can
+fail; marathon's standards-reviewer names the ways a green test lies,
 [tautological, structure-sensitive, or unable to fail](https://github.com/standards-lab/claude-plugins/blob/main/plugins/marathon/agents/standards-reviewer.md),
 and rewrites or deletes such a test.
 
@@ -31,14 +31,10 @@ its behavior with fakes, scripted drivers, and loopback listeners:
   supports prepare, so prepare-based verification is provable on this tier, and that fails
   where a real driver would.
 - **Providers** may drive a loopback test server on port 0. go-database's postgres provider
-  tests complete a startup exchange with an in-test `pgproto3` server, asserting the user,
-  database, and password the provider sends over TCP and over a Unix socket.
+  tests drive a startup exchange with an in-test `pgproto3` server, asserting the user,
+  database, and password the provider sends over TCP, and the database over a Unix socket.
 - **Handlers** run through recorded requests with no listener; a test that must listen binds
   port 0 and reads the assigned port back, never a fixed port.
-
-The same check builds each module with the workspace file disabled (`GOWORK=off`), so a broken
-version pin fails it, and, in sqlate, blobfs, and go-web-service, runs the SQL conventions
-lint.
 
 A test helper stays in its test package until more than one test package needs it; then it is
 hoisted into a `<pkg>test` package, following the standard library's `httptest` and `fstest`
@@ -57,7 +53,8 @@ variable, so the unit tier never reaches it:
   check neither compiles nor runs them.
 - **go-storage's azureblob acceptance tests** run the storage conformance suite against a real
   service when `AZUREBLOB_TEST_ENDPOINT` names one, and skip otherwise. CI's `acceptance` job
-  runs them on every push and pull request against an Azurite container.
+  runs them against an Azurite container on every pull request into `main` and every push to
+  it; no task runs them locally.
 - **The template's and go-web-service's integration tier** (`-tags integration`, in the
   root-level `integration` package) runs the built service as a subprocess, black-box,
   through its API. Each repository's `mise run integration` task and CI `integration` job run
@@ -69,7 +66,9 @@ variable, so the unit tier never reaches it:
 
 The integration tier drives the service only through production surfaces: configuration by
 environment variable, the API and the admin mount for state, the network for faults, and
-signals and the exit code for lifecycle. Nothing in the runtime exists for the tests' sake.
+signals and the exit code for lifecycle. It observes through the same surfaces, plus the log
+for what only the log records and, in go-web-service, the object store read beneath the API.
+Nothing in the runtime exists for the tests' sake.
 
 ### Integration toolkits and harness rules
 
@@ -79,7 +78,9 @@ its signals, and its exit code; go-web-sdk's `webtest` is the client a suite dri
 service through. Both suites build their harness on them, and the harnesses follow these rules:
 
 - **A stall is a finding, never a sleep.** Every wait is a poll on an observable condition,
-  bounded by `processtest.Failsafe`, and a wait that runs out fails the test.
+  bounded by `processtest.Failsafe` or a multiple of it, and a wait that runs out fails the test.
+- **Readiness through the API.** A harness waits for a process to be ready by polling its
+  probe, never by reading its output.
 - **One connection per client.** `webtest`'s client holds one connection per host, so the
   service's graceful shutdown never waits on an idle second connection.
 - **Interrupt before kill.** Stopping a process sends an interrupt and kills only a process
@@ -88,10 +89,10 @@ service through. Both suites build their harness on them, and the harnesses foll
   and go-web-service's outage cases sever it, so a fault is indistinguishable from an outage.
 - **Output captured on failure.** Every process's output is captured; `processtest` includes
   it in each failure it reports, and go-web-service's harness logs it for any failed test.
-- **The harness proves itself on the unit tier.** `processtest` and `webtest` carry unit tests
-  against loopback stand-ins, and go-web-service's state helpers are tested against an
-  `httptest` server; the template's harness is untagged, so the unit tier type-checks it on
-  every pull request.
+- **The harness proves itself on the unit tier.** `processtest` carries unit tests against a
+  stand-in program, `webtest` against an `httptest` server, and go-web-service's state helpers are
+  tested against an `httptest` server; the template's harness is untagged, so the unit tier
+  type-checks it on every pull request.
 
 Toolkit mechanics, such as dropping the race runtime's exit sleep from a launched binary, stay
 with the toolkit's own code and documentation.

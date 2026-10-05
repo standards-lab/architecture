@@ -16,11 +16,11 @@ client.
 
 The server's read and write timeouts stay tight, sized for a request that moves no large body. A
 route that moves one sets its own connection deadlines before it moves the body, through
-[go-web-sdk](https://github.com/standards-lab/go-web-sdk)'s `Transfer`: the server's timeout as
-grace, plus the time the body's own size takes at the configured minimum client rate, capped at
-the route's limit. A small body on a route with a large limit gets a short deadline. A `Transfer`
-sets only the connection's deadlines, never the request's context, so such a route never sits
-under a request timeout shorter than the transfer it allows.
+[go-web-sdk](https://github.com/standards-lab/go-web-sdk)'s `Transfer`: the longer of the server's
+read and write timeouts as grace, plus the time the body's own size takes at the configured minimum
+client rate, capped at the route's limit. A small body on a route with a large limit gets a short
+deadline. A `Transfer` sets only the connection's deadlines, never the request's context, so a route
+that moves a body must not sit under a request timeout shorter than the transfer it allows.
 
 ## A store's per-try deadline bounds one operation
 
@@ -42,7 +42,7 @@ base configuration.
 ## An upload's read deadline belongs to the client
 
 An upload's body slower than the transfer's rate fails its read deadline, and that failure is the
-client's, answered 408. The store's provider reads far enough ahead of the store, more than the
-largest object the service accepts, that a stalled store never stops the body's reads: the body is
+client's, answered 408. The store's provider reads at least the largest object the
+service accepts ahead of the store, that a stalled store never stops the body's reads: the body is
 read whole, or fails on its own, and a stalled store stays the store's fault. The same
 configuration test holds the largest object within that read-ahead.

@@ -44,12 +44,13 @@ it may build on another adjacent library.
 
 ## Dependencies run downward, one tier at a time
 
-A reference architecture depends on its application SDK, the infrastructure libraries it
-composes, and the core SDK. A template depends on the core SDK and its one application SDK. An
-application SDK and an infrastructure library never depend on each other; both depend on the
-core SDK alone. The core SDK depends only on what its standard's dependency line admits.
-Knowledge follows the same direction: a repository documents its dependencies and never names
-its dependents ([dependencies flow downward only](downward-dependencies.md)).
+A reference architecture depends on its application SDK, the infrastructure libraries, adjacent
+libraries, and providers it composes, and the core SDK. A template depends on the core SDK and its
+one application SDK. An application SDK and an infrastructure library never depend on each other;
+both depend on the core SDK and on no other tier. The core SDK depends only on what its standard's
+dependency line admits. Knowledge follows the same direction: a repository documents its
+dependencies and never names its dependents ([dependencies flow downward
+only](downward-dependencies.md)).
 
 ## Versioning across the tiers
 
