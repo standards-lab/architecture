@@ -54,10 +54,6 @@ only](downward-dependencies.md)).
 
 ## Versioning across the tiers
 
-Each repository releases independently ([independent releases](independent-releases.md)), and
-the library tiers stabilize together. The core SDK, an application SDK, and the infrastructure
-libraries its reference architecture composes reach their first stable major version when that
-reference architecture does, because the reference is what proves their contracts in one
-production-representative composition. Until then the core SDK is a pre-stable dependency shared
-by every repository above it; a change to it releases first and is taken up by the coordinated
-releases that follow.
+Each repository releases independently ([independent releases](independent-releases.md)). The
+core SDK is a dependency shared by every repository above it; a change to it releases first and is
+taken up by the coordinated releases that follow.

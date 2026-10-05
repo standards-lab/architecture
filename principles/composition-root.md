@@ -38,18 +38,19 @@ tier.
 ## The entrypoint owns process entry and exit
 
 The entrypoint is minimal: process-level concerns only, nothing else. It traps the process
-signals and derives the root context, loads the configuration, and hands the configuration to
-the composition root. It then passes the root context to the run call that executes the declared
-composition, and exits with the code that call returns. A failure before the run, a
-configuration that does not load or a composition that does not assemble, is reported by the
-entrypoint and becomes its exit code.
+signals and derives the root context, passes the root context to the composition root's run call,
+which executes the declared composition, and exits with the code that call returns.
 
-The composition root receives the configuration and never loads it; subsystems receive the values
-they need, never the configuration itself. The entrypoint reaches the composition root only through
-its construction and its run call, and nothing below the composition root reaches back up to it.
-Extending an application means editing its composition root; the entrypoint stays untouched. What
-sits below the composition root, the application's domain and infrastructure packages, stays the
-author's decision.
+A web service's entrypoint also loads the configuration and hands it to the composition root
+before the run. A failure before the run, a configuration that does not load or a composition that
+does not assemble, is reported by the entrypoint and becomes its exit code. The web service's
+composition root receives the configuration and never loads it; subsystems receive the values they
+need, never the configuration itself. This configuration rule is the web service's.
+
+The entrypoint reaches the composition root only through its construction and its run call, and
+nothing below the composition root reaches back up to it. Extending an application means editing
+its composition root; the entrypoint stays untouched. What sits below the composition root, the
+application's domain and infrastructure packages, stays the author's decision.
 
 ## It fails loudly, at startup
 

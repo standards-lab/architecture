@@ -39,18 +39,20 @@ Top to bottom:
 - **Application**: the deployable unit of a binary software project. The **application layer** owns
   the infrastructure services and the process lifecycle, assembles the transport, and runs the
   process. Its entrypoint is the minimal entry above the composition root: it derives the signal
-  context, loads the configuration, hands both to the composition root, and exits with the code the
-  run call returns; it does nothing else. Its [composition root](principles/composition-root.md),
-  beneath the entrypoint, is the package where the application assembles its dependencies; it
-  declares the composition, and its run call hands that declaration to the application layer's
-  lifecycle, which executes it. Application types (a web service, a CLI, a game) share this
+  context, hands it to the composition root's run call, and exits with the code that call returns.
+  A web service's entrypoint also loads the configuration and hands it to the composition root,
+  which never loads it. Its [composition root](principles/composition-root.md), beneath the
+  entrypoint, is the package where the application assembles its dependencies; it declares the
+  composition, and its run call hands that declaration to the application layer's lifecycle, which
+  executes it. Application types (a web service, a CLI, a game) share this
   architecture; they differ in composition-root initialization sequence, runtime cycle, and
   deployment platform. A web service is an application whose form is a containerized public API.
-- **Reactor**: an entry point driven by an occurrence from outside the application rather than a
-  caller (a subscription, a poll interval, a schedule). It owns the transport connection the
-  occurrence arrives on, calls a Domain Service, and runs for the process lifetime: the inbound
-  counterpart to the application layer's transport, which a caller drives instead. A Reactor is
-  not a Domain Service; it dispatches to one.
+- **Reactor**: an entry point the lifecycle coordinator runs for the process lifetime, driven by an
+  occurrence rather than a caller (a subscription, an interval, a wake on demand). It owns what the
+  occurrence arrives on: the inbound counterpart to the application layer's transport, which a
+  caller drives instead. A Reactor commonly dispatches to a Domain Service, but a background worker
+  the application owns, run for the process lifetime, is a Reactor too, such as go-web-service's
+  sweeper, woken on demand, on an interval, and at startup. A Reactor is not a Domain Service.
 - **Infrastructure Services**: the process-level services an application is composed on, such as
   the logger, the database, and storage. Their APIs are defined outside the application,
   and they are distinct from domain services. A service that holds a resource follows a uniform
@@ -84,11 +86,11 @@ Top to bottom:
   Domain Service of the domain whose root owns the transaction, which composes the other
   entities' operations within it, its own Entities and another domain's alike.
 - **Dependencies flow downward through the elements.** The application layer depends on
-  everything it assembles; a Reactor depends on the infrastructure connection it owns and the
-  Domain Service it calls; domain services depend on their Entity and the infrastructure services
-  they use; entities depend on nothing above themselves. This is the organizational
-  [downward-dependency principle](principles/downward-dependencies.md), ordered by the
-  elements.
+  everything it assembles; a Reactor depends on what its occurrence arrives on and on the
+  Domain Service or infrastructure service it drives; domain services depend on their Entity and
+  the infrastructure services they use; entities depend on nothing above themselves. This is the
+  organizational [downward-dependency principle](principles/downward-dependencies.md), ordered by
+  the elements.
 - **A proven pattern sinks to the lowest level at which it is generic.** A pattern is proven in
   application code first, then graduates: to the application SDK when it is specific to the
   application type, to the core SDK when it is generic across application types. The template

@@ -74,7 +74,8 @@ section and creates the GitHub release; runs for the same tag are serialized.
 
 Release preparation lands on `main` through a pull request, like any other change: the
 changelog date, metadata edits, and the README brought current with the release's changes. A
-ruleset on `main` requires the pull request in every repository except go-storage and blobfs.
+ruleset on `main` in every repository requires the pull request and forbids deleting or
+force-pushing the branch.
 The tag is pushed only after `main`'s CI run passes, the integration job included where the
 repository has one, so a release never points at a commit that failed CI. This is practice, not
 a gate: no ruleset requires a status check and the release workflow runs no CI of its own.
