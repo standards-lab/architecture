@@ -153,7 +153,7 @@ Door          two-way: prose and configuration on branches, revertable;
 
 ## Progress
 
-slices 0/8 committed · standards — · spec — · editor —
+slices 1/8 committed · standards — · spec — · editor —
 
 ## Decisions
 
