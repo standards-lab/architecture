@@ -1,13 +1,13 @@
 # goal · quality
 
-- **State:** building
-- **Task:** honest-tests
-- **Branch:** honest-tests
+- **State:** idle
+- **Task:** none
+- **Branch:** none
 
 ## Tasks
 
 1. [x] checks
-2. [ ] honest-tests
+2. [x] honest-tests
 3. [ ] architecture-diet
 4. [ ] standards
 
@@ -88,9 +88,6 @@ Door          two-way: every change is a revertable test or lint-config
               pushed.
 ```
 
-## Progress
-
-slices 0/12 committed · standards — · spec — · editor —
 
 ## Decisions
 
@@ -129,14 +126,26 @@ slices 0/12 committed · standards — · spec — · editor —
 - honest-tests: release-and-ci folds into architecture-diet; record Tasks unchanged; the roadmap entry is removed by a pending edit.
 - honest-tests: go-web-service's collector image moves to 0.162.0; no breaking change touches a component its config uses.
 
+- honest-tests: deleted go-core processtest's reaped-before-Exited Stop test (escalation 1): an undocumented edge of a test-helper package; a sync hook in Stop is neither a clock nor a probe. Stop's os.ErrProcessDone handling is now untested.
+- honest-tests: deleted the template's white-box panic-recovery test (escalation 2): go-web-sdk proves Recoverer and its ordering; the template's inclusion of Recoverer has no test of its own. The export_test allowance stays clock-or-probe only.
+- honest-tests: the template keeps its documented stageInfrastructure placeholder with a `//nolint:unused` directive (escalation 3), a lint-only production line.
+- honest-tests: go-web-service verifies every registered store at startup by construction (escalation 4): data.Database.Register and data.NewStorage record each store's verifier and Seeder.Verify checks all of them, replacing the hand-kept list and its white-box test; the one production change beyond the brief's test-only scope.
+- honest-tests: removed slab's duplicate-scenario panic, its doc sentence, and its white-box test (escalation 5); TestScenarios_ListsEachOnceInPresentationOrder pins the fixed list's distinct names, and Commands builds from Scenarios() directly.
+- honest-tests: go-web-service's integration tier keeps its seed-count assertions, because the counts are the reference data a named state promises, not an inventory size.
+- honest-tests: slab's fakes repeat values the service owns (the organization code pattern, the absent id, the 64 KiB command-body limit) as black-box knowledge of the service's contract rather than importing them through new exports.
+- honest-tests: go-database's TestNew_UnixSocketHost keeps its socket under os.MkdirTemp, accepting that a TMPDIR long enough to push the path past the ~104-byte Unix-socket limit fails the test.
+- honest-tests: go-storage's tests re-run the test binary as a child process to drive the testing.T-taking storagetest suites over broken clients and to observe the SDK's default endpoint through a proxy.
+- honest-tests: tests that assert the SQL text or operation sequence on sqlate's scripted driver stay where the composed SQL or the transaction protocol is the package's documented output.
+
 ## Pending edits
 
-- architecture-diet: restate `dependencies.md`'s line as "bottom-up, no provider in a base, kept light", held by discipline; drop `service-tiers.md`'s claim that a lint step checks the boundary; update `context/standards-audit.md`'s split-check suggestion.
+- architecture-diet: restate `dependencies.md`'s line as "bottom-up, no provider in a base, kept light", held by discipline; drop `service-tiers.md`'s claim that a lint step checks the boundary; update `context/standards-audit.md`'s split-check suggestion and drop its claim that go-web-service has no `.golangci*` file (it has `.golangci.yml`, enabling testpackage, with no depguard rule).
 - standards: each STANDARDS.md points the reviewer to the hierarchy, provider, and doc.go discipline.
 - v1.deployment: Dockerfile base images join each repository's currency.
 - architecture-diet: `standards/go-elemental/principles/release-and-ci.md` still prescribes a per-module CI matrix and omits check, currency, and upgrade; restate it from the practice checks established.
 - architecture-diet: `tests-and-docs.md` states the black-box rule as practiced, with the export_test clock/probe allowance; check enforces it through testpackage.
 - architecture-diet: `tests-and-docs.md` states the integration tier as practiced (sqlate/blobfs postgres suites, go-storage Azurite acceptance beside the application tier); drop "not re-proven in CI" or restate where each runs.
-- architecture-diet: `tests-and-docs.md` drops "provider tests assert construction" and links to marathon's standards-reviewer definition of a lying test.
+- architecture-diet: `tests-and-docs.md` drops "provider tests assert construction", states that a provider test may drive a loopback port-0 test server (go-database's postgres provider tests complete a startup exchange with an in-test pgproto3 server), and links to marathon's standards-reviewer definition of a lying test.
 - architecture-diet: absorb the `release-and-ci` task into the existing `release-and-ci.md` restatement (release prep via PR; a failed-release tag may be re-pushed at the same version; a released tag is never re-cut).
 - coordinator · roadmap: remove `[goals.quality.tasks.release-and-ci]` from the roadmap.
+- coordinator · roadmap: add backlog goal `slab-json-partial-color`: go-web-service tools/slab `style.JSON` returns partly colored output when the input breaks after the first token, though its comment says any tokenizer error returns the input unchanged; fix the code or the comment.
