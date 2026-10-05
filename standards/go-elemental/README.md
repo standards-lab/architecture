@@ -41,6 +41,9 @@ further, stating the enhancement beside its link to the principle.
 - [Lifecycle and context ownership](principles/lifecycle-and-context.md) states the process
   lifecycle every application follows, which package owns the signal context, and the wiring
   rule.
+- [Timeouts and deadlines](principles/timeouts.md) states how a service bounds a request that
+  moves a large body through a store: tight server timeouts with size-derived transfer
+  deadlines, the store's per-try and idle bounds, and which party a timeout is charged to.
 - [Tests and documentation](principles/tests-and-docs.md) states the black-box unit tier, the
   integration and acceptance suites and where each runs, the harness rules, and `doc.go`
   ownership of API documentation.
