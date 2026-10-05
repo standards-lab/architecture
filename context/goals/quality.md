@@ -7,8 +7,9 @@
 ## Tasks
 
 1. [x] checks
-2. [ ] architecture-diet
-3. [ ] standards
+2. [ ] honest-tests
+3. [ ] architecture-diet
+4. [ ] standards
 
 ## Task brief · checks
 
@@ -90,10 +91,6 @@ Door          two-way: no tags pushed; every repo change is a revertable file
 ## Pending edits
 
 - coordinator · roadmap: add `factory.currency` before `factory.evals`: marathon core gains `[project] currency`, a PLAN-time currency pass (run before round 1, release notes read, adapt and adopt questions, the upgrade as the brief's first slice), and a migration recipe naming the key per repository. Needed before quality syncs: the architect runs `marathon plan factory` to add it.
-- coordinator · roadmap: add `quality.tasks.honest-tests` between checks and architecture-diet: a full evaluation of every repository's tests, a standards-reviewer over each whole suite, go-web-service in three scopes (service, integration, tools/slab).
-- coordinator · roadmap: narrow `v1.data.evaluation` to code built after honest-tests, and drop its depguard re-ask.
-- coordinator · roadmap: drop `backlog.library-pins`, which checks absorbs.
-- coordinator · roadmap: restate the v1 criterion "The import-boundary lint is in place" as a reviewed discipline.
 - architecture-diet: restate `dependencies.md`'s line as "bottom-up, no provider in a base, kept light", held by discipline; drop `service-tiers.md`'s claim that a lint step checks the boundary; update `context/standards-audit.md`'s split-check suggestion.
 - standards: each STANDARDS.md points the reviewer to the hierarchy, provider, and doc.go discipline.
 - v1.deployment: Dockerfile base images join each repository's currency.
