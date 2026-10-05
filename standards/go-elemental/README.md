@@ -41,10 +41,12 @@ further, stating the enhancement beside its link to the principle.
 - [Lifecycle and context ownership](principles/lifecycle-and-context.md) states the process
   lifecycle every application follows, which package owns the signal context, and the wiring
   rule.
-- [Tests and documentation](principles/tests-and-docs.md) states the unit tier and the
-  integration tier, the toolkit convention, and `doc.go` ownership of API documentation.
-- [Releases and CI](principles/release-and-ci.md) states artifact-keyed tags, changelog
-  discipline, prerelease purging, and the CI checks every repository runs.
+- [Tests and documentation](principles/tests-and-docs.md) states the black-box unit tier, the
+  integration and acceptance suites and where each runs, the harness rules, and `doc.go`
+  ownership of API documentation.
+- [Releases and CI](principles/release-and-ci.md) states the one check every repository runs,
+  currency and upgrade beside it, artifact-keyed tags, changelog discipline, and how a release
+  lands.
 - [DSL-driven services](principles/dsl-driven-services.md) states how a service whose
   expressive content is a language of its own is integrated, and the conventions the
   standard's authored SQL declares.
