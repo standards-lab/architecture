@@ -14,11 +14,11 @@ only what the language cannot do on its own.
 
 ## The two categories of infrastructure service
 
-A protocol-driven service keeps its expressive content in the host language. Authentication,
-object storage, and messaging are protocol-driven: the consumer calls operations with typed
-arguments, and the provider boundary is an interface over those operations. The
+A protocol-driven service keeps its expressive content in the host language. Object storage
+is protocol-driven: the consumer calls operations with typed arguments, and the provider
+boundary is an interface over those operations. The
 [service tiers](../../../principles/service-tiers.md) principle describes that boundary, and
-it stands for those services.
+it stands for such a service.
 
 A DSL-driven service keeps its expressive content in a language the host cannot type-check.
 SQL is one. So are the graph query languages Cypher and Gremlin, a search engine's query

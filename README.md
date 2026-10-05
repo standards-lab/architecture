@@ -47,13 +47,6 @@ architecture's.
   Architecture: a complete reference architecture on the Go standard library, with the smallest
   deliberate dependency surface. Its README catalogs its member repositories by tier.
 
-## Catalog
-
-Implementations that live outside this blueprint, graduated organizations and external
-implementations of its architecture, are referenced here rather than documented here. No
-entries exist yet; the first arrives when the Elemental Architecture completes and graduates
-to its own organization.
-
 ## What belongs here
 
 This repository holds what has generalized past one repository: a principle, a definition, a
@@ -81,7 +74,7 @@ Per-type fields:
   attaches to.
 - `type: architecture` — `status`: `draft` | `active` | `superseded`.
 - `type: standard` — `architecture`: the key of the architecture the standard implements;
-  `status` as above; `derives`: the key of the standard it re-expresses, when it does.
+  `status` as above.
 
 ## Conventions
 
@@ -89,7 +82,7 @@ Per-type fields:
   for a documentation site.
 - Code on a page is illustrative only: it links to a direct example, or it encodes a generic
   representation of the pattern that stands on its own.
-- A page describes what exists; planned work is marked as planned.
+- A page describes what exists; work not yet built is left off the page.
 
 ## License
 

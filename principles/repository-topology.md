@@ -10,14 +10,14 @@ level: architecture
 A repository is scoped to one concern of its standard. A reader who opens an infrastructure
 library sees the organization's conventions for that technology and nothing else, and a consumer
 who depends on it pulls in exactly one service. The organization defines five repository tiers,
-and every module repository of a standard belongs to exactly one:
+and every member repository of a standard belongs to exactly one:
 
 - **Core SDK** — the common primitives useful across all of a standard's application types:
   configuration, process lifecycle, logging. One repository per standard, at the bottom of the
   dependency graph, with no knowledge of its dependents.
 - **Application SDKs** — one repository per application type, defining what makes that type of
-  program: a web service SDK, a command-line SDK, a worker SDK, each created once a consumer
-  warrants it. An application SDK builds on the core SDK and never on an infrastructure library.
+  program: a web service SDK, a command-line SDK, each created once a consumer warrants it. An
+  application SDK builds on the core SDK and never on an infrastructure library.
 - **Infrastructure libraries** — one repository per external technology, presenting that
   technology as a service in two tiers ([service tiers](service-tiers.md)): a base module
   defining the standard tier, with providers as independently versioned sub-modules. An
@@ -27,12 +27,20 @@ and every module repository of a standard belongs to exactly one:
   application chooses its own infrastructure.
 - **Reference architectures** — the holistic reference for an application SDK: one application
   composing the SDK with the services a production system of its type requires, on one declared
-  stack. A variant — another provider, another style, another application type — is a separate
-  focused reference architecture, created when a consumer demands it, never a switch inside the
-  cohesive one.
+  stack.
 
-The agent-tooling repositories and the organization-context repositories stand outside the five
-tiers.
+A standard's adjacent libraries stand beside the five tiers rather than in one, and the
+agent-tooling repositories and the organization-context repositories stand outside them.
+
+## Adjacent libraries
+
+A module repository may stand adjacent to a standard rather than in it: a standalone library any
+project on the standard's technology can adopt on its own. It is no infrastructure library,
+because it presents no one external technology as a service, and it keeps its guide in its own
+repository. An adjacent library follows the standard's engineering principles (naming, module
+layout, releases and CI, tests and documentation) without being a member of any tier. It is
+consumed downward like any library: a tier may depend on it, and it depends on no tier, though
+it may build on another adjacent library.
 
 ## Dependencies run downward, one tier at a time
 

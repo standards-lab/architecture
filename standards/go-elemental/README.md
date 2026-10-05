@@ -66,17 +66,13 @@ enhances, and its package documentation states its API.
 | Templates | [go-web-sdk-template](https://github.com/standards-lab/go-web-sdk-template) | Scaffolds an initial Go Elemental web service, engine-free, with the composition root as one file per layer and the integration tier in place. |
 | Reference architectures | [go-web-service](https://github.com/standards-lab/go-web-service) | The holistic Go Elemental web service reference, grown in documented layers on the declared stack; versionless until its 1.0. |
 
-Adjacent to the standard rather than a member of it,
-[sqlate](https://github.com/standards-lab/sqlate) is the SQL templating library the standard's
-libraries consume: authored `.sql` files made dynamic and composable, with the PostgreSQL
-dialect and the conventions linter as sub-modules. Any Go project can adopt it on its own, and
-its guide lives with it.
+Two libraries stand [adjacent](../../principles/repository-topology.md#adjacent-libraries) to
+the standard rather than in it: standalone libraries any Go project can adopt on its own, each
+with its guide in its own repository.
 
-Additional infrastructure libraries, for auth, messaging, and AI, are created as the
-reference architecture integrates each technology.
-
-## Derived standards
-
-A .NET re-expression, `dotnet-elemental`, is anticipated: the same goals and structure
-expressed in .NET, declaring `derives: go-elemental` when it exists. A derived standard tracks
-the declared stack and one provider per service; it never mirrors a provider matrix.
+- [sqlate](https://github.com/standards-lab/sqlate) is the SQL templating library the
+  standard's libraries consume: authored `.sql` files made dynamic and composable, with the
+  PostgreSQL dialect and the conventions linter as sub-modules.
+- [blobfs](https://github.com/standards-lab/blobfs) is a tree of directories and file metadata
+  in SQL over any object store, built on sqlate, with the PostgreSQL engine and its migration
+  set as a sub-module.

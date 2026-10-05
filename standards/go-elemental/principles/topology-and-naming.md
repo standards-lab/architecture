@@ -14,8 +14,7 @@ layout of each tier. The tiers themselves are defined by the organizational
 ## Repository names
 
 A repository is named for its language and its tier, so the name states what a reader will find
-and where it belongs. The language prefix is the only part a re-expression in another language
-changes.
+and where it belongs.
 
 - **Core SDK** — `go-core`.
 - **Application SDKs** — `go-<application>-sdk`: `go-web-sdk`. The `-sdk` suffix marks a
@@ -25,17 +24,16 @@ changes.
   joined by hyphens, never for the library it wraps: `rate-limit`, not `httprate`. Its package
   name is that name with the hyphens removed: `ratelimit`.
 - **Infrastructure libraries** — `go-<technology>`, named for the technology the library
-  presents as a service, starting with `go-database`. The rest arrive in turn:
-  - `go-auth`
-  - `go-storage`
-  - `go-observability`
-  - `go-messaging`
-  - `go-ai`
+  presents as a service: `go-database`, `go-storage`, `go-observability`.
 
   A provider sub-module is a nested directory named for
   the target API or system, never the driver it wraps: `postgres`, not `pgx`.
 - **Templates** — the application SDK's name with `-template`: `go-web-sdk-template`.
 - **Reference architectures** — named for the application built on the SDK: `go-web-service`.
+
+An [adjacent library](../../../principles/repository-topology.md#adjacent-libraries) belongs to
+no tier, so it takes no `go-` prefix: it presents no one technology and is named for what it
+does, as `sqlate` and `blobfs` are.
 
 ## Module layout per tier
 
@@ -84,9 +82,9 @@ run method stay untouched. A package that the layers share and that must not imp
 composition root, the application's database infrastructure for one, lives at the root level.
 
 This is an Application-layer principle, independent of application type: a web service's
-`internal/app` is one realization, and a CLI or a worker composes its own `internal/app` the
-same way. It does not apply to a core SDK or an application SDK, which are libraries, not
-applications, and have no composition root of their own.
+`internal/app` is one realization, and a CLI composes its own `internal/app` the same way. It
+does not apply to a core SDK or an application SDK, which are libraries, not applications, and
+have no composition root of their own.
 
 ## Release tags
 

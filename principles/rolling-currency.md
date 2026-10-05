@@ -20,13 +20,22 @@ scheduled step.
 
 ## Which versions the principle covers
 
-A dependency is anything whose version the build depends on. The principle covers every such
-surface, so no surface is exempt:
+A dependency is anything whose version the build depends on. The principle covers every
+surface on which a component chooses such a version, so no chosen version is exempt:
 
 - the language toolchain;
 - the direct module dependencies;
 - the actions a CI workflow runs;
-- the developer tools the task runner and CI invoke.
+- the developer tools the task runner and CI invoke;
+- the container images a compose file or a CI workflow starts.
+
+A container image is pinned by an exact tag, and its latest is the highest semantic version
+among the tags that carry the pinned tag's variant suffix: a pin of `18.6-alpine` is current
+against the newest `-alpine` release, not the newest tag of any variant.
+
+Indirect dependencies are left to the ecosystem's resolver. A component pins and bumps the
+dependencies it names, and the resolver (`go mod tidy`, in Go) settles what those require;
+the currency report names only what the component chose.
 
 The organization's linter is the worked example. Pinned at `latest`, it made the lint gate
 irreproducible. Pinned at a fixed version and left alone, it would have fallen behind the

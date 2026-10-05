@@ -51,7 +51,7 @@ Top to bottom:
   counterpart to the application layer's transport, which a caller drives instead. A Reactor is
   not a Domain Service; it dispatches to one.
 - **Infrastructure Services**: the process-level services an application is composed on, such as
-  the logger, the database, storage, and auth. Their APIs are defined outside the application,
+  the logger, the database, and storage. Their APIs are defined outside the application,
   and they are distinct from domain services. They follow a uniform lifecycle contract: ordered
   startup, reverse-order drain, readiness checks feeding the probes. Each is constructed and
   registered once, declaratively, in the composition root.
@@ -68,16 +68,6 @@ Top to bottom:
 - **Entity**: the elemental component. An Entity is a data structure, table-backed or not; it
   defines its intrinsic capability, and the Domain Service decides what of that capability is
   exposed.
-
-**Events** are the architecture's single cross-system mechanism, and they are not a layer in the
-element stack: an event tells a system outside the domain that a mutation committed. The
-architecture defines emission only; delivery guarantees belong to the messaging system that
-receives the event. This is the [service tiers](principles/service-tiers.md) pattern
-applied to eventing. Events are never used inside the application: an internal cascade is a
-transactional command cascade through entity operations. The same is true on the inbound side: a
-Reactor consuming an event from another system is not an exception to it. The event stops being
-one at the process boundary; what crosses is the occurrence that triggers a Domain Service call,
-the same as any other Reactor source.
 
 ## The rules
 
