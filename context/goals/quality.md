@@ -153,7 +153,7 @@ Door          two-way: prose and configuration on branches, revertable;
 
 ## Progress
 
-slices 2/8 committed · standards — · spec — · editor —
+slices 3/8 committed · standards — · spec — · editor —
 
 ## Decisions
 
@@ -239,3 +239,4 @@ slices 2/8 committed · standards — · spec — · editor —
 - standards: go-web-service's STANDARDS.md carries the three domain-architecture judgement lines (domain layer as compositional grouping; a capability-named translation file per domain; cross-domain coupling as SQL downward and an injected interface upward) and resolves `context/domain-architecture.md`'s "Promotion candidates".
 - standards: go-web-sdk, go-storage and go-web-service STANDARDS.md point to the timeouts page; go-web-sdk's README "organization's markers" points to the dependencies sourcing section.
 - claude-plugins · CLAUDE.md and context/README.md: stop calling the repository "the harness level of the organization's reference architecture"; architecture-diet removed that level.
+- standards: go-core `process/doc.go` says "a composition root composes its run function from it"; restate it as the entrypoint, per architecture-diet's composition-root page.
