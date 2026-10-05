@@ -1,12 +1,12 @@
 # goal · quality
 
-- **State:** brief ready
-- **Task:** checks
-- **Branch:** checks
+- **State:** idle
+- **Task:** none
+- **Branch:** none
 
 ## Tasks
 
-1. [ ] checks
+1. [x] checks
 2. [ ] architecture-diet
 3. [ ] standards
 
@@ -61,10 +61,6 @@ Door          two-way: no tags pushed; every repo change is a revertable file
               on a branch. The Dependabot security setting can be switched
               off.
 ```
-
-## Progress
-
-slices 9/9 committed · standards ✓ (12 fixes) · spec ✓ (3 gaps closed, re-review no gaps) · editor ✓
 
 ## Decisions
 
