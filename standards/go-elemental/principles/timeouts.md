@@ -42,7 +42,7 @@ base configuration.
 ## An upload's read deadline belongs to the client
 
 An upload's body slower than the transfer's rate fails its read deadline, and that failure is the
-client's, answered 408. The store's provider reads at least the largest object the
-service accepts ahead of the store, that a stalled store never stops the body's reads: the body is
-read whole, or fails on its own, and a stalled store stays the store's fault. The same
-configuration test holds the largest object within that read-ahead.
+client's, answered 408. The store's provider reads at least the largest object the service
+accepts ahead of the store, so that a stalled store never stops the body's reads: the body is read
+whole or fails on its own, and a stalled store stays the store's fault. The same configuration
+test holds the largest object within that read-ahead.

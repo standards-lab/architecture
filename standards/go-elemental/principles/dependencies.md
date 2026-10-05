@@ -67,7 +67,7 @@ carry a dependency for what the standard library provides. The test for "trivial
 count: a request-ID middleware fails loudly, while a rate limiter fails by growing memory under
 an attacker's keys with answers that look right.
 
-A standard library shows these markers, in rough order of weight:
+An industry-standard library shows these markers, in rough order of weight:
 
 1. It uses standard-library types at its boundary (`http.Handler`, `context.Context`, `error`),
    so it can be removed without touching callers.

@@ -28,8 +28,8 @@ The tier is hermetic: `go test -race ./...` passes with no service running. A pa
 its behavior with fakes, scripted drivers, and loopback listeners:
 
 - **SQL libraries** run over sqlate's `sqltest`, a scripted `database/sql` driver that
-  supports prepare, so prepare-based verification is provable on this tier, and that fails
-  where a real driver would.
+  supports prepare and fails where a real driver would, so prepare-based verification is
+  provable on this tier.
 - **Providers** may drive a loopback test server on port 0. go-database's postgres provider
   tests drive a startup exchange with an in-test `pgproto3` server, asserting the user,
   database, and password the provider sends over TCP, and the database over a Unix socket.

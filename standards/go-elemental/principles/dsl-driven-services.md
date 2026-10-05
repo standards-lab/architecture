@@ -17,8 +17,7 @@ only what the language cannot do on its own.
 A protocol-driven service keeps its expressive content in the host language. Object storage
 is protocol-driven: the consumer calls operations with typed arguments, and the provider
 boundary is an interface over those operations. The
-[service tiers](../../../principles/service-tiers.md) principle describes that boundary, and
-it stands for such a service.
+[service tiers](../../../principles/service-tiers.md) principle describes that boundary.
 
 A DSL-driven service keeps its expressive content in a language the host cannot type-check.
 SQL is one. So are the graph query languages Cypher and Gremlin, a search engine's query
@@ -105,8 +104,8 @@ stated by none of them alone:
 - Every statement and pattern file declares its tier in its header, standard or native. A
   native file names the engine feature it uses and how another engine expresses the same effect,
   so the native files are found by one search; with the migrations, which carry no tier, they
-  are a repository's complete port list. The conventions linter
-  refuses a standard file that uses a form the engine declares native.
+  are a repository's complete port list. The conventions linter refuses a standard file that
+  uses a form the engine declares native.
 - A statement is named for its operation, never for its SQL verb. The file, the store method,
   the service method, and the route share one name.
 - A command's validation belongs to the domain's entity. Existence and uniqueness belong to

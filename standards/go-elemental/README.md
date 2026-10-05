@@ -8,8 +8,7 @@ status: active
 
 # Go Elemental
 
-The Go implementation of the
-[Elemental Architecture](../../architecture.md). Go Elemental
+The Go implementation of the [Elemental Architecture](../../architecture.md). Go Elemental
 implements the architecture on the Go standard library, and its goal is to demonstrate what the
 platform provides by itself: a complete reference architecture with the smallest deliberate
 dependency surface, expressing the architecture's supply-chain purpose in its strictest form.
@@ -17,8 +16,8 @@ dependency surface, expressing the architecture's supply-chain purpose in its st
 ## The dependency line
 
 Every Go Elemental module follows one dependency line: bottom-up, no provider in a base, kept
-light. The [Dependencies](principles/dependencies.md) principle states it per tier, with when a
-capability is written in-house and when a library is sourced.
+light. The [Dependencies](principles/dependencies.md) principle states it per tier, along with
+when a capability is written in-house and when a library is sourced.
 
 The declared stack of the standard's reference architecture selects one provider per service;
 for SQL that provider is Postgres.
@@ -39,7 +38,7 @@ further, stating the enhancement beside its link to the principle.
   packages, and release tags are named, the module layout of each tier, and the composition
   root's layout.
 - [Lifecycle and context ownership](principles/lifecycle-and-context.md) states the process
-  lifecycle every application follows, which package owns the signal context, and the wiring
+  lifecycle every web service follows, which package owns the signal context, and the wiring
   rule.
 - [Timeouts and deadlines](principles/timeouts.md) states how a service bounds a request that
   moves a large body through a store: tight server timeouts with size-derived transfer

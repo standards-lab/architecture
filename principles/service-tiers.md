@@ -33,20 +33,19 @@ feature native to one implementation. There is no third case to reason about.
 
 What keeps native use from spreading a provider across a codebase is the [resolution
 rule](resolution.md) applied to provider imports. An application's
-[composition root](composition-root.md) is the package
-where it assembles its dependencies: it constructs the providers, the pools, the loggers, and
-the configuration, and passes them to the packages that use them. A package that
-interfaces at the native tier wraps that use and presents the standard tier upward: the domain
-package that owns engine-specific SQL exposes plain queries and commands to its callers. Only
-the composition root, the binaries, and the packages the design documentation declares import a
-provider;
-every other package works against the standard tier and stays provider-free.
+[composition root](composition-root.md) is the package where it assembles its dependencies: it
+constructs the providers, the pools, the loggers, and the configuration, and passes them to the
+packages that use them. A package that interfaces at the native tier wraps that use and presents
+the standard tier upward: the domain package that owns engine-specific SQL exposes plain queries
+and commands to its callers. Only the composition root, the binaries, and the packages the
+design documentation declares import a provider; every other package works against the standard
+tier and stays provider-free.
 
 The boundary is declared in the application's design documentation and held in review: it is a
-discipline, not a lint step, and no linter reports a provider import outside the declared packages.
-The discipline belongs to the consumer; a library never names the consumers it protects. The
-consequence is that a port to another provider is a list of packages: the composition root, the
-migrations, and the domain packages that declare native use. Nothing has to be discovered.
+discipline, not a lint step. The discipline belongs to the consumer; a library never names the
+consumers it protects. The consequence is that a port to another provider is a list of packages:
+the composition root, the migrations, and the domain packages that declare native use. Nothing
+has to be discovered.
 
 ## Three classes of technology, by swap cost
 

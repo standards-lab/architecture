@@ -19,9 +19,9 @@ neither a framework above it nor `syscall` beneath it. Each layer that reaches l
 reach and presents a coarser interface to the layer above.
 
 Interfacing with an external technology (a database engine, an object store, a telemetry
-pipeline) follows the same rule. The organization's infrastructure libraries
-offer each technology at two resolutions ([service tiers](service-tiers.md)), and a consumer
-interfaces at the resolution its purpose requires. The libraries are layered so both resolutions
-are reachable, and the software that consumes them is layered so the finer resolution never
-leaks upward. This is "the lowest practical level of abstraction" made precise: practical means
+pipeline) follows the same rule. The organization's infrastructure libraries offer each
+technology at two resolutions ([service tiers](service-tiers.md)), and a consumer interfaces at
+the resolution its purpose requires. The libraries are layered so both resolutions are
+reachable, and the software that consumes them is layered so the finer resolution never leaks
+upward. This is "the lowest practical level of abstraction" made precise: practical means
 matched to the purpose.

@@ -30,22 +30,22 @@ execution.
 ## It is the boundary for provider imports
 
 The composition root is where the [service tiers](service-tiers.md) import boundary anchors. Only
-the composition root, the application's binaries, and the packages its design documentation declares
-import a provider. The root constructs the provider and passes the resulting service downward as an
-ordinary dependency, so every package below it stays provider-free and works against the standard
-tier.
+the composition root, the application's binaries, and the packages its design documentation
+declares import a provider. The root constructs the provider and passes the resulting service
+downward as an ordinary dependency, so every package below it stays provider-free and works
+against the standard tier.
 
 ## The entrypoint owns process entry and exit
 
 The entrypoint is minimal: process-level concerns only, nothing else. It traps the process
-signals and derives the root context, passes the root context to the composition root's run call,
-which executes the declared composition, and exits with the code that call returns.
+signals and derives the root context, passes that context to the composition root's run call,
+and exits with the code that call returns.
 
 A web service's entrypoint also loads the configuration and hands it to the composition root
 before the run. A failure before the run, a configuration that does not load or a composition that
 does not assemble, is reported by the entrypoint and becomes its exit code. The web service's
 composition root receives the configuration and never loads it; subsystems receive the values they
-need, never the configuration itself. This configuration rule is the web service's.
+need, never the configuration itself. This configuration rule applies to web services.
 
 The entrypoint reaches the composition root only through its construction and its run call, and
 nothing below the composition root reaches back up to it. Extending an application means editing

@@ -26,8 +26,8 @@ and where it belongs.
 - **Infrastructure libraries** — `go-<technology>`, named for the technology the library
   presents as a service: `go-database`, `go-storage`, `go-observability`.
 
-  A provider sub-module is a nested directory named for
-  the target API or system, never the driver it wraps: `postgres`, not `pgx`.
+  A provider sub-module is a nested directory named for the target API or system, never the
+  driver it wraps: `postgres`, not `pgx`.
 - **Templates** — the application SDK's name with `-template`: `go-web-sdk-template`.
 - **Reference architectures** — named for the application built on the SDK: `go-web-service`.
 
@@ -62,8 +62,8 @@ does, as `sqlate` and `blobfs` are.
 
 Every Go Elemental application — whatever its type — divides into three tiers with one import
 direction: `cmd/*` imports only `internal/*` and go-core's `process` package, which owns the
-signal context and the exit path, `internal/*` is the composition root and may import
-any root-level package, and nothing at the root level imports `internal/*`. A `cmd/*` binary is
+signal context and the exit path; `internal/*` is the composition root and may import any
+root-level package; and nothing at the root level imports `internal/*`. A `cmd/*` binary is
 initialization alone: it constructs the application from `internal/*` and never reaches past it.
 `internal/*`'s own layers import each other and the root-level packages that make up the
 application's domain and infrastructure, but the reverse never happens — a root-level package
@@ -82,10 +82,10 @@ the middleware stack each a file of their own. Beside them, `app.go` holds the c
 the run method, and `stages.go` the stage table the layer files register on; a layer the
 application adds, such as go-web-service's telemetry, is one more file. Each layer file
 constructs its layer and owns its mount, so the layer files are the architecture's layer list,
-and extending the
-application means editing a layer file's body while the signatures, the entrypoint, and the
-run method stay untouched. A package that the layers share and that must not import the
-composition root, the application's database infrastructure for one, lives at the root level.
+and extending the application means editing a layer file's body while the signatures, the
+entrypoint, and the run method stay untouched. A package that the layers share and that must not
+import the composition root, the application's database infrastructure for one, lives at the root
+level.
 
 This is an Application-layer principle, independent of application type: a web service's
 `internal/app` is one realization, and a CLI composes its own `internal/app` the same way. It

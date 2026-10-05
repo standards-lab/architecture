@@ -76,9 +76,10 @@ Release preparation lands on `main` through a pull request, like any other chang
 changelog date, metadata edits, and the README brought current with the release's changes. A
 ruleset on `main` in every repository requires the pull request and forbids deleting or
 force-pushing the branch.
+
 The tag is pushed only after `main`'s CI run passes, the integration job included where the
 repository has one, so a release never points at a commit that failed CI. This is practice, not
-a gate: no ruleset requires a status check and the release workflow runs no CI of its own.
+a gate: no ruleset requires a status check, and the release workflow runs no CI of its own.
 
 A tag whose release failed may be deleted and re-pushed at the same version once the fix is on
 `main`. A released tag is never re-cut: once the module proxy has fetched a version, the

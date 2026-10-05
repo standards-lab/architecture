@@ -153,7 +153,7 @@ Door          two-way: prose and configuration on branches, revertable;
 
 ## Progress
 
-slices 8/8 committed · standards ✓ (b2936ea) · spec — · editor —
+slices 8/8 committed · standards ✓ (b2936ea) · spec ✓ (no gaps) · editor ✓
 
 ## Decisions
 
@@ -225,31 +225,27 @@ slices 8/8 committed · standards ✓ (b2936ea) · spec — · editor —
 - architecture-diet: escalation 3: doc.go inventories stay a rule; the standards task brings the partial packages to it.
 - architecture-diet: escalation 4: go-storage and blobfs got the `main` ruleset the other seven repositories carry (PR required, no deletion, no force push); blobfs now merges by merge commit only and deletes merged branches. release-and-ci names no exceptions.
 - architecture-diet: escalation 5: cut "libraries reach their first stable major together"; no code expresses it, and graduation holds the intent.
+- architecture-diet: the check reads every markdown file git tracks or would track, so ignored files such as `.claude/briefs/` are skipped; every file outside `context/` other than `CLAUDE.md` carries front matter; it resolves inline links and reference definitions, skipping fenced code, inline code spans and links with a scheme, and strips a `#fragment` without checking the anchor.
+- architecture-diet: the configuration-loading rule says "web service", not "service", in the Application element, composition-root and lifecycle-and-context.
+- architecture-diet: architecture.md's Principles list mirrors `principles/README.md`, with the same entries in the same order.
 
 ## Pending edits
 
-- architecture-diet: restate `dependencies.md`'s line as "bottom-up, no provider in a base, kept light", held by discipline; drop `service-tiers.md`'s claim that a lint step checks the boundary.
 - standards: each STANDARDS.md points the reviewer to the hierarchy, provider, and doc.go discipline.
 - v1.deployment: Dockerfile base images join each repository's currency.
-- architecture-diet: `standards/go-elemental/principles/release-and-ci.md` still prescribes a per-module CI matrix and omits check, currency, and upgrade; restate it from the practice checks established.
-- architecture-diet: `tests-and-docs.md` states the black-box rule as practiced, with the export_test clock/probe allowance; check enforces it through testpackage.
-- architecture-diet: `tests-and-docs.md` states the integration tier as practiced (sqlate/blobfs postgres suites, go-storage Azurite acceptance beside the application tier); drop "not re-proven in CI" or restate where each runs.
-- architecture-diet: `tests-and-docs.md` drops "provider tests assert construction", states that a provider test may drive a loopback port-0 test server (go-database's postgres provider tests complete a startup exchange with an in-test pgproto3 server), and links to marathon's standards-reviewer definition of a lying test.
-- architecture-diet: absorb the `release-and-ci` task into the existing `release-and-ci.md` restatement (release prep via PR; a failed-release tag may be re-pushed at the same version; a released tag is never re-cut).
-- coordinator · roadmap: remove `[goals.quality.tasks.release-and-ci]` from the roadmap.
-- coordinator · roadmap: add backlog goal `slab-json-partial-color`: go-web-service tools/slab `style.JSON` returns partly colored output when the input breaks after the first token, though its comment says any tokenizer error returns the input unchanged; fix the code or the comment.
-- coordinator · roadmap: `[goals.quality]` repos and `[goals.quality.tasks.architecture-diet]` repos add claude-plugins.
-- coordinator · roadmap: v1.harness.tasks.sitrep and .tooling context keys point to `claude-plugins/context/tool-based-skills.md`; v1.harness.tasks.local-models drops "architecture" from its repos.
-- coordinator · notes: `ai-strategy.md` and `ai-hosting.md` cite claude-plugins' tool-based-skills note, not `architecture/harness/`.
-- coordinator · roadmap: remove backlog goal `entrypoint-composition-split` (entry and table); backlog `sql-meta-language` drops its context key; v1.middleware's context replaces `architecture/context/dependency-sourcing.md` with `architecture/standards/go-elemental/principles/dependencies.md`.
+- coordinator · `context/roadmap.toml`: remove `[goals.quality.tasks.release-and-ci]`; `[goals.quality]` and `[goals.quality.tasks.architecture-diet]` add claude-plugins to their repos and drop their `architecture/context/standards-audit.md` context key; add backlog goal `slab-json-partial-color` (go-web-service tools/slab `style.JSON` returns partly colored output when the input breaks after the first token, though its comment says any tokenizer error returns the input unchanged; fix the code or the comment); v1.harness.tasks.sitrep and .tooling context keys point to `claude-plugins/context/tool-based-skills.md`; v1.harness.tasks.local-models drops "architecture" from its repos; remove backlog goal `entrypoint-composition-split` (entry and table); backlog `sql-meta-language` drops its context key; v1.middleware's context replaces `architecture/context/dependency-sourcing.md` with `architecture/standards/go-elemental/principles/dependencies.md`, and its summary drops "(dependency-sourcing.md)"; goal cli's context or summary records that slab implements the CLI architecture, leaning toward startup rooted at the command level.
+- coordinator · `context/ai-strategy.md`: cite claude-plugins' tool-based-skills note, not `architecture/harness/`.
+- coordinator · `context/ai-hosting.md`: cite claude-plugins' tool-based-skills note, not `architecture/harness/`.
+- coordinator · `context/service-organization.md`: cite `architecture.md`'s sinking rule and `principles/independent-releases.md` instead of the culled `architecture/context/promote-on-fit.md`.
+- coordinator · `context/auth-strategy.md`: cite the sourcing section of `architecture/standards/go-elemental/principles/dependencies.md` instead of `dependency-sourcing.md`.
+- coordinator · `context/cli-applications.md`: cite the sourcing section of `architecture/standards/go-elemental/principles/dependencies.md` instead of `dependency-sourcing.md`.
+- coordinator · `references.md` and `references.toml`: drop the derived-standard mechanics (`derives = "<key>"`, and dotnet-elemental as go-elemental's derived standard), since architecture-diet cut derived standards; drop claude-plugins' "The harness level of the reference architecture"; stop attributing cross-standard adoption to the downward-dependencies principle, whose "Across standards" section architecture-diet cut.
 - standards: go-web-service's STANDARDS.md carries the three domain-architecture judgement lines (domain layer as compositional grouping; a capability-named translation file per domain; cross-domain coupling as SQL downward and an injected interface upward) and resolves `context/domain-architecture.md`'s "Promotion candidates".
 - standards: go-web-sdk, go-storage and go-web-service STANDARDS.md point to the timeouts page; go-web-sdk's README "organization's markers" points to the dependencies sourcing section.
 - claude-plugins · CLAUDE.md and context/README.md: stop calling the repository "the harness level of the organization's reference architecture"; architecture-diet removed that level.
 - standards: go-core `process/doc.go` says "a composition root composes its run function from it"; restate it as the entrypoint, per architecture-diet's composition-root page; likewise `lifecycle/doc.go`'s "a composition root builds" the signal context.
-- coordinator · notes: `service-organization.md` cites `architecture.md`'s sinking rule and `principles/independent-releases.md` instead of the culled `architecture/context/promote-on-fit.md`; `auth-strategy.md` and `cli-applications.md` cite the sourcing section of `architecture/standards/go-elemental/principles/dependencies.md` instead of `dependency-sourcing.md`; v1.middleware's summary prose drops "(dependency-sourcing.md)" for that page.
 - standards: go-web-service's and blobfs/postgres's currency scripts report `tool` directives (sqlint), which their indirect-requirement filter hides today, as rolling-currency's developer-tools coverage states.
 - standards: sqlate's `postgres/CHANGELOG.md` and `sqlint/CHANGELOG.md` gain an `[Unreleased]` section and link definitions for their latest headings (Keep a Changelog, per release-and-ci).
 - standards: go-observability's `otlp` sub-module requires go-core v0.4.1 while its base is on v0.5.0; bring it current.
 - standards: complete the doc.go inventories in sqlate's query, migrate, header, sqlint and sqltest packages, go-observability's otlp, and go-web-service's tools/slab; give blobfs's data/datatest a doc.go.
 - standards: go-web-service's README stops calling the sweeper an exception to the Reactor ("calls a Domain Service ... so it is not one"), and the template's README stops requiring a reactor to dispatch to a domain service, per the broadened Reactor.
-- coordinator · roadmap: goal cli's context or summary records that slab implements the CLI architecture, leaning toward startup rooted at the command level.

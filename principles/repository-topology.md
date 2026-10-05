@@ -35,7 +35,7 @@ agent-tooling repositories and the organization-context repositories stand outsi
 ## Adjacent libraries
 
 A module repository may stand adjacent to a standard rather than in it: a standalone library any
-project on the standard's technology can adopt on its own. It is no infrastructure library,
+project on the standard's technology can adopt on its own. It is not an infrastructure library,
 because it presents no one external technology as a service, and it keeps its guide in its own
 repository. An adjacent library follows the standard's engineering principles (naming, module
 layout, releases and CI, tests and documentation) without being a member of any tier. It is
