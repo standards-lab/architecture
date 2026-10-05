@@ -1,14 +1,14 @@
 # goal · quality
 
-- **State:** brief ready
-- **Task:** architecture-diet
-- **Branch:** architecture-diet
+- **State:** idle
+- **Task:** none
+- **Branch:** none
 
 ## Tasks
 
 1. [x] checks
 2. [x] honest-tests
-3. [ ] architecture-diet
+3. [x] architecture-diet
 4. [ ] standards
 
 ## Task brief · architecture-diet
@@ -150,10 +150,6 @@ Out of scope  Any code repository; STANDARDS.md files and their pointers
 Door          two-way: prose and configuration on branches, revertable;
               deleted pages stay in git history; no tags.
 ```
-
-## Progress
-
-slices 8/8 committed · standards ✓ (b2936ea) · spec ✓ (no gaps) · editor ✓
 
 ## Decisions
 
