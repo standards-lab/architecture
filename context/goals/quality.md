@@ -1,8 +1,8 @@
 # goal · quality
 
-- **State:** idle
-- **Task:** none
-- **Branch:** none
+- **State:** building
+- **Task:** honest-tests
+- **Branch:** honest-tests
 
 ## Tasks
 
@@ -11,57 +11,86 @@
 3. [ ] architecture-diet
 4. [ ] standards
 
-## Task brief · checks
+## Task brief · honest-tests
 
 ```
-Problem       The nine code repos lack one runnable check built from the
-              Go ecosystem's own tooling, and CI duplicates it step by step.
-              Nothing detects drift in direct dependencies, toolchain,
-              actions or images.
-Behaviors     1. In each code repo, `mise run check` exits 0 on main,
-                 non-zero on any failing step, and leaves the tree clean.
-              2. Check composes only established tooling, on every module:
-                 GOWORK=off go build, go vet, gofmt -l, go fix -diff,
-                 go mod tidy -diff, go test -race (unit tier), golangci-lint
-                 (standard set + testpackage), and sqlint where SQL lives.
-                 No hand-written rule scripts: blobfs's split-check is
-                 removed entirely (mise task, CI job, README and CLAUDE.md
-                 mentions). Integration and acceptance stay out (Docker).
-              3. testpackage lint: a white-box test file without the
-                 _internal_test/export_test suffix fails check.
-              4. `mise run currency` exits non-zero when a direct go.mod
-                 requirement, mise tool (Go patch included), go directive
-                 minor, GitHub Action, or Compose/CI service image tag (same
-                 variant suffix, via crane) trails its latest.
-                 `mise run upgrade` bumps the Go and mise surfaces and
-                 `go mod tidy` settles indirect. After this task, currency
-                 and check pass in all 9 repos.
-              5. CI runs `mise run check` (jdx/mise-action) plus the existing
-                 integration / Azurite jobs, never currency. Dependabot
-                 alerts and security-update PRs are on; no version-update PRs.
-              6. Every pin is exact: actions (full semver), images (exact
-                 tag, no digest), Go patch, tools. marathon.toml names check,
-                 merge and [remote] ci. .gitignore swaps .claude/report.md
-                 for .claude/briefs/.
-Test seams    `mise run check` and `mise run currency` per repo
-Slices        Workspace order, one per repo, each: upgrade everything stale
-              first (fix breaks in-slice: watch pgx 5.11, go-observability →
-              go-core v0.5.0), then check, testpackage renames, go fix
-              findings, currency, CI, config, gitignore.
-              1 go-core   2 sqlate   3 go-database   4 go-web-sdk
-              5 go-observability   6 go-storage   7 blobfs
-              8 go-web-sdk-template   9 go-web-service
-Out of scope  The full lying-test evaluation (honest-tests); currency in
-              marathon core and the `currency` marathon.toml key
-              (factory.currency); dependency-direction, provider-leakage,
-              import-boundary and doc.go gates (discipline in planning and
-              review instead); Dockerfile base images (none exist yet);
-              the architecture repo beyond this record; STANDARDS.md and
-              CLAUDE.md; releases and tags; integration tests in check.
-Door          two-way: no tags pushed; every repo change is a revertable file
-              on a branch. The Dependabot security setting can be switched
-              off.
+Problem       The nine code repos' suites pass, but a green check proves
+              less than it claims: tests restate constants, read
+              unexported fields, struct shapes and SDK option structs, or
+              only construct; 29 white-box *_internal_test files bypass
+              the exported API. A suite that can't fail can't guard the
+              API it documents.
+Behaviors     1. Every test in the nine repos lives in its package's
+                 external test package and drives only the exported API.
+                 No *_internal_test file remains. The one white-box file
+                 is export_test, and only to export a hook that injects a
+                 clock or probe the API can't reach deterministically;
+                 the tests that use the hook stay black-box.
+              2. check fails on any white-box test file other than
+                 export_test: testpackage's skip regexp narrows to
+                 export_test in all nine repos, reversing the checks
+                 Decision that allowed the _internal_test suffix.
+              3. No test lies. A whole-suite review finds no test that is
+                 tautological (restates a constant or the implementation),
+                 structure-sensitive (reflects on struct shape or tags,
+                 reads unexported or SDK fields, asserts concrete types,
+                 counts implementation calls, hard-codes inventory sizes),
+                 or unable to fail (only constructs, or mocks away the
+                 failure that matters).
+              4. A lying test whose behavior the package's doc.go or
+                 README states is rewritten at the exported seam; it is
+                 deleted only when another test already proves that
+                 behavior. No documented behavior loses its last test.
+              5. The only guard test kept is blobfs's sha256 pin on
+                 released migrations, now read through the exported
+                 migration set. Startup stage order (template,
+                 go-web-service) is proved through observable startup
+                 order, and blobfs entity NULL handling through a scan on
+                 sqlate's scripted driver, or each is deleted where
+                 another test already covers it.
+              6. Each repo's integration and acceptance suites are judged
+                 with the same rules and pass under Docker through the
+                 repo's own integration or acceptance task. check stays
+                 unit-only.
+              7. go-web-service runs the collector image 0.162.0, and its
+                 currency exits 0.
+Test seams    `mise run check` per repo (testpackage enforces the
+              black-box rule; the unit suites prove the API), and each
+              repo's integration / acceptance task under Docker
+Slices        Workspace order. In each slice the standards-reviewer
+              profile runs over that scope's whole suite, every test file
+              and not the branch diff, with Behaviors 1-6 as its rules. It
+              rewrites or deletes, commits, and the slice is done when the
+              scope has no white-box file beyond allowed export_test
+              hooks, check passes, and the scope's integration or
+              acceptance task passes where it has one. The end-of-task
+              diff review then runs as usual.
+              1 go-web-service collector upgrade (compose image 0.162.0;
+                currency and check pass)
+              2 go-core   3 sqlate   4 go-database   5 go-web-sdk
+              6 go-observability   7 go-storage (Azurite acceptance)
+              8 blobfs (acceptance)   9 go-web-sdk-template (integration)
+              Slices 2-9 each narrow that repo's testpackage regexp.
+              10 go-web-service: the service
+              11 go-web-service: its integration suite (run isolated)
+              12 go-web-service: tools/slab, then narrow testpackage for
+                 the whole repo
+Out of scope  Coverage of any kind (no threshold, no before/after
+              figures); mutation testing; production-code changes beyond
+              a clock or probe hook an export_test reaches (any other
+              need escalates); the architecture repo beyond this record
+              (tests-and-docs changes go to architecture-diet);
+              STANDARDS.md, CLAUDE.md and the marathon.toml currency key
+              (standards); releases and tags; integration tests in check
+              or CI changes.
+Door          two-way: every change is a revertable test or lint-config
+              file on a branch, plus one compose image tag; no tags
+              pushed.
 ```
+
+## Progress
+
+slices 0/12 committed · standards — · spec — · editor —
 
 ## Decisions
 
@@ -88,9 +117,26 @@ Door          two-way: no tags pushed; every repo change is a revertable file
 - checks: the template groups its own imports last, so an app generated by gonew passes gofmt.
 - checks: white-box test files flagged by testpackage are renamed to `*_internal_test.go` with unchanged contents (go-storage 2, blobfs 2, template 2, go-web-service 17); honest-tests judges them.
 
+- honest-tests: one slice per repository in workspace order; go-web-service's collector upgrade slice first, then its three scopes (service, integration suite, tools/slab).
+- honest-tests: one task, not split; each slice is committed and stands alone.
+- honest-tests: a lying test is rewritten at the exported seam when the package's doc.go or README states its behavior, and deleted only when another test proves it; no documented behavior loses its last test.
+- honest-tests: black-box only; every test lives in `<pkg>_test` and drives the exported API; the one allowance is an export_test hook injecting a clock or probe the API can't reach deterministically. Reverses the checks Decision allowing `_internal_test`.
+- honest-tests: check enforces the black-box rule: testpackage's skip regexp narrows to export_test in all nine repos.
+- honest-tests: the only guard kept is blobfs's sha256 pin on released migrations, read through the exported migration set; stage order via observable startup order, entity NULL handling via a scan on sqlate's scripted driver, or deleted where covered.
+- honest-tests: integration and acceptance suites are judged by the same rules and run under Docker in each slice; check stays unit-only.
+- honest-tests: no coverage measure of any kind; the strategy is truthful tests of the exported API.
+- honest-tests: tests-and-docs contradictions go to architecture-diet as pending edits; the architecture repository changes only by this record.
+- honest-tests: release-and-ci folds into architecture-diet; record Tasks unchanged; the roadmap entry is removed by a pending edit.
+- honest-tests: go-web-service's collector image moves to 0.162.0; no breaking change touches a component its config uses.
+
 ## Pending edits
 
 - architecture-diet: restate `dependencies.md`'s line as "bottom-up, no provider in a base, kept light", held by discipline; drop `service-tiers.md`'s claim that a lint step checks the boundary; update `context/standards-audit.md`'s split-check suggestion.
 - standards: each STANDARDS.md points the reviewer to the hierarchy, provider, and doc.go discipline.
 - v1.deployment: Dockerfile base images join each repository's currency.
 - architecture-diet: `standards/go-elemental/principles/release-and-ci.md` still prescribes a per-module CI matrix and omits check, currency, and upgrade; restate it from the practice checks established.
+- architecture-diet: `tests-and-docs.md` states the black-box rule as practiced, with the export_test clock/probe allowance; check enforces it through testpackage.
+- architecture-diet: `tests-and-docs.md` states the integration tier as practiced (sqlate/blobfs postgres suites, go-storage Azurite acceptance beside the application tier); drop "not re-proven in CI" or restate where each runs.
+- architecture-diet: `tests-and-docs.md` drops "provider tests assert construction" and links to marathon's standards-reviewer definition of a lying test.
+- architecture-diet: absorb the `release-and-ci` task into the existing `release-and-ci.md` restatement (release prep via PR; a failed-release tag may be re-pushed at the same version; a released tag is never re-cut).
+- coordinator · roadmap: remove `[goals.quality.tasks.release-and-ci]` from the roadmap.
