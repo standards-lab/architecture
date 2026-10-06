@@ -9,146 +9,143 @@
 1. [x] checks
 2. [x] honest-tests
 3. [x] architecture-diet
-4. [ ] standards
+4. [x] standards
 
-## Task brief · architecture-diet
+## Task brief · standards
 
 ```
-Problem       The architecture layer is what each STANDARDS.md will point
-              the standards-reviewer at, yet it prescribes more than the
-              code does: pages contradict the code (who owns the signal
-              context, a lint step that doesn't exist, doc comments, the
-              guard's home, CI shape), describe speculation (events,
-              derived standards, worker SDKs, unbuilt libraries), hold a
-              harness level written for marathon 0.15, and leave validated
-              cross-repo rules (adjacency, sourcing, harness rules, doc.go
-              inventories, timeouts) stranded in notes. The repository
-              also lacks marathon 0.16's check, merge and briefs
-              conventions. The standards task points into this layer
-              next, so it must be trimmed first.
-Repos         claude-plugins, architecture
-Behaviors     1. Every page, kept or new, states only what merged code in
-                 the nine code repositories expresses or a check
-                 enforces; the end-of-task review can name the code
-                 behind each claim.
-              2. The architecture repository's check fails when any
-                 relative link in its markdown doesn't resolve, or when a
-                 page's front matter lacks the keys the root README's
-                 schema requires for its type. It passes on the finished
-                 tree.
-              3. The architecture repository's marathon configuration
-                 names that check and the merge command
-                 `gh pr merge --merge --delete-branch`, with no ci key;
-                 session briefs are git-ignored and the retired report
-                 file isn't listed.
-              4. The harness level is gone from the architecture
-                 repository: no harness pages, no harness row or section
-                 in the root README, no harness mention in the
-                 context-architecture principle, CLAUDE.md or the context
-                 orientation. Tool-based skills lives on as a planning
-                 note in claude-plugins' context, framed as planned work
-                 for v1.harness.tooling, listed in its orientation map;
-                 claude-plugins' marathon-extraction note cites it there;
-                 claude-plugins' check passes.
-              5. The architecture says, as practised, that an
-                 application's entrypoint derives the signal context,
-                 loads configuration and owns the exit code, and that its
-                 composition root beneath it only declares the
-                 composition. The Application element, the
-                 composition-root principle and Go Elemental's
-                 lifecycle-and-context agree; "entrypoint" is prose in
-                 Application, and the element list stays at five; the
-                 entrypoint/composition-root split note is gone.
-              6. No page describes event emission, derived or
-                 re-expressed standards, the external catalog, or a
-                 derives front-matter field; no page names a worker SDK,
-                 a reference-architecture variant, or go-auth,
-                 go-messaging or go-ai. The command-line SDK tier stays;
-                 the Reactor element stays.
-              7. Repository topology names an adjacent position for
-                 standalone libraries outside the five tiers; the Go
-                 Elemental catalog lists blobfs beside sqlate as
-                 adjacent; topology-and-naming exempts adjacent libraries
-                 from the go- prefix. No shipped-schema exception is
-                 stated.
-              8. Service tiers names only standards with built code and
-                 calls the import boundary a reviewed discipline, not a
-                 lint step.
-              9. Rolling currency covers container images and leaves
-                 indirect dependencies to the ecosystem's resolver, as
-                 each repository's currency command does.
-              10. Go Elemental's dependencies principle states the line
-                  as "bottom-up, no provider in a base, kept light",
-                  held by discipline, and gains the sourcing rule: when
-                  to write a capability in-house and when to source one,
-                  the markers of a standard library, and how sourced
-                  weight is isolated.
-              11. Baseline-standard ownership's worked case is sqlate's
-                  optimistic-concurrency guard; no unbuilt library is
-                  named.
-              12. Tests and documentation states, as practised: the
-                  black-box rule with the export_test clock-or-probe
-                  allowance, enforced by check through testpackage; the
-                  integration and acceptance suites and where each runs;
-                  provider tests that may drive a loopback port-0
-                  server; a link to marathon's standards-reviewer
-                  definition of a lying test; the integration harness
-                  rules the template's and service's suites follow; and
-                  doc.go as the authoritative API description with an
-                  inventory of every export, each contract stated once
-                  on its symbol. "Written without doc comments" and
-                  "provider tests assert construction" are gone.
-              13. Releases and CI states, as practised: one check per
-                  repository, with currency and upgrade beside it;
-                  release preparation through a pull request; a tag
-                  whose release failed may be deleted and re-pushed at
-                  the same version, while a released tag is never
-                  re-cut. No per-module CI matrix is described.
-              14. A Go Elemental principle "Timeouts and deadlines" (key
-                  timeouts), listed after lifecycle-and-context, states
-                  the four validated rules: tight server timeouts with
-                  size-derived per-route deadlines, a per-try deadline
-                  with an idle read bound, a retry budget inside the
-                  write timeout, and the upload read deadline as the
-                  client's.
-              15. The Go Elemental README points to the dependencies
-                  principle instead of restating the line; the root
-                  README says a page arrives only from validated code;
-                  CLAUDE.md holds navigation pointers only.
-              16. Only goal records remain in the architecture
-                  repository's context; every note this task consumes or
-                  cuts is gone (standards audit, promote on fit, testing
-                  harness, adjacent position, dependency sourcing, SQL
-                  meta language, entrypoint split), and the orientation's
-                  map matches.
-Test seams    Each repository's check (architecture's new script;
-              claude-plugins' scripts/check.sh); the end-of-task
-              standards-reviewer, reading each changed page against the
+Problem       The standards-reviewer reviews every task against a
+              repository's STANDARDS.md and the architecture pages it
+              points to, yet no repository has one, so it falls back
+              to the language's general practice. The judgement calls
+              it should apply sit in CLAUDE.md files, which every
+              agent loads, mixed with prose that restates READMEs and
+              the context-architecture principle. architecture-diet
+              trimmed the layer so the pointers can land now. Each
+              code repository also has a currency task its marathon
+              configuration doesn't name, so PLAN can't run it, and
+              the goal's pending edits leave doc.go inventories,
+              doc and README wording, changelogs and tool-directive
+              currency behind the architecture as practised.
+Repos         go-core, sqlate, go-database, go-web-sdk,
+              go-observability, go-storage, blobfs,
+              go-web-sdk-template, go-web-service, architecture
+Behaviors     1. Each of the ten repositories has a STANDARDS.md
+                 holding judgement calls only, one line each. None
+                 restates what its check enforces or what its README,
+                 package documentation or guide states. Each pointer
+                 is a workspace-relative path written as code, not a
+                 link, and resolves to a page in the architecture
+                 repository. It names the narrowest page whose rule
+                 the repository's merged code follows: a Go Elemental
+                 page over the architecture principle it enhances,
+                 and no page the code doesn't follow. A pointer may
+                 narrow its page with a convention of the
+                 repository's own, never restate it. The end-of-task
+                 review can name the code behind each pointer.
+              2. Each code repository's STANDARDS.md points the
+                 reviewer to the dependency line's bottom-up
+                 hierarchy and its no-provider-in-a-base rule, and to
+                 the doc.go inventory rule, all held by review rather
+                 than a check.
+              3. go-web-sdk's, go-storage's and go-web-service's
+                 STANDARDS.md point to the timeouts page.
+              4. go-web-service's STANDARDS.md carries three domain
+                 judgement lines: the domain layer as a compositional
+                 grouping (one package, one Domain Service, one
+                 handler); a capability-named translation file per
+                 domain; cross-domain coupling as an SQL check
+                 downward and an injected interface upward. Its
+                 domain-architecture note has no promotion-candidates
+                 section.
+              5. Every judgement line that only a CLAUDE.md held is a
+                 STANDARDS.md line, among them the template's
+                 dual-copy rule for its two CI workflows and
+                 go-web-service's documented layer as the unit of
+                 change. Every other CLAUDE.md line is gone because
+                 the README, package documentation, guide, a check or
+                 an architecture page already states it.
+              6. Each of the ten CLAUDE.md files holds navigation
+                 pointers only: the working context's index,
+                 STANDARDS.md and the check; architecture keeps its
+                 root README pointer.
+              7. go-web-sdk-template keeps STANDARDS.md and CLAUDE.md
+                 at its repository root only; the module gonew
+                 generates gains no file.
+              8. The architecture repository's STANDARDS.md says that
+                 each claim on a page names the merged code or check
+                 that expresses it, and that a page never restates a
+                 repository's implementation. It points to the root
+                 README's what-belongs-here section and the
+                 context-architecture principle. Its check exempts
+                 STANDARDS.md from front matter as it does CLAUDE.md.
+              9. The marathon configuration of each code repository
+                 names its currency command: `mise run currency` in
+                 the eight with tasks at the root,
+                 `mise -C template run currency` in
+                 go-web-sdk-template. architecture names none. Each
+                 command exits 0 with no output on the finished tree.
+              10. go-web-service's and blobfs's currency commands
+                  report a tool directive's module that trails its
+                  latest release, as `<where>: <module> <pin> ->
+                  <latest>`. They find tools through Go's own tool
+                  listing (`go list tool`), not by parsing go.mod.
+                  With sqlint at its latest they report nothing.
+              11. go-core's process and lifecycle package
+                  documentation name the entrypoint, not the
+                  composition root, as what composes the run function
+                  and builds the signal context, as the
+                  composition-root page states.
+              12. go-web-sdk's README links to the sourcing section of
+                  the Go Elemental dependencies page for the markers
+                  of a standard library instead of stating them.
+              13. go-web-service's README calls the sweeper a Reactor,
+                  not an exception to one. The template's generated
+                  README describes a reactor as any process-lifetime
+                  entry point driven by an occurrence, which often
+                  dispatches to a domain service but need not.
+              14. sqlate's postgres and sqlint changelogs each open
+                  with an empty [Unreleased] section and carry link
+                  definitions for [Unreleased] and each latest
+                  heading, comparing from their latest released tag,
+                  per Keep a Changelog.
+              15. The package documentation of sqlate's query,
+                  migrate, header, sqlint and sqltest packages,
+                  go-observability's otlp, and each library package
+                  of go-web-service's slab tool lists every export,
+                  each contract stated once on its symbol. blobfs's
+                  data conformance-suite package gains package
+                  documentation with its inventory.
+              16. Every repository's check passes on the finished
+                  tree.
+Test seams    Each repository's check; each code repository's
+              currency command; the end-of-task standards-reviewer,
+              reading each STANDARDS.md pointer and line against the
               code it cites.
-Slices        No upgrade slice (claude-plugins current; architecture has
-              no currency command). Each slice leaves the checks passing.
-              1 Conventions: the check, marathon configuration, ignore
-                file (B2, B3); passes on today's tree
-              2 Harness level out; tool-based skills note in
-                claude-plugins; CLAUDE.md to pointers; root README
-                validated-code rule (B4, B15 in part)
-              3 Entrypoint and composition root (B5)
-              4 Speculation cut and topology: events, derived standards
-                and catalog, worker SDK and variants, adjacency, service
-                tiers, rolling currency (B6-B9)
-              5 Go Elemental dependencies, baseline standards,
-                topology-and-naming, README pointer (B10, B11, B15)
-              6 Tests and documentation; releases and CI (B12, B13)
-              7 Timeouts page (B14)
-              8 Notes culled; orientation updated (B16)
-Out of scope  Any code repository; STANDARDS.md files and their pointers
-              (standards task); claude-plugins beyond the tool-based
-              skills note, its orientation entry and the
-              marathon-extraction citation; coordinator edits (pending);
-              CI for architecture; a currency command; releases or tags;
-              the shipped-schema exception; new pages beyond timeouts.
-Door          two-way: prose and configuration on branches, revertable;
-              deleted pages stay in git history; no tags.
+Slices        No upgrade slice (every currency command reports
+              current). One slice per repository, in workspace order;
+              each leaves its check passing.
+              1  go-core (B1, B2, B5, B6, B9, B11)
+              2  sqlate (B1, B2, B5, B6, B9, B14, B15)
+              3  go-database (B1, B2, B5, B6, B9)
+              4  go-web-sdk (B1-B3, B5, B6, B9, B12)
+              5  go-observability (B1, B2, B5, B6, B9, B15)
+              6  go-storage (B1-B3, B5, B6, B9)
+              7  blobfs (B1, B2, B5, B6, B9, B10, B15)
+              8  go-web-sdk-template (B1, B2, B5-B7, B9, B13)
+              9  go-web-service (B1-B6, B9, B10, B13, B15)
+              10 architecture (B1, B6, B8, B16)
+Out of scope  Releases and tags: otlp keeps its indirect go-core
+              v0.4.1. A gate key in any repository. STANDARDS.md or
+              CLAUDE.md inside the generated template module.
+              STANDARDS.md for claude-plugins, standards-lab or any
+              spike. Architecture page content. Currency changes in
+              repositories with no tool directive. A check that
+              resolves STANDARDS.md pointers (retro's drift pass does
+              it; hand-written gates were rejected). Coordinator and
+              claude-plugins edits (the sync).
+Door          two-way: prose, configuration and scripts on branches,
+              revertable; no tags.
 ```
 
 ## Decisions
@@ -225,23 +222,29 @@ Door          two-way: prose and configuration on branches, revertable;
 - architecture-diet: the configuration-loading rule says "web service", not "service", in the Application element, composition-root and lifecycle-and-context.
 - architecture-diet: architecture.md's Principles list mirrors `principles/README.md`, with the same entries in the same order.
 
+- standards: the architecture repository gets its own STANDARDS.md: each claim on a page names the merged code or check that expresses it, a page never restates a repository's implementation; it points to the root README's "What belongs here" and the context-architecture principle.
+- standards: go-web-sdk-template keeps STANDARDS.md and CLAUDE.md at its repository root only; gonew's output gains no file, since workspace-relative pointers don't resolve in a generated service outside the workspace.
+- standards: held go-core at v0.4.1 in go-observability's otlp: otlp imports no go-core package and takes it indirectly through its pin on go-observability v0.1.0, so the line moves at go-observability's next release; declined v0.5.0, the pending edit is dropped and nothing is released.
+- standards: the architecture repository's check exempts STANDARDS.md from page front matter beside CLAUDE.md; it is reviewer instructions, not a page, and a new page type would grow the schema for one file.
+- standards: the implementers read the architecture pages their STANDARDS.md pointers name, an exception to the rule that implementers don't load the architecture, because STANDARDS.md is the deliverable.
+- standards: the standards-reviewer added a lifecycle-and-context pointer to go-database, go-web-sdk, go-observability and go-storage; added no timeouts pointer for go-database, whose ConnTimeout is an operational default under baseline-standards; dropped the composition-root pointer from go-core and the template; and narrowed it in go-web-service.
+- standards: a doc.go inventory takes go-core's form, a "The package exports:" list without methods; a file's existing grouped or prose form stays acceptable, and review holds only completeness.
+- standards: the gap fix completed four inventories outside B15 (sqlate's root package errors, the template's and go-web-service's configtest, blobfs's dbtest), because the STANDARDS.md pointers claim the rule for every package.
+- standards: the template's CHANGELOG gained an [Unreleased] entry for the reactor wording.
+- standards: the currency scripts' tool scan reports only tool modules that are indirect requirements, so a tool the module also requires directly is reported once, and it reads only go list's standard output.
+
 ## Pending edits
 
-- standards: each STANDARDS.md points the reviewer to the hierarchy, provider, and doc.go discipline.
-- v1.deployment: Dockerfile base images join each repository's currency.
-- coordinator · `context/roadmap.toml`: remove `[goals.quality.tasks.release-and-ci]`; `[goals.quality]` and `[goals.quality.tasks.architecture-diet]` add claude-plugins to their repos and drop their `architecture/context/standards-audit.md` context key; add backlog goal `slab-json-partial-color` (go-web-service tools/slab `style.JSON` returns partly colored output when the input breaks after the first token, though its comment says any tokenizer error returns the input unchanged; fix the code or the comment); v1.harness.tasks.sitrep and .tooling context keys point to `claude-plugins/context/tool-based-skills.md`; v1.harness.tasks.local-models drops "architecture" from its repos; remove backlog goal `entrypoint-composition-split` (entry and table); backlog `sql-meta-language` drops its context key; v1.middleware's context replaces `architecture/context/dependency-sourcing.md` with `architecture/standards/go-elemental/principles/dependencies.md`, and its summary drops "(dependency-sourcing.md)"; goal cli's context or summary records that slab implements the CLI architecture, leaning toward startup rooted at the command level.
+- coordinator · `context/roadmap.toml`: add backlog goal `slab-json-partial-color` (go-web-service tools/slab `style.JSON` returns partly colored output when the input breaks after the first token, though its comment says any tokenizer error returns the input unchanged; fix the code or the comment); v1.harness.tasks.sitrep and .tooling context keys point to `claude-plugins/context/tool-based-skills.md`; v1.harness.tasks.local-models drops "architecture" from its repos; remove backlog goal `entrypoint-composition-split` (entry and table); backlog `sql-meta-language` drops its context key; v1.middleware's context replaces `architecture/context/dependency-sourcing.md` with `architecture/standards/go-elemental/principles/dependencies.md`, and its summary drops "(dependency-sourcing.md)"; goal cli's context or summary records that slab implements the CLI architecture, leaning toward startup rooted at the command level.
+- coordinator · `context/roadmap.toml`: subsumed by sync, which deletes `[goals.quality]` with everything under it: removing `[goals.quality.tasks.release-and-ci]`; adding claude-plugins to the repos of `[goals.quality]` and `[goals.quality.tasks.architecture-diet]` and dropping their `architecture/context/standards-audit.md` context key; and `[goals.quality]`'s summary, which still says "marathon 0.16's conventions".
+- coordinator · roadmap.toml: [goals.v1.deployment] summary: Dockerfile base images join each repository's currency.
 - coordinator · `context/ai-strategy.md`: cite claude-plugins' tool-based-skills note, not `architecture/harness/`.
 - coordinator · `context/ai-hosting.md`: cite claude-plugins' tool-based-skills note, not `architecture/harness/`.
 - coordinator · `context/service-organization.md`: cite `architecture.md`'s sinking rule and `principles/independent-releases.md` instead of the culled `architecture/context/promote-on-fit.md`.
 - coordinator · `context/auth-strategy.md`: cite the sourcing section of `architecture/standards/go-elemental/principles/dependencies.md` instead of `dependency-sourcing.md`.
 - coordinator · `context/cli-applications.md`: cite the sourcing section of `architecture/standards/go-elemental/principles/dependencies.md` instead of `dependency-sourcing.md`.
 - coordinator · `references.md` and `references.toml`: drop the derived-standard mechanics (`derives = "<key>"`, and dotnet-elemental as go-elemental's derived standard), since architecture-diet cut derived standards; drop claude-plugins' "The harness level of the reference architecture"; stop attributing cross-standard adoption to the downward-dependencies principle, whose "Across standards" section architecture-diet cut.
-- standards: go-web-service's STANDARDS.md carries the three domain-architecture judgement lines (domain layer as compositional grouping; a capability-named translation file per domain; cross-domain coupling as SQL downward and an injected interface upward) and resolves `context/domain-architecture.md`'s "Promotion candidates".
-- standards: go-web-sdk, go-storage and go-web-service STANDARDS.md point to the timeouts page; go-web-sdk's README "organization's markers" points to the dependencies sourcing section.
 - claude-plugins · CLAUDE.md and context/README.md: stop calling the repository "the harness level of the organization's reference architecture"; architecture-diet removed that level.
-- standards: go-core `process/doc.go` says "a composition root composes its run function from it"; restate it as the entrypoint, per architecture-diet's composition-root page; likewise `lifecycle/doc.go`'s "a composition root builds" the signal context.
-- standards: go-web-service's and blobfs/postgres's currency scripts report `tool` directives (sqlint), which their indirect-requirement filter hides today, as rolling-currency's developer-tools coverage states.
-- standards: sqlate's `postgres/CHANGELOG.md` and `sqlint/CHANGELOG.md` gain an `[Unreleased]` section and link definitions for their latest headings (Keep a Changelog, per release-and-ci).
-- standards: go-observability's `otlp` sub-module requires go-core v0.4.1 while its base is on v0.5.0; bring it current.
-- standards: complete the doc.go inventories in sqlate's query, migrate, header, sqlint and sqltest packages, go-observability's otlp, and go-web-service's tools/slab; give blobfs's data/datatest a doc.go.
-- standards: go-web-service's README stops calling the sweeper an exception to the Reactor ("calls a Domain Service ... so it is not one"), and the template's README stops requiring a reactor to dispatch to a domain service, per the broadened Reactor.
+- sqlate · `query/errors.go` and `query/statement.go`: the comments on `ErrTransactionRequired` and `Statement.TransactionRequired` write the header as `-- transaction: required`; the grammar is `--| transaction: required`.
+- go-web-sdk · `context/`: record the open question whether `middleware/rate-limit`'s default of 300 requests per minute is application policy, which baseline-standards bars from a library, or an allowed operational default.
+- go-web-service · `tools/slab/demo/storage.go`: the comment on the `FixturesDir` const group describes the unexported `replacementFixture`, not `FixturesDir`.
