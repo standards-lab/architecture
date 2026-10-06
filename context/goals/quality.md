@@ -1,15 +1,15 @@
 # goal · quality
 
-- **State:** brief ready
-- **Task:** standards
-- **Branch:** standards
+- **State:** idle
+- **Task:** none
+- **Branch:** none
 
 ## Tasks
 
 1. [x] checks
 2. [x] honest-tests
 3. [x] architecture-diet
-4. [ ] standards
+4. [x] standards
 
 ## Task brief · standards
 
@@ -147,10 +147,6 @@ Out of scope  Releases and tags: otlp keeps its indirect go-core
 Door          two-way: prose, configuration and scripts on branches,
               revertable; no tags.
 ```
-
-## Progress
-
-slices 10/10 committed (go-core cad3135, sqlate 4479c45, go-database ab1f494, go-web-sdk 5bc1921, go-observability 6a3838f, go-storage ace7f74, blobfs 7418039, go-web-sdk-template a7694e2, go-web-service 34df494, architecture e8d25fc) · standards ✓ (fixes committed) · spec ✓ (gap fix: 4 inventories) · editor ✓
 
 ## Decisions
 
