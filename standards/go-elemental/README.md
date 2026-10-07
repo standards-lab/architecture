@@ -33,19 +33,22 @@ further, stating the enhancement beside its link to the principle.
   compose.
 - [Baseline-standard ownership](principles/baseline-standards.md) states that a library takes
   an external standard as its baseline and never hardens organizational convention or policy
-  into its contract.
+  into its contract, and that a consumer introduces a type only when it is needed.
 - [Topology and naming](principles/topology-and-naming.md) states how repositories, modules,
   packages, and release tags are named, the module layout of each tier, and the composition
   root's layout.
 - [Lifecycle and context ownership](principles/lifecycle-and-context.md) states the process
-  lifecycle every web service follows, which package owns the signal context, and the wiring
-  rule.
+  lifecycle every web service follows, which package owns the signal context, how a value takes
+  part in the lifecycle, and the wiring rule.
+- [Domain package files](principles/domain-files.md) states the file each part of a domain
+  package lives in, how a CLI splits a domain's API by dependency profile, and how a CLI domain's
+  commands are shaped.
 - [Timeouts and deadlines](principles/timeouts.md) states how a service bounds a request that
   moves a large body through a store: tight server timeouts with size-derived transfer
   deadlines, the store's per-try and idle bounds, and which party a timeout is charged to.
-- [Tests and documentation](principles/tests-and-docs.md) states the black-box unit tier, the
-  integration and acceptance suites and where each runs, the harness rules, and `doc.go`
-  ownership of API documentation.
+- [Tests and documentation](principles/tests-and-docs.md) states the black-box unit tier and
+  where its helpers and a composition root's fixtures live, the integration and acceptance suites
+  and where each runs, the harness rules, and `doc.go` ownership of API documentation.
 - [Releases and CI](principles/release-and-ci.md) states the one check every repository runs,
   currency and upgrade beside it, artifact-keyed tags, changelog discipline, and how a release
   lands.

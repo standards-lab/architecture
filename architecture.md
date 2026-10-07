@@ -121,6 +121,8 @@ and never loosen it:
   dependency rule between them.
 - [The composition root](principles/composition-root.md) — the one package where an application
   assembles and declares its composition.
+- [Composition terms](principles/composition-terms.md) — the graph, node, system, layer,
+  subsystem, and coordinator a composition root describes and the lifecycle runs.
 - [Rolling currency](principles/rolling-currency.md) — every chosen version is pinned and the
   latest release.
 - [Validation-first layering](principles/validation-first.md) — each scope validates what it owns

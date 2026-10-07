@@ -61,10 +61,13 @@ does, as `sqlate` and `blobfs` are.
 ## Application-layer import direction
 
 Every Go Elemental application — whatever its type — divides into three tiers with one import
-direction: `cmd/*` imports only `internal/*` and go-core's `process` package, which owns the
-signal context and the exit path; `internal/*` is the composition root and may import any
-root-level package; and nothing at the root level imports `internal/*`. A `cmd/*` binary is
-initialization alone: it constructs the application from `internal/*` and never reaches past it.
+direction: of its own module's packages, `cmd/*` imports only `internal/*`; `internal/*` is the
+composition root and may import any root-level package; and nothing at the root level imports
+`internal/*`. Outside its module, `cmd/*` may import the SDK packages the application composes
+over: go-core for process setup, whose `process` package owns the signal context and the exit
+path, and the application SDK, such as go-cli-sdk, whose `cli.Streams` value carries a CLI's
+standard streams from its entrypoint into the composition root. A `cmd/*` binary is initialization alone: it constructs the application from
+`internal/*` and never reaches past it into its own module.
 `internal/*`'s own layers import each other and the root-level packages that make up the
 application's domain and infrastructure, but the reverse never happens — a root-level package
 importing back into `internal/*` would make domain code depend on how it is wired, not on what it

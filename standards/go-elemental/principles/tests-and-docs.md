@@ -36,9 +36,17 @@ its behavior with fakes, scripted drivers, and loopback listeners:
 - **Handlers** run through recorded requests with no listener; a test that must listen binds
   port 0 and reads the assigned port back, never a fixed port.
 
-A test helper stays in its test package until more than one test package needs it; then it is
-hoisted into a `<pkg>test` package, following the standard library's `httptest` and `fstest`
+A shared test helper stays in its test package until more than one test package needs it; then
+it is hoisted into a `<pkg>test` package, following the standard library's `httptest` and `fstest`
 naming, under `internal/` unless another module's tests consume it.
+
+A composition root's test fixtures live in an internal `<app>test` package even when only one test
+package consumes them. The fixtures are built over the composition the root publishes, its graph
+and its nodes: a fixture replaces a node's constructor with a substitute or observes which nodes a
+build reaches, and wraps no production constructor. The composition root's tests then need no
+`export_test.go` beyond the clock or probe hook above.
+[spike-cli-architecture](https://github.com/JaimeStill/spike-cli-architecture)'s
+`internal/apptest` holds its `internal/app` fixtures this way.
 
 ## Integration and acceptance suites, and where each runs
 
