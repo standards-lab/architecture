@@ -20,12 +20,13 @@ it. The entrypoint owns the process; the composition root owns the composition.
 The composition root's output is a declared composition, and execution belongs to the
 [application layer](../architecture.md): the root's run call hands the declaration to the
 lifecycle coordinator, which executes it. The root states which infrastructure services exist and
-in what order they start, which domain-service modules mount on which routes, which Reactors run
-alongside the transport, and which middleware wraps it. A root is not limited to one runner: the
-transport and any Reactors all register on the same lifecycle coordinator, ordered by stage like
-any other service. Keeping the root declarative keeps the application's entire composition
-readable in one place: a reviewer can see everything the application is made of without tracing
-execution.
+what each depends on, which orders their startup in layers; which domain-service modules mount on
+which routes; which Reactors run alongside the transport; and which middleware wraps it. A root is
+not limited to one runner: the transport and any Reactors are subsystems of the same coordinator,
+ordered in layers like any other. Keeping the root declarative keeps the application's entire
+composition readable in one place: a reviewer can see everything the application is made of
+without tracing execution. [Composition terms](composition-terms.md) defines the graph, layer,
+subsystem, and coordinator this page uses.
 
 ## It is the boundary for provider imports
 
@@ -46,6 +47,11 @@ before the run. A failure before the run, a configuration that does not load or 
 does not assemble, is reported by the entrypoint and becomes its exit code. The web service's
 composition root receives the configuration and never loads it; subsystems receive the values they
 need, never the configuration itself. This configuration rule applies to web services.
+
+A CLI's configuration is a node of its graph instead. Its entrypoint loads nothing, and the
+configuration is read only when a build reaches its node, so help, a usage error, or a command
+that declares no node reads no configuration and cannot fail on it. A CLI runs one command per
+process, and only the command knows which configuration it needs.
 
 The entrypoint reaches the composition root only through its construction and its run call, and
 nothing below the composition root reaches back up to it. Extending an application means editing

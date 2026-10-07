@@ -37,3 +37,13 @@ name from its caller rather than assuming it: `Statement.Guarded(check, version)
 service's configuration supplies them. The same rule holds for go-observability, whose baseline is
 OpenTelemetry: it enables the architecture's use of the standard without hard-coding the
 architecture's choices into it.
+
+## A type is introduced only when it is needed
+
+A consumer uses a library's types as the library defines them, and introduces a type or a layer of
+its own only when it adds something the library's lacks. A pass-through wrapper, a type whose
+methods only forward to the value it holds, adds a name to learn and a layer to keep current, and
+nothing else. The worked case is
+[spike-cli-architecture](https://github.com/JaimeStill/spike-cli-architecture)'s schema commands:
+their migrator node holds sqlate's `*migrate.Migrator` itself, which `schema.NewMigrator` builds,
+rather than a client type that forwards to it.
