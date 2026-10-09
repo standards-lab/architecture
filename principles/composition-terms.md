@@ -15,7 +15,10 @@ way, and a standard keeps the terms in its language's idiom.
 ## The terms
 
 - **Graph**: the composition root's description of the application's dependencies, as nodes.
-  Describing a graph constructs nothing.
+  Describing a graph constructs nothing. Only the composition root, its test fixtures, and the
+  SDKs that run a graph import `graph`. Every package below the root takes its dependencies as
+  plain values through its constructor and never sees a node, a scope, or the system, so the
+  graph's API can change without reaching them.
 - **Node**: one dependency in the graph, a name and a constructor. A constructor declares the
   nodes it depends on by using them, and those uses are the graph's edges.
 - **System**: what one build of the graph constructs. A build starts from a set of root nodes and
@@ -49,10 +52,10 @@ way, and a standard keeps the terms in its language's idiom.
 A graph lets each entry point build only what it reaches. A CLI runs one command per process, so
 a command that declares only the database never constructs the object store, and help or a usage
 error constructs nothing. A web service builds every node its serving path reaches and runs that
-system for the process lifetime. One coordinator runs both:
-[spike-cli-architecture](https://github.com/JaimeStill/spike-cli-architecture) expresses
-go-web-service's startup order as a graph and runs a CLI and a graph shaped like the web service
-on the same coordinator.
+system for the process lifetime. One coordinator runs both, and
+[go-core](https://github.com/standards-lab/go-core)'s `graph` and `lifecycle` realize it:
+[go-web-service](https://github.com/standards-lab/go-web-service) describes its composition root
+as one graph on that coordinator, and the CLI application type builds on the same one.
 
 How a standard realizes participation, startup, and shutdown is stated at the standard's level:
 Go Elemental's is [Lifecycle and context ownership](../standards/go-elemental/principles/lifecycle-and-context.md).

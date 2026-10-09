@@ -78,17 +78,20 @@ import a package under `internal/`. It enforces nothing on the inner one — wit
 root-level package importing `internal/domain` compiles. The direction is a convention, kept by
 review and package documentation, not by the compiler.
 
-The composition root, `internal/app`, is laid out as one file per layer of the architecture:
-one file constructs the infrastructure services, one the administrative services and their
-mount, one the domain services and their mount, one the reactors, with the list of mounts and
-the middleware stack each a file of their own. Beside them, `app.go` holds the construction and
-the run method, and `stages.go` the stage table the layer files register on; a layer the
-application adds, such as go-web-service's telemetry, is one more file. Each layer file
-constructs its layer and owns its mount, so the layer files are the architecture's layer list,
-and extending the application means editing a layer file's body while the signatures, the
-entrypoint, and the run method stay untouched. A package that the layers share and that must not
-import the composition root, the application's database infrastructure for one, lives at the root
-level.
+The composition root, `internal/app`, describes the application as one dependency graph on
+go-core's `graph`, one file per layer of the architecture. Each layer file defines its layer's
+nodes in one define function: one file the infrastructure services, one the administrative
+services, one the domain services, and one the reactors, and the administrative and domain files
+also build their mounts. `server.go` defines the request edge: the readiness the probes report,
+the router, and the server. The list of mounts and the middleware stack are each a file of their
+own, and a layer the application adds, such as go-web-service's telemetry, is one more file.
+Beside them, `app.go` holds the `Nodes` value, one handle per node; `New`, which describes the
+graph and cannot fail; and `Run`, which builds the graph and runs it under the lifecycle
+coordinator. The layer files are the architecture's layer list, and extending the application
+means defining a node in its layer's define function, a reactor's node also joining
+`Nodes.Reactors`, while the signatures, the entrypoint, and `Run` stay untouched. A package that
+the layers share and that must not import the composition root, the application's database
+infrastructure for one, lives at the root level.
 
 This is an Application-layer principle, independent of application type: a web service's
 `internal/app` is one realization, and a CLI composes its own `internal/app` the same way. It
