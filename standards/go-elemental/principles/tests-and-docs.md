@@ -59,10 +59,13 @@ variable, so the unit tier never reaches it:
   up the compose stack, runs them (and, in blobfs, the composition example), and resets the
   stack whatever the result. They run on a developer's machine; no CI job runs them, and the
   check neither compiles nor runs them.
-- **go-storage's azureblob acceptance tests** run the storage conformance suite against a real
-  service when `AZUREBLOB_TEST_ENDPOINT` names one, and skip otherwise. CI's `acceptance` job
-  runs them against an Azurite container on every pull request into `main` and every push to
-  it; no task runs them locally.
+- **go-storage's acceptance tests** run the storage conformance suite against a real service,
+  `azureblob`'s when `AZUREBLOB_TEST_ENDPOINT` names one and `s3`'s when `S3_TEST_ENDPOINT` does,
+  and skip otherwise. `mise run acceptance:azureblob` and `mise run acceptance:s3` each start
+  their provider's service from the compose harness (Azurite or SeaweedFS), run that module's
+  tests against it, and stop it whatever the result; `mise run acceptance` runs both. CI's
+  `acceptance` job runs `mise run acceptance` on every pull request into `main` and every push
+  to it.
 - **The template's and go-web-service's integration tier** (`-tags integration`, in the
   root-level `integration` package) runs the built service as a subprocess, black-box,
   through its API. Each repository's `mise run integration` task and CI `integration` job run
