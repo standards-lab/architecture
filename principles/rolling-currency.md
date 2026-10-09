@@ -27,7 +27,8 @@ surface on which a component chooses such a version, so no chosen version is exe
 - the direct module dependencies;
 - the actions a CI workflow runs;
 - the developer tools the task runner and CI invoke;
-- the container images a compose file or a CI workflow starts.
+- the container images a compose file or a CI workflow starts, each pinned once: a compose
+  service's pin is the `FROM` line of the Dockerfile it builds from, which currency reads.
 
 A container image is pinned by an exact tag, and its latest is the highest semantic version
 among the tags that carry the pinned tag's variant suffix: a pin of `18.6-alpine` is current

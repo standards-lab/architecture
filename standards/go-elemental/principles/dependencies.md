@@ -15,7 +15,7 @@ Go Elemental's dependency line is **bottom-up, no provider in a base, kept light
   is the line followed: the dependency points down, to a library that is itself engine-free.
 - **No provider in a base.** A database driver, a vendor SDK, or an exporter enters only
   through a sub-module that pins it in its own `go.mod`: go-database's and sqlate's `postgres`,
-  go-storage's `azureblob`, go-observability's `otlp`. Importing a base module compiles none of
+  go-storage's `azureblob` and `s3`, go-observability's `otlp`. Importing a base module compiles none of
   it.
 - **Kept light.** A base module takes the standard library first, and beyond it only what its
   repository's stated line admits: packages as idiomatic and stable as the standard library
@@ -92,7 +92,9 @@ model, under the organization's markers, and keeps cryptography out of the SDK.
 pinned in its own `go.mod`; the base module requires go-core alone. go-observability is the
 worked case for a stated exception: its README admits `otelhttp`, from a contrib repository that
 has never released its instrumentation modules past v0, as a stated v0 exception that passes
-every other marker.
+every other marker. go-storage's README admits `s3`'s `feature/s3/transfermanager` as a stated v0
+exception in a provider sub-module, sourced under the specification category: S3's multipart
+upload protocol.
 
 ## Peers compose in the application
 

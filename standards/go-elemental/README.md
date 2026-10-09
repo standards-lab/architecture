@@ -46,6 +46,9 @@ further, stating the enhancement beside its link to the principle.
 - [Timeouts and deadlines](principles/timeouts.md) states how a service bounds a request that
   moves a large body through a store: tight server timeouts with size-derived transfer
   deadlines, the store's per-try and idle bounds, and which party a timeout is charged to.
+- [Times in UTC](principles/utc-times.md) states that every time a library returns is in
+  `time.UTC`, the columns and read path that keep it so, log record times, how tests prove it,
+  and where a caller converts.
 - [Tests and documentation](principles/tests-and-docs.md) states the black-box unit tier and
   where its helpers and a composition root's fixtures live, the integration and acceptance suites
   and where each runs, the harness rules, and `doc.go` ownership of API documentation.
@@ -67,7 +70,7 @@ enhances, and its package documentation states its API.
 | Core SDK | [go-core](https://github.com/standards-lab/go-core) | The common primitives every Go Elemental application type uses: layered configuration, the process lifecycle, logging, and the process sequence with its integration toolkit. |
 | Infrastructure libraries | [go-database](https://github.com/standards-lab/go-database) | The SQL infrastructure service: the connection pool with its configuration, lifecycle, and readiness, the database admin service, and the PostgreSQL provider as a sub-module. |
 | Infrastructure libraries | [go-observability](https://github.com/standards-lab/go-observability) | The observability infrastructure service: OpenTelemetry configuration and process lifecycle, the trace-correlating log handler, HTTP server middleware, and the request-ID source function, with the OTLP exporters as a sub-module. |
-| Infrastructure libraries | [go-storage](https://github.com/standards-lab/go-storage) | The object storage infrastructure service: the standard-tier client interface over the operations Azure Blob and S3 share, the lifecycle wrapper that bounds and gates it, and the conformance suite a provider proves itself against, with the Azure Blob provider as a sub-module. |
+| Infrastructure libraries | [go-storage](https://github.com/standards-lab/go-storage) | The object storage infrastructure service: the standard-tier client interface over the operations Azure Blob and S3 share, the lifecycle wrapper that bounds and gates it, and the conformance suite a provider proves itself against, with the Azure Blob and S3 providers as sub-modules. |
 | Application SDKs | [go-web-sdk](https://github.com/standards-lab/go-web-sdk) | The SDK for Go Elemental web services: the server, routing, problem responses, paginated reads, the probes, middleware, and the integration toolkit. |
 | Templates | [go-web-sdk-template](https://github.com/standards-lab/go-web-sdk-template) | Scaffolds an initial Go Elemental web service, engine-free, with the composition root as one file per layer and the integration tier in place. |
 | Reference architectures | [go-web-service](https://github.com/standards-lab/go-web-service) | The holistic Go Elemental web service reference, grown in documented layers on the declared stack; versionless until its 1.0. |
