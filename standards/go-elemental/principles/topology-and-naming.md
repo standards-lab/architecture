@@ -94,7 +94,7 @@ the layers share and that must not import the composition root, the application'
 infrastructure for one, lives at the root level.
 
 This is an Application-layer principle, independent of application type: a web service's
-`internal/app` is one realization, and a CLI composes its own `internal/app` the same way. It
+`internal/app` is one realization, and [a CLI composes its own `internal/app` the same way](cli-applications.md#the-composition-roots-layer-files). It
 does not apply to a core SDK or an application SDK, which are libraries, not applications, and
 have no composition root of their own.
 

@@ -26,9 +26,9 @@ failure. For every module in the repository's module list, with the workspace fi
 - `golangci-lint run ./...`
 
 A repository adds what its own code needs: sqlate, blobfs, and go-web-service run the SQL
-conventions lint after the loop, and the template and go-web-service vet, fix, and lint with
+conventions lint after the loop, and both templates and go-web-service vet, fix, and lint with
 `-tags integration` so the integration suite compiles and lints too
-([tests and documentation](tests-and-docs.md)). The template's check runs inside its
+([tests and documentation](tests-and-docs.md)). Each template's check runs inside its
 `template/` subtree.
 
 CI runs the same check, so the gate is the one a developer runs. Each repository's CI workflow has
@@ -36,7 +36,7 @@ one `check` job that installs the pinned tools with mise and runs `mise run chec
 request into `main` and every push to it; there is no per-module matrix, because the check loops
 over the modules itself. A suite beyond the unit tier that CI runs has a job of its own:
 go-storage's `acceptance` job runs `mise run acceptance`, azureblob against Azurite and s3 against
-SeaweedFS, and the template's and
+SeaweedFS, and both templates' and
 go-web-service's `integration` job runs the integration tier on push to `main` and on manual
 dispatch. sqlate's and blobfs's postgres suites have no job; they run on a developer's machine
 ([tests and documentation](tests-and-docs.md)). A job that needs containers runs the same mise
@@ -110,8 +110,8 @@ and CI needs no private-module configuration.
 
 A module zip includes every committed file below its `go.mod`, `context/`, `CLAUDE.md`, and
 `.claude/` among them. Go provides no supported way to exclude them, and they cost nothing: the
-toolchain compiles only imported `.go` files, so they ship as committed. The template is the
-deliberate exception: its module boundary at `template/` exists so the management layer never
+toolchain compiles only imported `.go` files, so they ship as committed. The templates are the
+deliberate exception: each one's module boundary at `template/` exists so the management layer never
 ships.
 
 ## Containers for tests and development

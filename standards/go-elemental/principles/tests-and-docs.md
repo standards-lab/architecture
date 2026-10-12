@@ -45,8 +45,9 @@ package consumes them. The fixtures are built over the composition the root publ
 and its nodes: a fixture replaces a node's constructor with a substitute or observes which nodes a
 build reaches, and wraps no production constructor. The composition root's tests then need no
 `export_test.go` beyond the clock or probe hook above.
-[spike-cli-architecture](https://github.com/JaimeStill/spike-cli-architecture)'s
-`internal/apptest` holds its `internal/app` fixtures this way.
+go-cli-sdk-template's
+[`template/internal/apptest`](https://github.com/standards-lab/go-cli-sdk-template/blob/main/template/internal/apptest)
+holds its `internal/app` fixtures this way.
 
 ## Integration and acceptance suites, and where each runs
 
@@ -66,19 +67,22 @@ variable, so the unit tier never reaches it:
   tests against it, and stop it whatever the result; `mise run acceptance` runs both. CI's
   `acceptance` job runs `mise run acceptance` on every pull request into `main` and every push
   to it.
-- **The template's and go-web-service's integration tier** (`-tags integration`, in the
-  root-level `integration` package) runs the built service as a subprocess, black-box,
-  through its API. Each repository's `mise run integration` task and CI `integration` job run
+- **go-web-sdk-template's, go-cli-sdk-template's, and go-web-service's integration tier**
+  (`-tags integration`, in the root-level `integration` package) runs the built program as a
+  subprocess, black-box: a service through its API, and a CLI through its arguments, its two
+  output streams, and its exit code. Each repository's `mise run integration` task and CI `integration` job run
   it, the job on push to `main` and on manual dispatch. go-web-service's task and job boot its
   compose stack under Docker as an isolated project on its own ports and tear it down with its
-  volumes; the template is engine-free and runs the suite against the binary alone. The check
+  volumes; the templates are engine-free and run the suite against the binary alone. The check
   vets, fixes, and lints the suite with the integration tag, so it always compiles, but runs
   only the unit tier.
 
-The integration tier drives the service only through production surfaces: configuration by
+The integration tier drives a service only through production surfaces: configuration by
 environment variable, the API and the admin mount for state, the network for faults, and
 signals and the exit code for lifecycle. It observes through the same surfaces, plus the log
 for what only the log records and, in go-web-service, the object store read beneath the API.
+It drives a CLI through configuration by environment variable and its arguments, and observes
+it through its standard output, its standard error, and its exit code.
 Nothing in the runtime exists for the tests' sake.
 
 ### Integration toolkits and harness rules
