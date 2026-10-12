@@ -23,8 +23,10 @@ Go Elemental's dependency line is **bottom-up, no provider in a base, kept light
   module carries the in-process OpenTelemetry API and SDK, which is its stated line, while the
   exporters and their gRPC weight live in its `otlp` sub-module.
 
-No lint, build check, or CI step enforces the line. It is held by discipline: planning states
-which module a new dependency enters, and review rejects an import no stated line covers.
+One lint enforces the line: go-cli-sdk's check runs a depguard rule that holds the module to the
+standard library and go-core, so an import outside that line fails the check and CI. Every other
+repository holds the line by discipline: planning states which module a new dependency enters,
+and review rejects an import no stated line covers.
 
 This line bounds dependency weight. Which packages may import a provider at all is the separate
 import-boundary rule of the [service tiers](../../../principles/service-tiers.md) principle.

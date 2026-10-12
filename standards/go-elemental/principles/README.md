@@ -15,6 +15,7 @@ repository may enhance one further, stating the enhancement where it links to th
 - [Topology and naming](topology-and-naming.md)
 - [Lifecycle and context ownership](lifecycle-and-context.md)
 - [Domain package files](domain-files.md)
+- [CLI applications](cli-applications.md)
 - [Timeouts and deadlines](timeouts.md)
 - [Times in UTC](utc-times.md)
 - [Tests and documentation](tests-and-docs.md)

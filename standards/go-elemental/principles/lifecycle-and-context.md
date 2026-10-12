@@ -75,7 +75,8 @@ coordinator watches its channel: the first non-nil error ends the run.
 
 The coordinator is ready once startup completes, and not ready again the moment draining
 begins, so a readiness probe reports a draining process as unavailable before its teardown
-runs. A subsystem exposes its own readiness through its named readiness check, and that state
-is live: a subsystem that degrades fails the probe under its own name until it restores, and a
+runs. A subsystem exposes its own readiness through its named readiness check, which the
+coordinator infers only from a `Starter` that implements `Ready`, a `lifecycle.ReadyStarter`;
+a value that implements `Ready` alone joins no probe. That state is live: a subsystem that degrades fails the probe under its own name until it restores, and a
 process that begins draining stays not ready until it exits. Leaf components take a plain
 `context.Context`, keeping them usable without the coordinator.

@@ -43,6 +43,9 @@ further, stating the enhancement beside its link to the principle.
 - [Domain package files](principles/domain-files.md) states the file each part of a domain
   package lives in, how a CLI splits a domain's API by dependency profile, and how a CLI domain's
   commands are shaped.
+- [CLI applications](principles/cli-applications.md) states the conventions particular to
+  a command-line tool: the composition root's layer files, a command building only the nodes it
+  declares, exit codes and command words, and opt-in scenarios.
 - [Timeouts and deadlines](principles/timeouts.md) states how a service bounds a request that
   moves a large body through a store: tight server timeouts with size-derived transfer
   deadlines, the store's per-try and idle bounds, and which party a timeout is charged to.
@@ -72,7 +75,9 @@ enhances, and its package documentation states its API.
 | Infrastructure libraries | [go-observability](https://github.com/standards-lab/go-observability) | The observability infrastructure service: OpenTelemetry configuration and process lifecycle, the trace-correlating log handler, HTTP server middleware, and the request-ID source function, with the OTLP exporters as a sub-module. |
 | Infrastructure libraries | [go-storage](https://github.com/standards-lab/go-storage) | The object storage infrastructure service: the standard-tier client interface over the operations Azure Blob and S3 share, the lifecycle wrapper that bounds and gates it, and the conformance suite a provider proves itself against, with the Azure Blob and S3 providers as sub-modules. |
 | Application SDKs | [go-web-sdk](https://github.com/standards-lab/go-web-sdk) | The SDK for Go Elemental web services: the server, routing, problem responses, paginated reads, the probes, middleware, and the integration toolkit. |
+| Application SDKs | [go-cli-sdk](https://github.com/standards-lab/go-cli-sdk) | The SDK for Go Elemental command-line tools: a dispatcher on the standard library's `flag` whose commands build only the graph nodes they declare, and the scenario runner. |
 | Templates | [go-web-sdk-template](https://github.com/standards-lab/go-web-sdk-template) | Scaffolds an initial Go Elemental web service, engine-free, with the composition root as one file per layer and the integration tier in place. |
+| Templates | [go-cli-sdk-template](https://github.com/standards-lab/go-cli-sdk-template) | Scaffolds an initial Go Elemental CLI, engine-free, with the composition root as one file per layer and the integration tier in place. |
 | Reference architectures | [go-web-service](https://github.com/standards-lab/go-web-service) | The holistic Go Elemental web service reference, grown in documented layers on the declared stack; versionless until its 1.0. |
 
 Two libraries stand [adjacent](../../principles/repository-topology.md#adjacent-libraries) to
