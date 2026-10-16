@@ -19,8 +19,11 @@ and rewrites or deletes such a test.
 Every test lives in an external test package (`package <pkg>_test`), co-located with the
 source it covers, and drives only the package's exported API; unexported code is covered
 through the exported entry points that use it. The one white-box file allowed is
-`export_test.go`, and it exists only to export a hook that injects a clock or a probe the API
-cannot reach deterministically; the tests that use the hook stay in the external package.
+`export_test.go`, and it exists only to export a hook for what the API cannot reach: a clock or a
+probe it cannot reach deterministically, or a fixture node added before `Run`, such as
+go-web-sdk-template's
+[`AppendReactor`](https://github.com/standards-lab/go-web-sdk-template/blob/main/template/internal/app/export_test.go).
+The tests that use the hook stay in the external package.
 Check enforces the rule: every repository's golangci-lint configuration enables the
 `testpackage` linter with its skip regexp narrowed to `export_test\.go`.
 
@@ -44,10 +47,13 @@ A composition root's test fixtures live in an internal `<app>test` package even 
 package consumes them. The fixtures are built over the composition the root publishes, its graph
 and its nodes: a fixture replaces a node's constructor with a substitute or observes which nodes a
 build reaches, and wraps no production constructor. The composition root's tests then need no
-`export_test.go` beyond the clock or probe hook above.
+`export_test.go` beyond the clock, probe, or fixture-node hook above.
 go-cli-sdk-template's
 [`template/internal/apptest`](https://github.com/standards-lab/go-cli-sdk-template/blob/main/template/internal/apptest)
-holds its `internal/app` fixtures this way.
+holds its `internal/app` fixtures this way, and so does go-web-service's
+[`internal/apptest`](https://github.com/standards-lab/go-web-service/blob/main/internal/apptest),
+whose fixture replaces the meter provider node's constructor with one over a manual reader, so
+the unit tier proves the outcomes the sweep metrics hook records.
 
 ## Integration and acceptance suites, and where each runs
 
@@ -67,6 +73,12 @@ variable, so the unit tier never reaches it:
   tests against it, and stop it whatever the result; `mise run acceptance` runs both. CI's
   `acceptance` job runs `mise run acceptance` on every pull request into `main` and every push
   to it.
+- **go-messaging's suites** (`-tags integration`) prove its engine and its broker: the
+  `postgres` sub-module's against PostgreSQL, run by `mise run integration:postgres`, and the
+  `nats` sub-module's, through its `natstest` package, against NATS with JetStream, run by
+  `mise run integration:nats`. Each task starts only its own compose service, runs the suite,
+  and stops the service whatever the result. `mise run integration` runs both, and so does CI's
+  `integration` job, on push to `main` and on manual dispatch.
 - **go-web-sdk-template's, go-cli-sdk-template's, and go-web-service's integration tier**
   (`-tags integration`, in the root-level `integration` package) runs the built program as a
   subprocess, black-box: a service through its API, and a CLI through its arguments, its two
@@ -80,7 +92,9 @@ variable, so the unit tier never reaches it:
 The integration tier drives a service only through production surfaces: configuration by
 environment variable, the API and the admin mount for state, the network for faults, and
 signals and the exit code for lifecycle. It observes through the same surfaces, plus the log
-for what only the log records and, in go-web-service, the object store read beneath the API.
+for what only the log records and, in go-web-service, the object store read beneath the API and
+the telemetry exporter, which configuration aims at an OTLP receiver the test runs (the sweep
+metrics test sets `APP_OBSERVABILITY_ENDPOINT` and `OTEL_METRIC_EXPORT_INTERVAL`).
 It drives a CLI through configuration by environment variable and its arguments, and observes
 it through its standard output, its standard error, and its exit code.
 Nothing in the runtime exists for the tests' sake.
@@ -101,7 +115,8 @@ service through. Both suites build their harness on them, and the harnesses foll
 - **Interrupt before kill.** Stopping a process sends an interrupt and kills only a process
   that has not exited within the bound.
 - **Faults at the network.** `processtest`'s forwarder relays a backing service over loopback,
-  and go-web-service's outage cases sever it, so a fault is indistinguishable from an outage.
+  and go-web-service's outage cases and go-messaging's NATS outage case sever it, so a fault is
+  indistinguishable from an outage.
 - **Output captured on failure.** Every process's output is captured; `processtest` includes
   it in each failure it reports, and go-web-service's harness logs it for any failed test.
 - **The harness proves itself on the unit tier.** `processtest` carries unit tests against a

@@ -29,7 +29,8 @@ not change that, so two layers convert on read:
 
 A library that parses a time from another source converts it before returning it, as
 [go-storage](https://github.com/standards-lab/go-storage)'s providers do with the HTTP dates behind
-`ModifiedAt`.
+`ModifiedAt`, and as [go-core](https://github.com/standards-lab/go-core)'s `event.Decode` does with
+the `ce-time` header it parses.
 
 ## Log record times are UTC
 

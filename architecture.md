@@ -27,7 +27,7 @@ The architecture keeps two inheritances: the separations of domain-driven design
 query/command operation model of CQRS. It deliberately drops the vocabulary DDD accumulated
 around them (aggregates, value objects, repositories, command buses), because that vocabulary
 existed to keep monolithic applications coherent. In a system of many narrowly scoped services,
-each application is small enough that the five elements below describe its entire design.
+each application is small enough that the six elements below describe its entire design.
 "Feature" was considered as a further element and rejected: every candidate feature is one
 domain, a Domain Service and the Entities it composes, so the term would only relabel what the
 elements already describe. Features stay informal prose.
@@ -71,6 +71,10 @@ Top to bottom:
   state; a **Command** is a mutable operation that requests a change to it. A Domain Service
   serves one domain, and its module is the unit a route or a Reactor calls. The simplest
   domain is one root Entity alone.
+- **Event**: the notice that a public Command committed, published to systems outside the
+  domain. The Command writes its Event in the transaction that makes the Command's change true,
+  so an Event exists only for a change that committed. Nothing inside the application consumes
+  an Event.
 - **Entity**: the elemental component. An Entity is a data structure, table-backed or not; it
   defines its intrinsic capability, and the Domain Service decides what of that capability is
   exposed.
