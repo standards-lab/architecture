@@ -25,9 +25,9 @@ failure. For every module in the repository's module list, with the workspace fi
 - `go test -race ./...`
 - `golangci-lint run ./...`
 
-A repository adds what its own code needs: sqlate, blobfs, and go-web-service run the SQL
-conventions lint after the loop, and both templates and go-web-service vet, fix, and lint with
-`-tags integration` so the integration suite compiles and lints too
+A repository adds what its own code needs: sqlate, blobfs, go-messaging, and go-web-service run
+the SQL conventions lint after the loop, and both templates and go-web-service vet, fix, and lint
+with `-tags integration` so the integration suite compiles and lints too
 ([tests and documentation](tests-and-docs.md)). Each template's check runs inside its
 `template/` subtree.
 
@@ -36,13 +36,13 @@ one `check` job that installs the pinned tools with mise and runs `mise run chec
 request into `main` and every push to it; there is no per-module matrix, because the check loops
 over the modules itself. A suite beyond the unit tier that CI runs has a job of its own:
 go-storage's `acceptance` job runs `mise run acceptance`, azureblob against Azurite and s3 against
-SeaweedFS, and both templates' and
-go-web-service's `integration` job runs the integration tier on push to `main` and on manual
-dispatch. sqlate's and blobfs's postgres suites have no job; they run on a developer's machine
+SeaweedFS. An `integration` job runs on push to `main` and on manual dispatch: both templates' and
+go-web-service's run the integration tier, and go-messaging's runs its postgres and nats suites.
+sqlate's and blobfs's postgres suites have no job; they run on a developer's machine
 ([tests and documentation](tests-and-docs.md)). A job that needs containers runs the same mise
 task a developer runs, and the task prints the containers' logs when it fails. The Go toolchain
-and golangci-lint versions are pinned in `mise.toml`, which CI and a developer's machine both read, so the gate moves only by a
-deliberate bump.
+and golangci-lint versions are pinned in `mise.toml`, which CI and a developer's machine both
+read, so the gate moves only by a deliberate bump.
 
 ## Currency and upgrade
 
@@ -131,9 +131,9 @@ Compose, in one layout:
   image has no `HEALTHCHECK`, and compose waits on it as running.
 - A stack starts with `docker compose up -d --wait --build` and stops with
   `docker compose down`.
-- A test-only harness, go-storage's, keeps its data on tmpfs, so every start is empty. A
-  development stack keeps its data in named volumes, which `<group>:down` keeps and
-  `<group>:reset` deletes.
+- A test-only harness, such as go-storage's or go-messaging's (PostgreSQL and NATS), keeps its
+  data on tmpfs, so every start is empty. A development stack keeps its data in named volumes,
+  which `<group>:down` keeps and `<group>:reset` deletes.
 - Every published port binds `127.0.0.1` and moves with an environment variable
   (`POSTGRES_PORT`, `AZURITE_BLOB_PORT`), and the repository's settings that name the port follow
   the variable. go-web-service's application settings are the exception: its README documents
@@ -148,6 +148,8 @@ plain command, plus `integration` or `acceptance` where the repository runs such
 and tasks that start and stop the containers it runs against: `db:up`, `db:down`, and `db:reset`
 for sqlate's, blobfs's, and go-web-service's development stacks, with go-web-service's `otel:*`
 and `stack:*` beside them, and `up`, `down`, `acceptance:s3`, and `acceptance:azureblob` for
-go-storage's test harness. A task name with more than one part is `<group>:<member>`, group
-first, joined by a colon, which is mise's namespace separator, so `mise run 'db:*'` matches a
-group. The repository works without mise; the tasks are a convenience.
+go-storage's test harness. go-messaging's test harness has `up` and `down` beside
+`integration:postgres` and `integration:nats`, each of which runs one suite, and `integration`,
+which runs both. A task name with more than one part is `<group>:<member>`, group first, joined by
+a colon, which is mise's namespace separator, so `mise run 'db:*'` matches a group. The
+repository works without mise; the tasks are a convenience.

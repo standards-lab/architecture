@@ -41,8 +41,12 @@ the run returns. It loads nothing.
   fixture can observe or replace a node before a run.
 - `infrastructure.go` defines the configuration and the infrastructure services as graph nodes.
   Configuration is read in its node's constructor, from the tool's environment prefix, only when
-  a build reaches it; no aggregate `Config` struct gathers it. It is the only file that names a
-  provider.
+  a build reaches it; no aggregate `Config` struct gathers it. It is the only file in the
+  composition root that names a provider. A command package outside the root may name the
+  provider its commands work through: go-web-service's `slab` tool builds go-messaging's NATS
+  broker in its [`events`](https://github.com/standards-lab/go-web-service/blob/main/tools/slab/events)
+  package, which `infrastructure.go` defines the broker node over, and its `sqlate` scenario
+  compiles statements with sqlate's PostgreSQL dialect.
 - `domain.go` defines each domain's nodes and mounts that domain's commands, one
   `root.Add(pkg.Commands(...)...)` per domain over the nodes it passes.
 - `version.go` holds the version command, which declares no nodes and prints the main module's

@@ -14,19 +14,20 @@ Go Elemental's dependency line is **bottom-up, no provider in a base, kept light
   templates and reference architectures on top. go-database's base module depending on sqlate
   is the line followed: the dependency points down, to a library that is itself engine-free.
 - **No provider in a base.** A database driver, a vendor SDK, or an exporter enters only
-  through a sub-module that pins it in its own `go.mod`: go-database's and sqlate's `postgres`,
-  go-storage's `azureblob` and `s3`, go-observability's `otlp`. Importing a base module compiles none of
-  it.
+  through a sub-module that pins it in its own `go.mod`: go-database's, sqlate's, and
+  go-messaging's `postgres`, go-messaging's `nats`, go-storage's `azureblob` and `s3`,
+  go-observability's `otlp`. Importing a base module compiles none of it.
 - **Kept light.** A base module takes the standard library first, and beyond it only what its
   repository's stated line admits: packages as idiomatic and stable as the standard library
   (`golang.org/x/…`), or a library sourced under [Sourcing](#sourcing). go-observability's base
   module carries the in-process OpenTelemetry API and SDK, which is its stated line, while the
   exporters and their gRPC weight live in its `otlp` sub-module.
 
-One lint enforces the line: go-cli-sdk's check runs a depguard rule that holds the module to the
-standard library and go-core, so an import outside that line fails the check and CI. Every other
-repository holds the line by discipline: planning states which module a new dependency enters,
-and review rejects an import no stated line covers.
+Two repositories enforce the line with a depguard rule in their check, so an import outside it
+fails the check and CI: go-cli-sdk's rule holds the module to the standard library and go-core,
+and go-messaging's holds its base module to the standard library, go-core, sqlate, and sqlate's
+`query` package. Every other repository holds the line by discipline: planning states which
+module a new dependency enters, and review rejects an import no stated line covers.
 
 This line bounds dependency weight. Which packages may import a provider at all is the separate
 import-boundary rule of the [service tiers](../../../principles/service-tiers.md) principle.
