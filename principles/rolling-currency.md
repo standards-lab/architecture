@@ -34,6 +34,11 @@ A container image is pinned by an exact tag, and its latest is the highest seman
 among the tags that carry the pinned tag's variant suffix: a pin of `18.6-alpine` is current
 against the newest `-alpine` release, not the newest tag of any variant.
 
+A developer tool pinned for one task alone is covered too. A currency check reads every mise
+environment's config, each `mise.<env>.toml` through `mise -E <env>`, not only `mise.toml`.
+[spike-html-hosting-sdk](https://github.com/JaimeStill/spike-html-hosting-sdk)'s currency bin
+does so from v0.6.1.
+
 Indirect dependencies are left to the ecosystem's resolver. A component pins and bumps the
 dependencies it names, and the resolver (`go mod tidy`, in Go) settles what those require;
 the currency report names only what the component chose.
@@ -49,6 +54,16 @@ An upstream release is an immediate priority and never interrupts a running sess
 session finishes its step, and the upgrade becomes its own small step, usually the next one. A
 patch or minor bump across the organization is one cheap step. A major version may need a
 planned session of its own.
+
+## Why pnpm installs a release the day it ships
+
+A web module that installs with pnpm sets `minimumReleaseAge: 0` in its `pnpm-workspace.yaml`,
+so pnpm installs the latest release the currency report names. Without it, pnpm 12's default
+one-day wait refuses a release published that day, and the bump fails in CI. Reading each
+release's notes before its bump lands is the review that replaces the wait. The trade is
+deliberate: the wait keeps out a compromised publish that the registry pulls within hours, and
+reading the notes doesn't. spike-html-hosting-sdk sets it from v0.2.0, as do the three sites
+that pin it.
 
 ## How the principle depends on the minimal footprint
 
