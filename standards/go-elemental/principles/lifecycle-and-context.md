@@ -51,7 +51,8 @@ A defect the composition root wires panics when the composition root's run call 
 not when the graph is described, with the fix named: an unfinalized configuration, a missing pool, a
 malformed route prefix, a duplicate mount or subsystem, a group modified after its module is built,
 a `lifecycle.Readiness` bound to a second coordinator. The graph's own wiring defects panic with a
-`graph: ` prefix. No runtime condition produces such a defect and no caller can recover from it
+`graph: ` prefix, and those its description shows already, such as a bad or duplicate name or an
+`After` or `In` naming a nil or foreign handle, panic as the graph is described. No runtime condition produces such a defect and no caller can recover from it
 sensibly, and the composition root is written once and runs at boot, so a loud failure there beats a
 silent one in production. A defect in configuration content, a reserved connection option or an
 invalid value, returns an error from the call that reads it, the configuration's finalize step or

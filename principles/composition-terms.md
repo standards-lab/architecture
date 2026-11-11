@@ -15,10 +15,13 @@ way, and a standard keeps the terms in its language's idiom.
 ## The terms
 
 - **Graph**: the composition root's description of the application's dependencies, as nodes.
-  Describing a graph constructs nothing. Only the composition root, its test fixtures, and the
-  SDKs that run a graph import `graph`. Every package below the root takes its dependencies as
-  plain values through its constructor and never sees a node, a scope, or the system, so the
-  graph's API can change without reaching them.
+  Describing a graph constructs nothing. Only the composition root, its test fixtures, the SDKs
+  that run a graph, and the packages that build a CLI's commands import `graph`. Such a package
+  takes the nodes its commands declare, because a command declares its nodes so that a run builds only
+  what the command uses; it reads their values when the command runs and never sees a scope or
+  the system. Every other package below the root takes its dependencies as plain values through
+  its constructor and never sees a node, a scope, or the system, so the graph's API can change
+  without reaching them.
 - **Node**: one dependency in the graph, a name and a constructor. A constructor declares the
   nodes it depends on by using them, and those uses are the graph's edges.
 - **System**: what one build of the graph constructs. A build starts from a set of root nodes and
