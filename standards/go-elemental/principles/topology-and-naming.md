@@ -86,10 +86,11 @@ also build their mounts. `server.go` defines the request edge: the readiness the
 the router, and the server. The list of mounts and the middleware stack are each a file of their
 own, and a layer the application adds, such as go-web-service's telemetry, is one more file.
 Beside them, `app.go` holds the `Nodes` value, one handle per node; `New`, which describes the
-graph and cannot fail; and `Run`, which builds the graph and runs it under the lifecycle
-coordinator. The layer files are the architecture's layer list, and extending the application
-means defining a node in its layer's define function, a reactor's node also joining
-`Nodes.Reactors`, while the signatures, the entrypoint, and `Run` stay untouched. A package that
+graph and cannot fail; and `Run`, which is one call to the application SDK's runner,
+`web.Service` or `cli.Program`. The layer files are the architecture's layer list, and extending
+the application means defining a node in its layer's define function, where a reactor joins the
+reactors group with `graph.In` on its Define line, while the signatures, the entrypoint, and
+`Run` stay untouched. A package that
 the layers share and that must not import the composition root, the application's database
 infrastructure for one, lives at the root level.
 

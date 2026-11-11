@@ -20,10 +20,10 @@ Every test lives in an external test package (`package <pkg>_test`), co-located 
 source it covers, and drives only the package's exported API; unexported code is covered
 through the exported entry points that use it. The one white-box file allowed is
 `export_test.go`, and it exists only to export a hook for what the API cannot reach: a clock or a
-probe it cannot reach deterministically, or a fixture node added before `Run`, such as
-go-web-sdk-template's
-[`AppendReactor`](https://github.com/standards-lab/go-web-sdk-template/blob/main/template/internal/app/export_test.go).
-The tests that use the hook stay in the external package.
+probe it cannot reach deterministically. A fixture node needs no hook: go-web-sdk-template's
+[layer tests](https://github.com/standards-lab/go-web-sdk-template/blob/main/template/internal/app/graph_test.go)
+define a fixture reactor on the App's own `Graph()`, joining the reactors group with
+`graph.In(Reactors)`. The tests that use a hook stay in the external package.
 Check enforces the rule: every repository's golangci-lint configuration enables the
 `testpackage` linter with its skip regexp narrowed to `export_test\.go`.
 
@@ -47,7 +47,7 @@ A composition root's test fixtures live in an internal `<app>test` package even 
 package consumes them. The fixtures are built over the composition the root publishes, its graph
 and its nodes: a fixture replaces a node's constructor with a substitute or observes which nodes a
 build reaches, and wraps no production constructor. The composition root's tests then need no
-`export_test.go` beyond the clock, probe, or fixture-node hook above.
+`export_test.go` beyond the clock or probe hook above.
 go-cli-sdk-template's
 [`template/internal/apptest`](https://github.com/standards-lab/go-cli-sdk-template/blob/main/template/internal/apptest)
 holds its `internal/app` fixtures this way, and so does go-web-service's

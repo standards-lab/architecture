@@ -12,6 +12,7 @@ repository may enhance one further, stating the enhancement where it links to th
 
 - [Dependencies](dependencies.md)
 - [Baseline-standard ownership](baseline-standards.md)
+- [Construction and execution](construction-and-execution.md)
 - [Topology and naming](topology-and-naming.md)
 - [Lifecycle and context ownership](lifecycle-and-context.md)
 - [Domain package files](domain-files.md)

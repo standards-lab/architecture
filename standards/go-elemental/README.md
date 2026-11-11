@@ -34,6 +34,9 @@ further, stating the enhancement beside its link to the principle.
 - [Baseline-standard ownership](principles/baseline-standards.md) states that a library takes
   an external standard as its baseline and never hardens organizational convention or policy
   into its contract, and that a consumer introduces a type only when it is needed.
+- [Construction and execution](principles/construction-and-execution.md) states how many
+  inputs a function takes, how it takes optional ones, and when an API becomes a struct with a
+  method, as `web.Service` and `cli.Program` are.
 - [Topology and naming](principles/topology-and-naming.md) states how repositories, modules,
   packages, and release tags are named, the module layout of each tier, and the composition
   root's layout.

@@ -44,8 +44,11 @@ declare the Storage's node.
 - **One `Commands` call per domain.** A domain exports one `Commands` function, which returns
   `[]*cli.Command` whether it builds one command or many, so every mount in the composition root
   is `root.Add(pkg.Commands(...)...)`.
-- **Plain command functions of declared nodes.** Each command is a function of the graph nodes it
-  declares, reading their values with `inv.Get`; no handle type wraps a node.
+- **Plain command functions of declared nodes.** Each command is built by a function that takes
+  the graph nodes it declares, as
+  [Composition terms](../../../principles/composition-terms.md#the-terms) admits for a CLI's
+  command packages. The command declares them with `Use` and reads their values with `inv.Get`;
+  no handle type wraps a node.
 - **Input checks in `Validate`.** `Args` only counts positional arguments, and every argument and
   flag value, the domain's form rules included, is checked in `Validate`, so bad input builds no
   dependency.
