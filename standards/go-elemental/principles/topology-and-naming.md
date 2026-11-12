@@ -58,6 +58,30 @@ does, as `sqlate` and `blobfs` are.
   sub-package is earned when its contents are a growth area or when a dependency is heavy enough
   that the rest of the module should not compile it.
 
+## Where a package's events live
+
+A package's events live with the package that produces the change they record. Its event kinds
+sit in the package's `messaging.go`: the `event.Define[T]` calls, a `Recorder` alias for the
+recorder the package emits through, and the raise and emit helpers that emit them. Their data
+types sit beside the package's other types, in a domain package its
+[`entities.go`](domain-files.md#one-file-per-role). go-web-service's
+[`domain/organization/messaging.go`](https://github.com/standards-lab/go-web-service/blob/main/domain/organization/messaging.go)
+and
+[`domain/document/messaging.go`](https://github.com/standards-lab/go-web-service/blob/main/domain/document/messaging.go)
+hold their kinds, a `Recorder` alias, and their raise and emit helpers, over data types in each
+package's `entities.go` (`OrganizationData` and `LogoUploadedData`; `DirectoryData` and
+`FileUploadedData`), and
+[`admin/database/messaging.go`](https://github.com/standards-lab/go-web-service/blob/main/admin/database/messaging.go)
+defines its one event over `string`, with its `Recorder` alias and the `OnReset` hook that emits
+it.
+
+There is no separate events package. go-core's `event` is the CloudEvents envelope alone, with
+the means a package defines and emits its kinds through; it declares no kind of its own. A
+library that emits no CloudEvents itself, as docproc and docinfer emit none, declares no kinds
+and has no `messaging.go`: its payload types sit in their producing packages' ordinary files, and
+the service that emits them defines its kinds over those types in its own `messaging.go`, with its
+own data types beside its other types.
+
 ## Application-layer import direction
 
 Every Go Elemental application — whatever its type — divides into three tiers with one import
