@@ -39,8 +39,17 @@ project on the standard's technology can adopt on its own. It is not an infrastr
 because it presents no one external technology as a service, and it keeps its guide in its own
 repository. An adjacent library follows the standard's engineering principles (naming, module
 layout, releases and CI, tests and documentation) without being a member of any tier. It is
-consumed downward like any library: a tier may depend on it, and it depends on no tier, though
-it may build on another adjacent library.
+consumed downward like any library, and it may build on another adjacent library.
+
+An adjacent library may also depend on a standard's stack libraries, as docinfer depends on
+go-ai, an infrastructure library, and the dependency rule then holds transitively: whatever may
+not depend on a tier may not depend on an adjacent library that depends on it. Doing so pins the library's level above
+the highest tier it depends on, so nothing at or below that tier, and nothing that may not use
+that tier, may use it: a peer tier such as an application SDK may not reach go-ai through
+docinfer, and only the layers above it, a reference architecture or a service like Cerebro, may.
+A provider sub-module pins only its own level, so a base module that depends on no tier stays
+usable below it, as docproc's base does beside its `docproc/storage` provider over go-storage.
+An adjacent library that depends on no tier is usable by every tier.
 
 ## Dependencies run downward, one tier at a time
 
@@ -48,8 +57,10 @@ A reference architecture depends on its application SDK, the infrastructure libr
 libraries, and providers it composes, and the core SDK. A template depends on the core SDK and its
 one application SDK. An application SDK and an infrastructure library never depend on each other;
 both depend on the core SDK and on no other tier. The core SDK depends only on what its standard's
-dependency line admits. Knowledge follows the same direction: a repository documents its
-dependencies and never names its dependents ([dependencies flow downward
+dependency line admits. An adjacent library sits where its dependencies pin it: whatever may
+not depend on a tier may not depend on an adjacent library that depends on that tier
+([adjacent libraries](#adjacent-libraries)). Knowledge follows the same direction: a repository
+documents its dependencies and never names its dependents ([dependencies flow downward
 only](downward-dependencies.md)).
 
 ## Versioning across the tiers

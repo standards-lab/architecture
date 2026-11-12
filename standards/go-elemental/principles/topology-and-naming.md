@@ -31,8 +31,8 @@ and where it belongs.
 - **Templates** — the application SDK's name with `-template`: `go-web-sdk-template`.
 - **Reference architectures** — named for the application built on the SDK: `go-web-service`.
 
-An [adjacent library](../../../principles/repository-topology.md#adjacent-libraries) belongs to
-no tier, so it takes no `go-` prefix: it presents no one technology and is named for what it
+An [adjacent library](../../../principles/repository-topology.md#adjacent-libraries) is a member
+of no tier, so it takes no `go-` prefix: it presents no one technology and is named for what it
 does, as `sqlate` and `blobfs` are.
 
 ## Module layout per tier
