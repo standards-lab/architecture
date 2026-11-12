@@ -41,15 +41,15 @@ repository. An adjacent library follows the standard's engineering principles (n
 layout, releases and CI, tests and documentation) without being a member of any tier. It is
 consumed downward like any library, and it may build on another adjacent library.
 
-An adjacent library may also depend on a standard's stack libraries, as docinfer depends on
-go-ai, an infrastructure library, and the dependency rule then holds transitively: whatever may
-not depend on a tier may not depend on an adjacent library that depends on it. Doing so pins the library's level above
-the highest tier it depends on, so nothing at or below that tier, and nothing that may not use
-that tier, may use it: a peer tier such as an application SDK may not reach go-ai through
-docinfer, and only the layers above it, a reference architecture or a service like Cerebro, may.
-A provider sub-module pins only its own level, so a base module that depends on no tier stays
-usable below it, as docproc's base does beside its `docproc/storage` provider over go-storage.
-An adjacent library that depends on no tier is usable by every tier.
+An adjacent library may also depend on a standard's stack libraries, and the dependency rule
+then holds transitively: whatever may not depend on a tier may not depend on an adjacent library
+that depends on it. Such a dependency pins the library's level above the highest tier it depends on, so
+nothing at or below that tier, and nothing that may not use that tier, may use it: an adjacent
+library that depends on an infrastructure library is out of reach of an application SDK, a peer
+tier, and only the layers above that tier, such as a reference architecture, may use it. A
+provider sub-module pins only its own level, so a base module that depends on no tier stays
+usable below the tier its provider depends on. An adjacent library that depends on no tier is
+usable by every tier.
 
 ## Dependencies run downward, one tier at a time
 

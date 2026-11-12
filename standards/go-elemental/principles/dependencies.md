@@ -15,10 +15,11 @@ Go Elemental's dependency line is **bottom-up, no provider in a base, kept light
   is the line followed: the dependency points down, to a library that is itself engine-free.
   An adjacent library may depend on a stack library, and the line is transitive: whatever may
   not depend on a tier may not depend on an adjacent library that depends on it, so the
-  dependency pins the adjacent library above that tier. docinfer depends on go-ai, so only the
-  layers above go-ai's tier use it, and an application SDK may not reach go-ai through it. A
-  provider sub-module pins only its own level: docproc's `docproc/storage` over go-storage leaves
-  docproc's base usable below go-storage's tier.
+  dependency pins the adjacent library above that tier. An adjacent library that depends on an
+  infrastructure library is used only by the layers above that tier, and an application SDK may
+  not reach the infrastructure library through it. A provider sub-module pins only its own
+  level: an adjacent library's provider over an infrastructure library leaves its base module
+  usable below that tier. sqlate and blobfs depend on no tier, so every tier may use them.
 - **No provider in a base.** A database driver, a vendor SDK, or an exporter enters only
   through a sub-module that pins it in its own `go.mod`: go-database's, sqlate's, and
   go-messaging's `postgres`, go-messaging's `nats`, go-storage's `azureblob` and `s3`,

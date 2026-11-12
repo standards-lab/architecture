@@ -77,10 +77,10 @@ it.
 
 There is no separate events package. go-core's `event` is the CloudEvents envelope alone, with
 the means a package defines and emits its kinds through; it declares no kind of its own. A
-library that emits no CloudEvents itself, as docproc and docinfer emit none, declares no kinds
-and has no `messaging.go`: its payload types sit in their producing packages' ordinary files, and
-the service that emits them defines its kinds over those types in its own `messaging.go`, with its
-own data types beside its other types.
+library that emits no CloudEvents itself declares no kinds and has no `messaging.go`: its payload
+types sit in their producing packages' ordinary files, and the service that emits them defines
+its kinds over those types in its own `messaging.go`, with its own data types beside its other
+types.
 
 ## Application-layer import direction
 
