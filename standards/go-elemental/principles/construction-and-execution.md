@@ -15,8 +15,9 @@ and whose method does the work.
 ## The rule
 
 - **Four required inputs, then one options struct.** A function takes at most four required
-  positional inputs. Optional inputs go in one options struct, passed last, whose zero value
-  selects every default, so a caller who wants the defaults passes the zero value.
+  positional inputs. A leading `context.Context` does not count toward the four, since it is the
+  call's scope rather than an input. Optional inputs go in one options struct, passed last, whose
+  zero value selects every default, so a caller who wants the defaults passes the zero value.
 - **No functional options.** An API does not take variadic option functions, such as
   `WithTimeout(d)`. Its optional inputs are fields of its options struct.
 - **A struct with a method beyond that.** An API that needs more than four required inputs, or
