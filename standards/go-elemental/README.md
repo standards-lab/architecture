@@ -34,7 +34,7 @@ further, stating the enhancement beside its link to the principle.
 - [System tools](principles/system-tools.md) states the third sourcing choice, a mature system
   tool run through an adapter: the adapter as the boundary, a tool as a process run directly or
   in a container pinned by digest, the tool found and version-checked at startup, and its
-  license binding the image that ships it.
+  license staying with the tool.
 - [Baseline-standard ownership](principles/baseline-standards.md) states that a library takes
   an external standard as its baseline and never hardens organizational convention or policy
   into its contract, and that a consumer introduces a type only when it is needed.

@@ -31,8 +31,7 @@ A tool runs as a process of its own, never linked into the system. It runs direc
 container whose image is pinned by digest, and an adapter is written once against either.
 spike-ai-pipeline-processing's `tool` package, at v0.9.0, holds both runners behind one `Tool`:
 `NewExec` runs a program directly, and `NewContainer` runs it inside an `Image` whose reference it
-refuses without a digest, every run locked down to no network, no capabilities, and the caller's
-user.
+refuses without a digest.
 
 ## Startup fails, not the first request
 
@@ -43,8 +42,9 @@ finds the program and refuses one older than its declared minimum, and `Tool.Run
 caller's context, stopping the program when that context ends. herald's `Render` runs ImageMagick
 under the caller's context.
 
-## A tool's license binds the image that ships it
+## A tool's license stays with the tool
 
-Running a tool links nothing, so the tool's license binds the image that ships it, not the code
-that runs it. spike-ai-pipeline-processing's `document` package runs Ghostscript, which is
-AGPL-licensed, as a separate program and never links it.
+Running a tool links nothing into the system, so the tool's license stays with the tool and does
+not pass to the code that runs it. spike-ai-pipeline-processing, Apache-2.0-licensed, runs
+Ghostscript, which is AGPL-licensed, from its `document` package as a separate program and never
+links it.

@@ -78,9 +78,8 @@ industry-standard library, as a pinned `go.mod` dependency, when the capability'
 depends on a specification with known corner cases, a threat model, or cryptography. Where a
 mature system tool already does the work, run it through an adapter, the third choice, which
 [System tools](system-tools.md) states. Never carry a dependency for what the standard library
-provides. The test for "trivial" is not line
-count: a request-ID middleware fails loudly, while a rate limiter fails by growing memory under
-an attacker's keys with answers that look right.
+provides. The test for "trivial" is not line count: a request-ID middleware fails loudly, while a
+rate limiter fails by growing memory under an attacker's keys with answers that look right.
 
 An industry-standard library shows these markers, in rough order of weight:
 
