@@ -11,6 +11,7 @@ The conventions every Go Elemental repository shares. Each enhances the
 repository may enhance one further, stating the enhancement where it links to the principle.
 
 - [Dependencies](dependencies.md)
+- [System tools](system-tools.md)
 - [Baseline-standard ownership](baseline-standards.md)
 - [Construction and execution](construction-and-execution.md)
 - [Topology and naming](topology-and-naming.md)

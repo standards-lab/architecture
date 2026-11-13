@@ -17,9 +17,9 @@ Go Elemental's dependency line is **bottom-up, no provider in a base, kept light
   not depend on a tier may not depend on an adjacent library that depends on it, so the
   dependency pins the adjacent library above that tier. An adjacent library that depends on an
   infrastructure library is used only by the layers above that tier, and an application SDK may
-  not reach the infrastructure library through it. A provider sub-module pins only its own
-  level: an adjacent library's provider over an infrastructure library leaves its base module
-  usable below that tier. sqlate and blobfs depend on no tier, so every tier may use them.
+  not reach the infrastructure library through it. Where a sub-module depends on a tier,
+  [a repository's place follows its base module](../../../principles/repository-topology.md#a-repositorys-place-follows-its-base-module).
+  sqlate and blobfs depend on no tier, so every tier may use them.
 - **No provider in a base.** A database driver, a vendor SDK, or an exporter enters only
   through a sub-module that pins it in its own `go.mod`: go-database's, sqlate's, and
   go-messaging's `postgres`, go-messaging's `nats`, go-storage's `azureblob` and `s3`,
@@ -46,7 +46,8 @@ import-boundary rule of the [service tiers](../../../principles/service-tiers.md
   library.
 - **Adjacent libraries** — a base module depends on the standard library, on packages as stable
   as it, and on another adjacent library below it, never on a tier, unless the rule pins it
-  above that tier (**Bottom-up**, above), and a provider is a sub-module that pins its own:
+  above that tier (**Bottom-up**, above), and a provider is a sub-module
+  ([a repository's place follows its base module](../../../principles/repository-topology.md#a-repositorys-place-follows-its-base-module)):
   sqlate's base takes the standard library alone, and blobfs's takes sqlate and
   `golang.org/x/text`. An engine is a
   sub-module that pins its driver.
@@ -74,10 +75,11 @@ import-boundary rule of the [service tiers](../../../principles/service-tiers.md
 Write a capability in-house when it is generic to its layer and has no specification or
 security surface, so that its failure shows in a unit test you would think to write. Source an
 industry-standard library, as a pinned `go.mod` dependency, when the capability's correctness
-depends on a specification with known corner cases, a threat model, or cryptography. Never
-carry a dependency for what the standard library provides. The test for "trivial" is not line
-count: a request-ID middleware fails loudly, while a rate limiter fails by growing memory under
-an attacker's keys with answers that look right.
+depends on a specification with known corner cases, a threat model, or cryptography. Where a
+mature system tool already does the work, run it through an adapter, the third choice, which
+[System tools](system-tools.md) states. Never carry a dependency for what the standard library
+provides. The test for "trivial" is not line count: a request-ID middleware fails loudly, while a
+rate limiter fails by growing memory under an attacker's keys with answers that look right.
 
 An industry-standard library shows these markers, in rough order of weight:
 
