@@ -10,9 +10,9 @@ level: go-elemental
 [Sourcing](dependencies.md#sourcing) gives a capability two homes: written in-house, or a sourced
 library pinned in `go.mod`. A Go Elemental system has a third choice: where a mature system tool
 already does specialized work, such as rendering a PDF's pages or converting an image, the system
-runs that tool through an adapter, and neither reimplements it nor binds to its library. Which
-tools qualify is the [minimal, deliberate dependency footprint](../../../principles/minimal-footprint.md)'s
-call, made as it is for any dependency.
+runs that tool through an adapter, and neither reimplements it nor binds to its library. The
+[minimal, deliberate dependency footprint](../../../principles/minimal-footprint.md) decides which
+tools qualify, as it does for any dependency.
 
 ## The adapter is the boundary
 
@@ -34,7 +34,7 @@ spike-ai-pipeline-processing's `tool` package, at v0.9.0, holds both runners beh
 `NewExec` runs a program directly, and `NewContainer` runs it inside an `Image` whose reference it
 refuses without a digest.
 
-## Startup fails, not the first request
+## An adapter checks its tool at startup and runs it under the caller's context
 
 An adapter finds its tool and checks its version when it is built, so a missing or outdated tool
 fails the system at startup, and it runs the tool under the caller's context, so cancelling the
