@@ -46,10 +46,8 @@ then holds transitively: whatever may not depend on a tier may not depend on an 
 that depends on it. Such a dependency pins the library's level above the highest tier it depends on, so
 nothing at or below that tier, and nothing that may not use that tier, may use it: an adjacent
 library that depends on an infrastructure library is out of reach of an application SDK, a peer
-tier, and only the layers above that tier, such as a reference architecture, may use it. A
-provider sub-module pins only its own level, so a base module that depends on no tier stays
-usable below the tier its provider depends on. An adjacent library that depends on no tier is
-usable by every tier.
+tier, and only the layers above that tier, such as a reference architecture, may use it. An
+adjacent library that depends on no tier is usable by every tier.
 
 ## Dependencies run downward, one tier at a time
 
@@ -63,8 +61,21 @@ not depend on a tier may not depend on an adjacent library that depends on that 
 documents its dependencies and never names its dependents ([dependencies flow downward
 only](downward-dependencies.md)).
 
+## A repository's place follows its base module
+
+A repository sits where its base module's dependencies place it. A nested module, whether a
+provider, a command, or an example, pins only its own level and does not move the repository:
+whatever may use the base module still may, and only the nested module is out of reach of what
+may not use its dependencies. blobfs's
+[`example`](https://github.com/standards-lab/blobfs/tree/main/example) module requires go-storage
+and its `azureblob` provider, an infrastructure library, while blobfs's base module depends on no
+tier and stays usable by every tier.
+
 ## Versioning across the tiers
 
 Each repository releases independently ([independent releases](independent-releases.md)). The
 core SDK is a dependency shared by every repository above it; a change to it releases first and is
-taken up by the coordinated releases that follow.
+taken up by the coordinated releases that follow. A change spanning a repository and a nested
+module that depends on a tier the base module does not releases that tier first, and the nested
+module takes up the release through its pin, as blobfs's example module pins go-storage and its
+`azureblob` provider at released versions.

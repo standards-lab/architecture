@@ -19,7 +19,8 @@ them forces one audience to carry the other's dependencies.
 - Both ship from the same repository, and each is documented for its own audience: the
   command's usage for the operator, the package documentation for the integrator.
 - The command may live in its own module when its dependencies exceed the library's, so an
-  integrator who imports the library never compiles the command's dependencies.
+  integrator who imports the library never compiles the command's dependencies, and
+  [the repository's place follows its base module](repository-topology.md#a-repositorys-place-follows-its-base-module).
 
 ## Where the organization applies the principle
 
