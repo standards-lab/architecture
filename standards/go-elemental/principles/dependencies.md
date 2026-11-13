@@ -74,8 +74,10 @@ import-boundary rule of the [service tiers](../../../principles/service-tiers.md
 Write a capability in-house when it is generic to its layer and has no specification or
 security surface, so that its failure shows in a unit test you would think to write. Source an
 industry-standard library, as a pinned `go.mod` dependency, when the capability's correctness
-depends on a specification with known corner cases, a threat model, or cryptography. Never
-carry a dependency for what the standard library provides. The test for "trivial" is not line
+depends on a specification with known corner cases, a threat model, or cryptography. Where a
+mature system tool already does the work, run it through an adapter, the third choice, which
+[System tools](system-tools.md) states. Never carry a dependency for what the standard library
+provides. The test for "trivial" is not line
 count: a request-ID middleware fails loudly, while a rate limiter fails by growing memory under
 an attacker's keys with answers that look right.
 
