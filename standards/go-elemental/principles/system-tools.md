@@ -20,7 +20,8 @@ The system's own interface says what it needs, and each adapter says how one too
 the tool's effect on the design stops at the adapter and a tool can be swapped for another.
 [herald](https://github.com/JaimeStill/herald)'s `internal/format`, at commit 6fc22b3, is the
 first case: its `Handler` interface says what extraction needs, its `Registry` keys handlers by
-media type, and the PDF and image handlers each run ImageMagick to produce their pages.
+media type, the PDF handler renders its pages with ImageMagick, and the image handler normalizes
+JPEG and WEBP to PNG with it.
 [spike-ai-pipeline-processing](https://github.com/JaimeStill/spike-ai-pipeline-processing)'s
 `document` package, at v0.9.0, is the second: its `Renderer` interface says what page rendering
 needs, and `Ghostscript` provides it over a gs tool.
