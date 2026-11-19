@@ -135,6 +135,8 @@ and never loosen it:
   authoritative home.
 - [A standalone tool beside the library](principles/tool-beside-library.md) — an operator's use
   case ships as a command beside the library.
+- [Four kinds of comment](principles/comments.md) — source carries only package documentation,
+  a suppression's or a pin hold's reason, and provenance.
 
 ## A note on "Domain Service"
 

@@ -132,7 +132,9 @@ with the toolkit's own code and documentation.
 Each API package has one `doc.go` holding only the package comment, and that comment is the
 authoritative description of the package's API. It inventories every exported identifier with
 a one-clause role and points to the symbols for the rest; each contract is stated once, on its
-symbol's own doc comment. Production symbols carry doc comments. A short method that exists only
-to satisfy a standard library interface, `Error() string` on a type whose comment already says
-what the error means or `String() string` on a `Stringer`, needs no comment of its own. Whether
-an inventory is complete is the reviewer's judgement; no check enforces it.
+symbol's own doc comment. Exported identifiers carry doc comments. A short method that exists
+only to satisfy a standard library interface, `Error() string` on a type whose comment already
+says what the error means or `String() string` on a `Stringer`, needs no comment of its own.
+[Four kinds of comment](../../../principles/comments.md) sets which other comments the source may
+carry. Whether an inventory is complete, and whether each exported identifier carries its doc
+comment, is the reviewer's judgement; no check enforces either.

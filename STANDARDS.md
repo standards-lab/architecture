@@ -7,3 +7,4 @@ The judgement calls the standards-reviewer applies to the architecture layer, be
 - `architecture/README.md` "What belongs here": what a page may hold and when it arrives.
 - `architecture/README.md` "Conventions": held by review; the check enforces only that each relative link resolves.
 - `architecture/principles/context-architecture.md`: every page and index, `architecture.md` and the root README included.
+- `architecture/principles/comments.md`: the comments in `scripts/`.
