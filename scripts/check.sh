@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Repository consistency checks, runnable locally; marathon runs it for every slice and review.
+# Checks that every relative link in the repository's markdown resolves and that every page opens
+# with the front matter its type requires.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -10,35 +11,31 @@ err() {
   fail=1
 }
 
-# Every markdown file git tracks or would track: ignored files, such as marathon's session
-# briefs under .claude/briefs/, are not part of the repository.
-mapfile -t markdown < <(git ls-files --cached --others --exclude-standard -- '*.md' | sort)
+mapfile -t markdown_outside_gitignore < <(git ls-files --cached --others --exclude-standard -- '*.md' | sort)
 
-# Every relative link in the markdown, inline or a reference definition, resolves to an
-# existing file or directory. A link with a scheme (https:, mailto:, ...) or a pure #anchor is
-# not a path, and a #fragment is stripped before resolving. Fenced code blocks and inline code
-# spans are illustration, not links, so they are skipped.
-links() {
+link_targets_outside_code() {
   awk '
-    /^[[:space:]]*(```|~~~)/ { fenced = !fenced; next }
-    fenced { next }
+    /^[[:space:]]*(```|~~~)/ { in_fenced_code = !in_fenced_code; next }
+    in_fenced_code { next }
     {
-      line = $0
-      gsub(/`[^`]*`/, "", line)
-      if (match(line, /^ {0,3}\[[^]]+\]:[[:space:]]*[^[:space:]]+/)) {
-        def = substr(line, RSTART, RLENGTH)
-        sub(/^ {0,3}\[[^]]+\]:[[:space:]]*/, "", def)
-        print FNR "\t" def
+      line_without_code_spans = $0
+      gsub(/`[^`]*`/, "", line_without_code_spans)
+      if (match(line_without_code_spans, /^ {0,3}\[[^]]+\]:[[:space:]]*[^[:space:]]+/)) {
+        reference_definition = substr(line_without_code_spans, RSTART, RLENGTH)
+        sub(/^ {0,3}\[[^]]+\]:[[:space:]]*/, "", reference_definition)
+        print FNR "\t" reference_definition
       }
-      while (match(line, /\]\(<[^>]*>|\]\([^)[:space:]]+/)) {
-        print FNR "\t" substr(line, RSTART + 2, RLENGTH - 2)
-        line = substr(line, RSTART + RLENGTH)
+      while (match(line_without_code_spans, /\]\(<[^>]*>|\]\([^)[:space:]]+/)) {
+        print FNR "\t" substr(line_without_code_spans, RSTART + 2, RLENGTH - 2)
+        line_without_code_spans = substr(line_without_code_spans, RSTART + RLENGTH)
       }
     }
   ' "$1"
 }
 
-for file in "${markdown[@]}"; do
+uri_scheme='^[A-Za-z][A-Za-z0-9+.-]*:'
+
+for file in "${markdown_outside_gitignore[@]}"; do
   dir=$(dirname "$file")
   while IFS=$'\t' read -r line target; do
     target=${target#<}
@@ -46,27 +43,26 @@ for file in "${markdown[@]}"; do
     case "$target" in
       '#'* | mailto:*) continue ;;
     esac
-    [[ "$target" =~ ^[A-Za-z][A-Za-z0-9+.-]*: ]] && continue
-    path=${target%%#*}
-    [ -e "$dir/$path" ] || err "$file:$line: link $target does not resolve"
-  done < <(links "$file")
+    [[ "$target" =~ $uri_scheme ]] && continue
+    path_without_fragment=${target%%#*}
+    [ -e "$dir/$path_without_fragment" ] || err "$file:$line: link $target does not resolve"
+  done < <(link_targets_outside_code "$file")
 done
 
-# Every page opens with the front matter README.md's "Page metadata" section requires: key,
-# name, and type on every page, plus the fields its type requires. The context/ notes and
-# goal records are marathon's working notes, not pages, CLAUDE.md is agent instructions, and
-# STANDARDS.md is the standards-reviewer's judgement calls, so none of them carries front matter.
-# A block that opens with --- on the first line and never closes is not front matter.
-frontmatter() {
+closed_front_matter() {
   awk 'NR == 1 { if ($0 != "---") exit; next } $0 == "---" { closed = 1; exit } { block = block $0 "\n" }
     END { if (closed) printf "%s", block }' "$1"
 }
 
-for file in "${markdown[@]}"; do
-  case "$file" in
-    context/* | CLAUDE.md | STANDARDS.md) continue ;;
+is_page() {
+  case "$1" in
+    context/* | CLAUDE.md | STANDARDS.md) return 1 ;;
   esac
-  fields=$(frontmatter "$file")
+}
+
+for file in "${markdown_outside_gitignore[@]}"; do
+  is_page "$file" || continue
+  fields=$(closed_front_matter "$file")
   if [ -z "$fields" ]; then
     err "$file: no front matter"
     continue
