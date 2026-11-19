@@ -29,17 +29,17 @@ Code Is Slop (Except Mine)", AI Engineer Code 2026.
 
 ## How the principle is enforced
 
-A suppression's reason is enforced by each ecosystem's stock lint rule:
+Each ecosystem's stock lint rule requires a suppression's reason:
 
 - Go: golangci-lint's `nolintlint`, with `require-explanation` and `require-specific`.
 - TypeScript: typescript-eslint's `ban-ts-comment`, set to `allow-with-description`.
 - ESLint directives: `@eslint-community/eslint-comments`' `require-description`.
 - Rust: clippy's `allow_attributes_without_reason`.
 
-Every other comment is judged by the standards-reviewer. No custom tool enforces the principle.
+The standards-reviewer judges every other comment. No custom tool enforces the principle.
 
-## Where the principle stands
+## Which code follows the principle
 
-The page arrives before any code repository follows it, a one-time exception to the rule that a
-page arrives only from validated code. The architecture layer's own
-[check script](../scripts/check.sh) follows it.
+The architecture layer's own [check script](../scripts/check.sh) follows the principle. No code
+repository follows it yet: the page is a one-time exception to the rule that a page arrives only
+from validated code.
