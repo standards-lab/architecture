@@ -41,7 +41,7 @@ for file in "${markdown_outside_gitignore[@]}"; do
     target=${target#<}
     target=${target%>}
     case "$target" in
-      '#'* | mailto:*) continue ;;
+      '#'*) continue ;;
     esac
     [[ "$target" =~ $uri_scheme ]] && continue
     path_without_fragment=${target%%#*}
