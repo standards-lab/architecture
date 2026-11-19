@@ -13,8 +13,8 @@ Source carries exactly four kinds of comment:
   identifier. A script's or a module's header comment counts as its package comment.
 - **A suppression's reason:** the reason a lint suppression requires, written on the
   suppression.
-- **A pin hold's reason:** the reason a version held back from the latest release requires,
-  written beside the pin, as [rolling currency](rolling-currency.md) asks of any hold.
+- **A pin hold's reason:** the reason a version is held back from the latest release that
+  [rolling currency](rolling-currency.md) tracks, written beside the pin.
 - **Provenance:** a line naming the source repository and commit of code taken from elsewhere,
   such as `From <repo> (<commit>)` or `Adapted from <repo> (<commit>)`.
 
@@ -40,6 +40,6 @@ Every other comment is judged by the standards-reviewer. No custom tool enforces
 
 ## Where the principle stands
 
-The page arrives before any repository's code follows it, a one-time exception to the rule
-that a page arrives only from validated code. Nothing enforces it in a code repository yet:
+The page arrives before any code repository follows it, a one-time exception to the rule that a
+page arrives only from validated code. The architecture layer's own scripts follow it. The code
 repositories adopt it, and the lint rules above, in the planned goal `harness.adoption`.
