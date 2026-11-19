@@ -41,5 +41,5 @@ Every other comment is judged by the standards-reviewer. No custom tool enforces
 ## Where the principle stands
 
 The page arrives before any code repository follows it, a one-time exception to the rule that a
-page arrives only from validated code. The architecture layer's own scripts follow it. The code
-repositories adopt it, and the lint rules above, in the planned goal `harness.adoption`.
+page arrives only from validated code. The architecture layer's own
+[check script](../scripts/check.sh) follows it.
