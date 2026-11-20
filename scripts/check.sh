@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# Checks that every relative link in the repository's markdown resolves and that every page opens
-# with the front matter its type requires.
+# Checks that every relative link in the repository's markdown resolves, that every page opens
+# with the front matter its type requires, and that every reference in the scripts resolves.
+#
+# A reference is a path ending in .md named on a whole-line # comment in a file under scripts/.
+# It resolves from the repository root; a leading architecture/ segment names this repository, as
+# the standards files across the workspace write it.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -84,6 +88,27 @@ for file in "${markdown_outside_gitignore[@]}"; do
   for key in key name type "${required[@]}"; do
     [ -n "$(value "$key")" ] || err "$file: front matter lacks $key${type:+ (required for type $type)}"
   done
+done
+
+mapfile -t scripts_outside_gitignore < <(git ls-files --cached --others --exclude-standard -- scripts | sort)
+
+references_on_comment_lines() {
+  awk '
+    /^[[:space:]]*#/ {
+      comment = $0
+      while (match(comment, /[A-Za-z0-9_.\/-]+\.md/)) {
+        print FNR "\t" substr(comment, RSTART, RLENGTH)
+        comment = substr(comment, RSTART + RLENGTH)
+      }
+    }
+  ' "$1"
+}
+
+for file in "${scripts_outside_gitignore[@]}"; do
+  while IFS=$'\t' read -r line reference; do
+    [ -e "${reference#architecture/}" ] ||
+      err "\`$file:$line\`: reference \`$reference\` does not resolve; fix the path or remove the reference"
+  done < <(references_on_comment_lines "$file")
 done
 
 if [ "$fail" -ne 0 ]; then

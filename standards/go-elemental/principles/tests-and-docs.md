@@ -135,6 +135,6 @@ a one-clause role and points to the symbols for the rest; each contract is state
 symbol's own doc comment. Exported identifiers carry doc comments. A short method that exists
 only to satisfy a standard library interface, `Error() string` on a type whose comment already
 says what the error means or `String() string` on a `Stringer`, needs no comment of its own.
-[Four kinds of comment](../../../principles/comments.md) sets which other comments the source may
+[Five kinds of comment](../../../principles/comments.md) sets which other comments the source may
 carry. Whether an inventory is complete, and whether each exported identifier carries its doc
 comment, is the reviewer's judgement; no check enforces either.
