@@ -43,9 +43,9 @@ over the modules itself. A suite beyond the unit tier that CI runs has a job of 
 the suite's mise task; an `integration` job runs on push to `main` and on manual dispatch. A suite
 CI does not run runs on a developer's machine ([tests and documentation](tests-and-docs.md)). A job
 that needs containers runs the same mise task a developer runs, and the task prints the
-containers' logs when it fails. The Go toolchain
-and golangci-lint versions are pinned in `mise.toml`, which CI and a developer's machine both
-read, so the gate moves only by a deliberate bump.
+containers' logs when it fails. The Go toolchain and golangci-lint versions are pinned in
+`mise.toml`, which CI and a developer's machine both read, so the gate moves only by a deliberate
+bump.
 
 ## Currency and upgrade
 

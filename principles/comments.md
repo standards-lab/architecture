@@ -18,8 +18,8 @@ compose files) is one of exactly five kinds:
   [rolling currency](rolling-currency.md) tracks, written beside the pin.
 - **Provenance:** one line per source naming the repository and commit of code taken from
   elsewhere, with a short clause saying what changed, such as
-  `Adapted from <repo> (<commit>): <what changed>`; with it stays any licence notice the ported
-  file's licence requires.
+  `Adapted from <repo> (<commit>): <what changed>`; with it stays any license notice the ported
+  file's license requires.
 - **Reference:** one line pointing a code or configuration file at the document or principle
   that governs it, in place of restating it, such as
   `See architecture/principles/rolling-currency.md`.

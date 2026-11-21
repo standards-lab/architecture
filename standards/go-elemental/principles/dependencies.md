@@ -84,10 +84,10 @@ An industry-standard library shows these markers, in rough order of weight:
 A sourced library enters as a pinned `go.mod` entry, never copied into the tree, and its weight is
 isolated by module: a capability sub-module of an application SDK or a provider sub-module of an
 infrastructure library, which the base module never imports, unless the repository states an
-exception for its base module. A repository that admits a
-sourced library states its line beside its link to the standard: the category it admits and the
-library taken under it. A capability that collaborates with an infrastructure service lives in that
-service's library, over standard-library types, never in an application SDK.
+exception for its base module. A repository that admits a sourced library states its line beside
+its link to the standard: the category it admits and the library taken under it. A capability that
+collaborates with an infrastructure service lives in that service's library, over standard-library
+types, never in an application SDK.
 
 ## Peers compose in the application
 

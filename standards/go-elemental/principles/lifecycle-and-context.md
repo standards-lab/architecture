@@ -43,8 +43,8 @@ from its value, so the part cannot drift from the value, and a test that substit
 value changes the node's part with it. The method is `Shutdown`, as `http.Server` and the
 standard's libraries name it.
 
-[go-core's `lifecycle` package](https://github.com/standards-lab/go-core/tree/v0.12.0/lifecycle) is an
-example.
+[go-core's `lifecycle` package](https://github.com/standards-lab/go-core/tree/v0.12.0/lifecycle)
+is an example.
 
 ## The wiring rule
 

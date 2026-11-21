@@ -22,11 +22,11 @@ and whose method does the work.
   `WithTimeout(d)`. Its optional inputs are fields of its options struct.
 - **A struct with a method beyond that.** An API that needs more than four required inputs, or
   that runs a configured thing, is an exported struct with a method. The caller names each input
-  as a field and calls the method on the value, such as a `Service{...}.Run(ctx)`.
+  as a field and calls the method on the value, as in `Service{...}.Run(ctx)`.
 - **A missing required field panics by name.** When a required field is nil, the method panics
   with a message that starts with the package name and names the field, such as
-  `web: Service.Run requires a Graph`. A nil field is a wiring
-  mistake in the caller's code, so the method reports it before it starts anything.
+  `web: Service.Run requires a Graph`. A nil field is a wiring mistake in the caller's code, so
+  the method reports it before it starts anything.
 
 ## The exception: a graph's Define-line options
 
