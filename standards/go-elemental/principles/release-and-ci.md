@@ -29,7 +29,9 @@ A repository adds what its own code needs: sqlate, blobfs, go-messaging, and go-
 the SQL conventions lint after the loop, and both templates and go-web-service vet, fix, and lint
 with `-tags integration` so the integration suite compiles and lints too
 ([tests and documentation](tests-and-docs.md)). Each template's check runs inside its
-`template/` subtree.
+`template/` subtree. Last, from the repository root, every repository runs marathon's
+`lint-context` and `lint-references`, both of them even when the first fails, and fails if either
+does; a lint missing from PATH fails the check with a message naming `mise install`.
 
 CI runs the same check, so the gate is the one a developer runs. Each repository's CI workflow has
 one `check` job that installs the pinned tools with mise and runs `mise run check`, on every pull
