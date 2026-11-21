@@ -139,8 +139,8 @@ Compose, in one layout:
   which `<group>:down` keeps and `<group>:reset` deletes.
 - Every published port binds `127.0.0.1` and moves with an environment variable
   (`POSTGRES_PORT`, `AZURITE_BLOB_PORT`), and the repository's settings that name the port follow
-  the variable. go-web-service's application settings are the exception: its README documents
-  that they keep their own ports.
+  the variable. go-web-service's application settings are the exception: its `docs/configuration.md`
+  documents that they keep their own ports.
 - mise tasks drive compose directly; no shell script backs a harness.
 
 ## Tasks
