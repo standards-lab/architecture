@@ -18,14 +18,14 @@ arrives.
   requires, and `lint-context` and `lint-references` pass ([scripts/check.sh](../scripts/check.sh)),
   with marathon's tools pinned in [mise.toml](../mise.toml). No CI runs it; the merge waits on no
   checks.
+- **Development-time secrets** (built): the principle for the workspace's development-time
+  secret convention, each repository's own age-encrypted `fnox.toml`
+  ([principles/development-secrets.md](../principles/development-secrets.md)).
 - **Site hosting** (planned): architecture published as a project site
   (`standards-lab/roadmap/index.toml`, goal `sites`, task `architecture-site`).
 - **Web Elemental standard** (planned): a draft web standard beside Go Elemental, with Lit as its
   one runtime dependency (`standards-lab/roadmap/index.toml`, goal `v1.client.stack`, task
   `standard`).
-- **Development-time secrets** (planned): the principle for the workspace's development-time
-  secret convention, a private `secrets` repository read through fnox
-  (`standards-lab/roadmap/index.toml`, goal `v1.ai.hosting`, task `secrets`).
 
 ## Goal records
 
