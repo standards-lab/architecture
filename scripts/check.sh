@@ -61,6 +61,10 @@ is_page() {
   esac
 }
 
+front_matter_value() {
+  sed -n "s/^$2:[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*$/\1/p" <<<"$1" | head -n1
+}
+
 for file in "${markdown_outside_gitignore[@]}"; do
   is_page "$file" || continue
   fields=$(closed_front_matter "$file")
@@ -68,9 +72,7 @@ for file in "${markdown_outside_gitignore[@]}"; do
     err "$file: no front matter"
     continue
   fi
-  value() { sed -n "s/^$1:[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*$/\1/p" <<<"$fields" | head -n1; }
-
-  type=$(value type)
+  type=$(front_matter_value "$fields" type)
   case "$type" in
     index) required=() ;;
     principle) required=(level) ;;
@@ -83,7 +85,7 @@ for file in "${markdown_outside_gitignore[@]}"; do
       ;;
   esac
   for key in key name type "${required[@]}"; do
-    [ -n "$(value "$key")" ] || err "$file: front matter lacks $key${type:+ (required for type $type)}"
+    [ -n "$(front_matter_value "$fields" "$key")" ] || err "$file: front matter lacks $key${type:+ (required for type $type)}"
   done
 done
 
