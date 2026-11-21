@@ -86,7 +86,8 @@ Per-type fields:
 - A page's claims hold regardless of any other repository's current state. A page may link a
   repository or a tool as an example; it never asserts that repository's or tool's current
   behavior, version, or adoption as fact, since such a claim goes stale when something outside the
-  page changes.
+  page changes. The member catalog is the one exception: a tier, a name, a link, and a one-clause
+  purpose.
 
 ## License
 

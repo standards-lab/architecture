@@ -68,10 +68,8 @@ only](downward-dependencies.md)).
 A repository sits where its base module's dependencies place it. A nested module, whether a
 provider, a command, or an example, pins only its own level and does not move the repository:
 whatever may use the base module still may, and only the nested module is out of reach of what
-may not use its dependencies. blobfs's
-[`example`](https://github.com/standards-lab/blobfs/tree/main/example) module requires the
-infrastructure library go-storage and its `azureblob` provider, while blobfs's base module depends
-on no tier and stays usable by every tier.
+may not use its dependencies: an adjacent library's example module may require an infrastructure
+library and a provider while its base module depends on no tier.
 
 ## Versioning across the tiers
 
@@ -79,5 +77,4 @@ Each repository releases independently ([independent releases](independent-relea
 core SDK is a dependency shared by every repository above it; a change to it releases first and is
 taken up by the coordinated releases that follow. When a change spans a repository and a tier
 that only a nested module depends on, the tier's library releases first, and the nested module
-takes up the release through its pin, as blobfs's example module pins go-storage and its
-`azureblob` provider at released versions.
+takes up the release through its pin.

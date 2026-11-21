@@ -22,9 +22,4 @@ them forces one audience to carry the other's dependencies.
   integrator who imports the library never compiles the command's dependencies, and
   [the repository's place follows its base module](repository-topology.md#a-repositorys-place-follows-its-base-module).
 
-## Where the organization applies the principle
-
-The [sqlate library](https://github.com/standards-lab/sqlate) established the pattern. Its
-conventions linter is the `sqlint` package, callable from a program, and the `sqlint` command
-in the same sub-module runs that package over a module for an operator. The sub-module keeps
-the linter's configuration-file dependency out of the base library.
+[sqlate's `sqlint`](https://github.com/standards-lab/sqlate/tree/sqlint/v0.4.0/sqlint) is an example.

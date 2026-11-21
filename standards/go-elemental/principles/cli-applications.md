@@ -11,11 +11,10 @@ A command-line tool is the second Go Elemental application type, beside the web 
 follows the same [import direction and composition root](topology-and-naming.md#application-layer-import-direction)
 as a web service, with one difference that shapes the rest: a CLI runs one command per process,
 so its graph is built per command, and a command brings up only the dependencies it declares. A
-CLI builds on [go-cli-sdk](https://github.com/standards-lab/go-cli-sdk), whose
-[`cli` package documentation](https://github.com/standards-lab/go-cli-sdk/blob/main/doc.go)
-states the dispatcher's API, and starts from
-[go-cli-sdk-template](https://github.com/standards-lab/go-cli-sdk-template), which scaffolds the
-layout below.
+CLI builds on the standard's command-line SDK and starts from its template, which scaffolds the
+layout below; [go-cli-sdk's package
+documentation](https://github.com/standards-lab/go-cli-sdk/blob/v0.4.0/doc.go) states the
+dispatcher's API.
 
 This page states the conventions particular to a CLI, and links the rest where it is stated:
 [The composition root](../../../principles/composition-root.md#the-entrypoint-owns-process-entry-and-exit)
@@ -28,27 +27,23 @@ composition root's fixtures live.
 
 ## The composition root's layer files
 
-`cmd/<name>/main.go` derives go-core's signal context, passes it, `cli.Streams` over the
-process's standard streams, and the arguments to the composition root, and exits with the code
-the run returns. It loads nothing.
+`cmd/<name>/main.go` derives the signal context, passes it, the process's standard streams, and
+the arguments to the composition root, and exits with the code the run returns. It loads nothing.
 
 `internal/app` has one file per layer:
 
 - `app.go` holds `App`, with `New` and `Run`, and `Nodes`. `New` describes the graph layer by layer
-  and builds the command tree; it is cold, reading and building nothing. `Run` is one
-  `cli.Program{Root, Graph, LifecycleConfig}.Run` call. `Nodes` holds one handle per node, each
-  named as the dispatcher labels its errors. The App publishes its graph, its `Nodes`, and its root
-  command, so a fixture can observe or replace a node before a run.
+  and builds the command tree; it is cold, reading and building nothing. `Run` is one call to the
+  SDK's program runner. `Nodes` holds one handle per node, each named as the dispatcher labels its
+  errors. The App publishes its graph, its `Nodes`, and its root command, so a fixture can observe
+  or replace a node before a run.
 - `infrastructure.go` defines the configuration and the infrastructure services as graph nodes.
   Configuration is read in its node's constructor, from the tool's environment prefix, only when
   a build reaches it; no aggregate `Config` struct gathers it. It is the only file in the
   composition root that names a provider. A command package outside the root may name the
-  provider its commands work through: go-web-service's `slab` tool builds go-messaging's NATS
-  broker in its [`events`](https://github.com/standards-lab/go-web-service/blob/main/tools/slab/events)
-  package, which `infrastructure.go` defines the broker node over, and its `sqlate` scenario
-  compiles statements with sqlate's PostgreSQL dialect.
-- `domain.go` defines each domain's nodes and mounts that domain's commands, one
-  `root.Add(pkg.Commands(...)...)` per domain over the nodes it passes.
+  provider its commands work through.
+- `domain.go` defines each domain's nodes and mounts that domain's commands, one call per domain
+  over the nodes it passes.
 - `version.go` holds the version command, which declares no nodes and prints the main module's
   version.
 - `admin.go` defines and mounts the admin services' nodes and commands as `domain.go` does the
@@ -60,32 +55,26 @@ the run returns. It loads nothing.
 There is no `config.go`, no `commands.go`, and no initializer: each layer file fills its own
 part of the graph and mounts its own commands, so adding a command touches its layer file and
 its package, and nothing else. The composition root's fixtures live in an internal `apptest`
-package, as go-cli-sdk-template's `Builds` and `Halt` do.
+package.
 
 ## A command builds only what it declares
 
-- **`Use` and `inv.Get`.** A command declares the nodes it needs with `Use` and reads their
-  values in `Run` with `inv.Get`, so a run builds only those nodes, and a command that declares
-  nothing builds nothing and reads no configuration. The
-  [`cli` package documentation](https://github.com/standards-lab/go-cli-sdk/blob/main/doc.go)
-  states how the dispatcher builds, runs, and shuts the nodes down, and that `inv.Get` panics on
-  a node the command did not declare, which enforces the
-  [wiring rule](lifecycle-and-context.md#the-wiring-rule).
-- **`Validate` builds nothing.** A command checks its input in `Validate`, as
+- **A command declares its nodes.** A command declares the nodes it needs and reads their values
+  when it runs, so a run builds only those nodes, and a command that declares nothing builds
+  nothing and reads no configuration. Reading a node the command did not declare fails, which
+  enforces the [wiring rule](lifecycle-and-context.md#the-wiring-rule).
+- **Validation builds nothing.** A command checks its input before any node is built, as
   [a CLI domain's commands](domain-files.md#a-cli-domains-commands) do.
-- **Root flags are checked in `PreRun`.** A root flag is accepted at any depth, so a check every
-  command shares, such as a flag that names something the tool cannot build, belongs in the
-  root's `PreRun`. The
-  [`cli` package documentation](https://github.com/standards-lab/go-cli-sdk/blob/main/doc.go)
-  states where `PreRun` falls in the dispatch order.
+- **Root flags are checked before dispatch.** A root flag is accepted at any depth, so a check
+  every command shares, such as a flag that names something the tool cannot build, belongs in the
+  root's hook that runs before the command.
 
 ## Exit codes and command words
 
 - **Help and usage errors exit 2.** Requested help, a parent run with no subcommand or an unknown
-  one, and every usage error return go-core's
-  [`ExitUsage`](https://github.com/standards-lab/go-core/blob/main/process/doc.go); any other
-  failure returns `ExitFailure`, 1, reported once on stderr. `cli.Program`'s `Run` returns the code
-  and the entrypoint exits with it unchanged, so no tool remaps a code or prints its own error line.
+  one, and every usage error return the usage exit code, 2; any other failure returns 1, reported
+  once on stderr. The program runner returns the code and the entrypoint exits with it unchanged,
+  so no tool remaps a code or prints its own error line.
 - **Subcommands are bare words.** A parent names the capability, so its subcommands never repeat
   it: `<tool> files list`, not `<tool> files list-files` or `<tool> files-list`.
 
@@ -96,9 +85,8 @@ a command that does one operation and prints its result, and not every CLI has t
 template ships none.
 
 A CLI that opts in keeps its scenarios in one root-level package named `scenarios`, and runs
-them on go-cli-sdk's [`scenario`](https://github.com/standards-lab/go-cli-sdk/blob/main/scenario/doc.go)
-runner, never one of its own. Its `scenario.go` mounts `scenario.Commands(scenarios...)` at the
-root, and the root's `Footer` calls `scenario.WriteListing` with the same scenarios.
+them on the SDK's scenario runner, never one of its own. Its `scenario.go` mounts the scenario
+commands at the root, and the root's help footer lists the same scenarios.
 `<tool> scenario <name>` runs one scenario, which declares its nodes like any other command and
 builds only those. `<tool> scenario` alone prints its help, and that help and the root's both
 end with the listing, so a CLI has no `list` command.

@@ -28,19 +28,3 @@ because the outermost scope ran first.
   with a latent defect.
 - The inner layers stay simple. A layer that can trust its input carries no defensive
   re-checking of what an outer layer already proved.
-
-## Where the organization's code applies the rule
-
-- Configuration. A configuration type finalizes once, in a fixed order, and a malformed
-  environment override fails the finalize step, so the composition root never receives a
-  configuration that did not validate. The mechanism is the core SDK's `config` package, and
-  its package documentation states the contract.
-- Authored SQL. The parameter delimiter is reserved, so text that looks like a parameter and is
-  not one fails the file's load. A statement then compiles against the pattern catalog, and at
-  startup the process verifies every statement in a domain's inventory against the live schema,
-  so a renamed column fails the process before it serves a request. The convention is the
-  [DSL-driven services](../standards/go-elemental/principles/dsl-driven-services.md) principle's.
-- Requests. The web SDK parses a read request's query string in full before any statement is
-  composed, and it rejects a malformed key or an operator on a reserved name as the request's
-  defect. The mechanism is the web SDK's query parse, and its package documentation states the
-  grammar.

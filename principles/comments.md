@@ -53,5 +53,5 @@ Each ecosystem's stock lint rule can require a suppression's reason, for example
 - ESLint directives: `@eslint-community/eslint-comments`' `require-description`.
 - Rust: clippy's `allow_attributes_without_reason`.
 
-Each repository's check resolves every reference comment, so a stale reference fails the check.
+A repository's check resolves every reference comment, so a stale reference fails it.
 The standards-reviewer judges every other comment.

@@ -26,25 +26,24 @@ and then golangci-lint:
 - `go test -race ./...`
 - `golangci-lint run ./...`
 
-A repository adds what its own code needs: sqlate, blobfs, go-messaging, and go-web-service run the
-SQL conventions lint after the loop, and both templates and go-web-service vet, fix, and lint with
-`-tags integration` so the integration suite compiles and lints too ([tests and
-documentation](tests-and-docs.md)). Each template's check runs inside its `template/` subtree, and
+A repository adds what its code needs: a conventions lint after the loop, such as a SQL
+conventions lint, and an integration build tag on vet, fix, and lint, such as
+`-tags integration`, so an integration suite compiles and lints too ([tests and
+documentation](tests-and-docs.md)). A template's check runs inside its `template/` subtree, and
 its lints run there and again at the template repository's root, so a generated project inherits
-them and runs them once, at its own root. Last, from the repository root, every repository runs
-marathon's `lint-context` and `lint-references`, both of them even when the first fails, and fails
-if either does; a lint missing from PATH fails the check with a message naming `mise install`.
+them and runs them once, at its own root. Last, from the repository root, the check runs the
+context lints, such as marathon's `lint-context` and `lint-references`, all of them even when one
+fails, and fails if any does; a lint missing from PATH fails the check with a message naming
+`mise install`.
 
-CI runs the same check, so the gate is the one a developer runs. Each repository's CI workflow has
+CI runs the same check, so the gate is the one a developer runs. A repository's CI workflow has
 one `check` job that installs the pinned tools with mise and runs `mise run check`, on every pull
 request into `main` and every push to it; there is no per-module matrix, because the check loops
-over the modules itself. A suite beyond the unit tier that CI runs has a job of its own:
-go-storage's `acceptance` job runs `mise run acceptance`, azureblob against Azurite and s3 against
-SeaweedFS. An `integration` job runs on push to `main` and on manual dispatch: both templates' and
-go-web-service's run the integration tier, and go-messaging's runs its postgres and nats suites.
-sqlate's and blobfs's postgres suites have no job; they run on a developer's machine
-([tests and documentation](tests-and-docs.md)). A job that needs containers runs the same mise
-task a developer runs, and the task prints the containers' logs when it fails. The Go toolchain
+over the modules itself. A suite beyond the unit tier that CI runs has a job of its own, which runs
+the suite's mise task; an `integration` job runs on push to `main` and on manual dispatch. A suite
+CI does not run runs on a developer's machine ([tests and documentation](tests-and-docs.md)). A job
+that needs containers runs the same mise task a developer runs, and the task prints the
+containers' logs when it fails. The Go toolchain
 and golangci-lint versions are pinned in `mise.toml`, which CI and a developer's machine both
 read, so the gate moves only by a deliberate bump.
 
@@ -61,8 +60,8 @@ Beside the check, two development-time tasks keep a repository current:
   `go.mod` and `mise.toml`.
 
 Currency is not a CI gate: no workflow runs it, so a new upstream release never turns a
-repository's CI red. Dependabot covers security only: each repository has Dependabot security
-updates enabled and no `dependabot.yml`, so no version-update pull requests open.
+repository's CI red. Dependabot covers security only: a repository enables Dependabot security
+updates and commits no `dependabot.yml`, so no version-update pull requests open.
 
 ## Releases
 
@@ -80,8 +79,7 @@ section and creates the GitHub release; runs for the same tag are serialized.
 
 Release preparation lands on `main` through a pull request, like any other change: the
 changelog date, metadata edits, and the README brought current with the release's changes. A
-ruleset on `main` in every repository requires the pull request and forbids deleting or
-force-pushing the branch.
+ruleset on `main` requires the pull request and forbids deleting or force-pushing the branch.
 
 The tag is pushed only after `main`'s CI run passes, the integration job included where the
 repository has one, so a release never points at a commit that failed CI. This is practice, not
@@ -104,7 +102,7 @@ directive is a transient bridge while a provider builds against unreleased base 
 is removed once the base is tagged. The release ripple runs bottom-up: tag the base, bump the
 provider's `require`, note it in the provider's changelog, tag the provider.
 
-The tiers ripple the same way: a go-core change releases first and is taken up by coordinated
+The tiers ripple the same way: a core SDK change releases first and is taken up by coordinated
 releases in the repositories above it, each pinning the versions it validated against.
 
 The repositories are public: modules resolve through the public Go proxy and checksum database,
@@ -135,25 +133,19 @@ Compose, in one layout:
   image has no `HEALTHCHECK`, and compose waits on it as running.
 - A stack starts with `docker compose up -d --wait --build` and stops with
   `docker compose down`.
-- A test-only harness, such as go-storage's or go-messaging's (PostgreSQL and NATS), keeps its
-  data on tmpfs, so every start is empty. A development stack keeps its data in named volumes,
-  which `<group>:down` keeps and `<group>:reset` deletes.
-- Every published port binds `127.0.0.1` and moves with an environment variable
-  (`POSTGRES_PORT`, `AZURITE_BLOB_PORT`), and the repository's settings that name the port follow
-  the variable. go-web-service's application settings are the exception: its `docs/configuration.md`
-  documents that they keep their own ports.
+- A test-only harness keeps its data on tmpfs, so every start is empty. A development stack keeps
+  its data in named volumes, which `<group>:down` keeps and `<group>:reset` deletes.
+- Every published port binds `127.0.0.1` and moves with an environment variable, such as
+  `POSTGRES_PORT`, and the repository's settings that name the port follow the variable. Where an
+  application's settings keep their own ports instead, the repository's documentation says so.
 - mise tasks drive compose directly; no shell script backs a harness.
 
 ## Tasks
 
-Each repository defines its developer tasks in `mise.toml`: `check`, `currency`, and `upgrade`,
-and beside them conveniences such as `test`, `vet`, `fmt`, `tidy`, and `lint`, each wrapping a
-plain command, plus `integration` or `acceptance` where the repository runs such a suite locally,
-and tasks that start and stop the containers it runs against: `db:up`, `db:down`, and `db:reset`
-for sqlate's, blobfs's, and go-web-service's development stacks, with go-web-service's `otel:*`
-and `stack:*` beside them, and `up`, `down`, `acceptance:s3`, and `acceptance:azureblob` for
-go-storage's test harness. go-messaging's test harness has `up` and `down` beside
-`integration:postgres` and `integration:nats`, each of which runs one suite, and `integration`,
-which runs both. A task name with more than one part is `<group>:<member>`, group first, joined by
-a colon, which is mise's namespace separator, so `mise run 'db:*'` matches a group. The
-repository works without mise; the tasks are a convenience.
+Each repository defines its developer tasks in `mise.toml`: `check`, `currency`, and `upgrade`, and
+beside them conveniences such as `test`, `vet`, `fmt`, `tidy`, and `lint`, each wrapping a plain
+command, plus `integration` or `acceptance` where the repository runs such a suite locally, and
+tasks that start and stop the containers it runs against, such as `db:up`, `db:down`, and
+`db:reset`. A task name with more than one part is `<group>:<member>`, group first, joined by a
+colon, which is mise's namespace separator, so `mise run 'db:*'` matches a group. The repository
+works without mise; the tasks are a convenience.
