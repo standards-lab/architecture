@@ -29,7 +29,8 @@ A repository adds what its own code needs: sqlate, blobfs, go-messaging, and go-
 the SQL conventions lint after the loop, and both templates and go-web-service vet, fix, and lint
 with `-tags integration` so the integration suite compiles and lints too
 ([tests and documentation](tests-and-docs.md)). Each template's check runs inside its
-`template/` subtree. Last, from the repository root, every repository runs marathon's
+`template/` subtree, and its lints run there and again at the template repository's root, so a
+generated project inherits them and runs them once, at its own root. Last, from the repository root, every repository runs marathon's
 `lint-context` and `lint-references`, both of them even when the first fails, and fails if either
 does; a lint missing from PATH fails the check with a message naming `mise install`.
 
