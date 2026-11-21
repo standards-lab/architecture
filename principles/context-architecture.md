@@ -35,13 +35,13 @@ authority it is, and every other layer refers to that definition by link.
 
 A layer that needs a detail defined elsewhere cites the home. A repository README links the
 principles the repository follows. The architecture's catalog links the repository rather than
-describing its packages. A profile links the architecture. A summary that adds no information
-beyond the link is a restatement and is removed.
+describing its packages. The [organization profile](https://github.com/standards-lab) links the
+architecture. A summary that adds no information beyond the link is a restatement and is removed.
 
-A narrowing is not a restatement. A profile that states less than the design supports, or a
-repository that declares a tighter dependency line than its standard, asserts something the
-home does not. The narrowing rule of the hierarchy permits that assertion, and the layer states
-it beside the link to the principle it tightens.
+A narrowing is not a restatement. The organization profile, where it states less than the design
+supports, or a repository that declares a tighter dependency line than its standard, asserts
+something the home does not. The narrowing rule of the hierarchy permits that assertion, and the
+layer states it beside the link to the principle it tightens.
 
 ## What each layer answers for a reader
 

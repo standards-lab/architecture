@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-# Checks that every relative link in the repository's markdown resolves, that every page opens
-# with the front matter its type requires, and that every reference in the scripts resolves.
-#
-# A reference is a path ending in .md named on a whole-line # comment in a file under scripts/.
-# It resolves from the repository root; a leading architecture/ segment names this repository, as
-# the standards files across the workspace write it.
+# Checks that every relative link in the repository's markdown resolves and that every page opens
+# with the front matter its type requires, then runs lint-context and lint-references, and fails if
+# any part fails. Reads no network.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -64,6 +61,10 @@ is_page() {
   esac
 }
 
+front_matter_value() {
+  sed -n "s/^$2:[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*$/\1/p" <<<"$1" | head -n1
+}
+
 for file in "${markdown_outside_gitignore[@]}"; do
   is_page "$file" || continue
   fields=$(closed_front_matter "$file")
@@ -71,9 +72,7 @@ for file in "${markdown_outside_gitignore[@]}"; do
     err "$file: no front matter"
     continue
   fi
-  value() { sed -n "s/^$1:[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*$/\1/p" <<<"$fields" | head -n1; }
-
-  type=$(value type)
+  type=$(front_matter_value "$fields" type)
   case "$type" in
     index) required=() ;;
     principle) required=(level) ;;
@@ -86,30 +85,20 @@ for file in "${markdown_outside_gitignore[@]}"; do
       ;;
   esac
   for key in key name type "${required[@]}"; do
-    [ -n "$(value "$key")" ] || err "$file: front matter lacks $key${type:+ (required for type $type)}"
+    [ -n "$(front_matter_value "$fields" "$key")" ] || err "$file: front matter lacks $key${type:+ (required for type $type)}"
   done
 done
 
-mapfile -t scripts_outside_gitignore < <(git ls-files --cached --others --exclude-standard -- scripts | sort)
-
-references_on_comment_lines() {
-  awk '
-    /^[[:space:]]*#/ {
-      comment = $0
-      while (match(comment, /[A-Za-z0-9_.\/-]+\.md/)) {
-        print FNR "\t" substr(comment, RSTART, RLENGTH)
-        comment = substr(comment, RSTART + RLENGTH)
-      }
-    }
-  ' "$1"
+run_lint() {
+  if ! command -v "$1" >/dev/null; then
+    echo "FAIL: $1 is not on PATH; run mise install" >&2
+    return 1
+  fi
+  "$1"
 }
 
-for file in "${scripts_outside_gitignore[@]}"; do
-  while IFS=$'\t' read -r line reference; do
-    [ -e "${reference#architecture/}" ] ||
-      err "\`$file:$line\`: reference \`$reference\` does not resolve; fix the path or remove the reference"
-  done < <(references_on_comment_lines "$file")
-done
+run_lint lint-context || fail=1
+run_lint lint-references || fail=1
 
 if [ "$fail" -ne 0 ]; then
   exit 1

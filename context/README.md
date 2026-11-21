@@ -6,17 +6,28 @@ repositories that implement them, published as plain markdown a person reads on 
 site serves without rewriting. The root `README.md` states what belongs here and how a page
 arrives.
 
-## Capabilities
+## Capability map
 
-- The Elemental Architecture (`architecture.md`) and its principles (`principles/`).
-- Each standard's definition, principles, and member catalog (`standards/<key>/`).
-- The front-matter schema and the conventions, in the root `README.md`.
-
-## Site hosting
-
-Site hosting is planned; `backlog.docs-site` in the workspace roadmap carries it.
+- **Elemental Architecture** (built): the architecture and its principles
+  ([architecture.md](../architecture.md), [principles/](../principles/)).
+- **Standards** (built): each standard's definition, principles, and member catalog
+  ([standards/](../standards/), one `standards/<key>/` directory per standard).
+- **Page conventions** (built): the page front-matter schema and the conventions
+  ([README.md](../README.md)).
+- **Check** (built): every relative link resolves, every page carries the front matter its type
+  requires, and `lint-context` and `lint-references` pass ([scripts/check.sh](../scripts/check.sh)),
+  with marathon's tools pinned in [mise.toml](../mise.toml). No CI runs it; the merge waits on no
+  checks.
+- **Site hosting** (planned): architecture published as a project site
+  (`standards-lab/roadmap/index.toml`, goal `sites`, task `architecture-site`).
+- **Web Elemental standard** (planned): a draft web standard beside Go Elemental, with Lit as its
+  one runtime dependency (`standards-lab/roadmap/index.toml`, goal `v1.client.stack`, task
+  `standard`).
+- **Development-time secrets** (planned): the principle for the workspace's development-time
+  secret convention, a private `secrets` repository read through fnox
+  (`standards-lab/roadmap/index.toml`, goal `v1.ai.hosting`, task `secrets`).
 
 ## Goal records
 
-`goals/` holds one record per active goal rooted here; the workspace roadmap at the coordinator
-lists the goals.
+`goals/`, when present, holds one record per active goal rooted here;
+`standards-lab/roadmap/index.toml` lists the goals.

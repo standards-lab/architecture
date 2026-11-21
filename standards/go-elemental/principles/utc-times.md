@@ -14,28 +14,22 @@ on every host.
 ## PostgreSQL columns store instants
 
 A PostgreSQL column that holds a point in time is `timestamp with time zone`, which stores an
-instant. [sqlate](https://github.com/standards-lab/sqlate)'s `postgres` dialect creates its
-migration history's `applied_at` the same way.
+instant.
 
 ## The read path converts to UTC
 
-pgx decodes a `timestamp with time zone` into `time.Local`, and a session `TimeZone` setting does
-not change that, so two layers convert on read:
+A driver may decode a `timestamp with time zone` into `time.Local`, whatever the session's
+`TimeZone` setting, so the provider and the scan layer both convert on read: the provider sets
+the driver to decode into `time.UTC` on every connection it opens, and the scan layer converts
+every `time.Time` it scans to `time.UTC`, whatever driver produced it.
 
-- [go-database](https://github.com/standards-lab/go-database)'s `postgres` provider registers
-  pgx's `TimestamptzCodec` with `ScanLocation: time.UTC` on every connection it opens.
-- sqlate's `query.Scanner` and `query.Scalar` convert every `time.Time` they scan to `time.UTC`,
-  whatever driver produced it.
-
-A library that parses a time from another source converts it before returning it, as
-[go-storage](https://github.com/standards-lab/go-storage)'s providers do with the HTTP dates behind
-`ModifiedAt`, and as [go-core](https://github.com/standards-lab/go-core)'s `event.Decode` does with
-the `ce-time` header it parses.
+A library that parses a time from another source, such as an HTTP date or an event header,
+converts it before returning it.
 
 ## Log record times are UTC
 
-[go-core](https://github.com/standards-lab/go-core)'s `logging.New` writes each record's own time
-in `time.UTC`. A time the caller logs as an attribute keeps the Location the caller gave it.
+The core SDK's logger writes each record's own time in `time.UTC`. A time the caller logs as an
+attribute keeps the Location the caller gave it.
 
 ## Tests prove UTC under a non-UTC zone
 
@@ -46,8 +40,8 @@ summer, since London's winter offset is zero and an unconverted time prints as a
 and they compare whole values with `==`, which compares the Location as well as the instant.
 
 A test whose times are stamped at run time cannot choose the season, so it uses a zone whose
-offset is never zero, Asia/Kolkata. go-web-service's integration tier, which runs the service
-process with `TZ` set, is that case.
+offset is never zero, Asia/Kolkata; an integration tier that runs the service process with `TZ`
+set is such a test.
 
 ## Callers convert where a time leaves their code
 

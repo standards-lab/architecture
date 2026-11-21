@@ -26,10 +26,10 @@ trivial, execute and query, and all the meaning is in the text. Forcing such a s
 protocol-driven pattern produces a large host-language interface standing in for a language
 that was already the right interface.
 
-SQL is the standard's reference implementation of the category, hosted by the
-[sqlate library](https://github.com/standards-lab/sqlate), whose guide documents the grammar
-and the packages. Its shape is what a later search or policy integration reproduces, with no
-shared code: native text, a thin library, a verification step, and a tier declaration.
+SQL is the standard's reference implementation of the category, hosted by a SQL templating library;
+[sqlate](https://github.com/standards-lab/sqlate) is an example. Its shape is what a later search or
+policy integration reproduces, with no shared code: native text, a thin library, a verification
+step, and a tier declaration.
 
 ## What the host-language layer does
 

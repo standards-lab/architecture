@@ -83,6 +83,11 @@ Per-type fields:
 - Code on a page is illustrative only: it links to a direct example, or it encodes a generic
   representation of the pattern that stands on its own.
 - A page describes what exists; work not yet built is left off the page.
+- A page's claims hold regardless of any other repository's current state. A page may link a
+  repository or a tool as an example; it never asserts that repository's or tool's current
+  behavior, version, or adoption as fact, since such a claim goes stale when something outside the
+  page changes. The member catalog is the one exception: a tier, a name, a link, and a one-clause
+  purpose.
 
 ## License
 

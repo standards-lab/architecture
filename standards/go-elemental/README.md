@@ -19,8 +19,7 @@ Every Go Elemental module follows one dependency line: bottom-up, no provider in
 light. The [Dependencies](principles/dependencies.md) principle states it per tier, along with
 when a capability is written in-house and when a library is sourced.
 
-The declared stack of the standard's reference architecture selects one provider per service;
-for SQL that provider is Postgres.
+The declared stack of the standard's reference architecture selects one provider per service.
 
 ## Principles
 
@@ -40,7 +39,7 @@ further, stating the enhancement beside its link to the principle.
   into its contract, and that a consumer introduces a type only when it is needed.
 - [Construction and execution](principles/construction-and-execution.md) states how many
   inputs a function takes, how it takes optional ones, and when an API becomes a struct with a
-  method, as `web.Service` and `cli.Program` are.
+  method.
 - [Topology and naming](principles/topology-and-naming.md) states how repositories, modules,
   packages, and release tags are named, the module layout of each tier, and the composition
   root's layout.
@@ -77,24 +76,23 @@ enhances, and its package documentation states its API.
 
 | Tier | Repository | Purpose |
 |------|------------|---------|
-| Core SDK | [go-core](https://github.com/standards-lab/go-core) | The common primitives every Go Elemental application type uses: layered configuration, the process lifecycle, logging, the process sequence with its integration toolkit, the reactor that joins a source of occurrences to a handler, and the CloudEvents event envelope a domain raises its events in. |
-| Infrastructure libraries | [go-database](https://github.com/standards-lab/go-database) | The SQL infrastructure service: the connection pool with its configuration, lifecycle, and readiness, the database admin service, the general sweeper (`sweep`), which runs a service's reclaimers as one reactor under a per-reclaimer advisory lock, and the PostgreSQL provider as a sub-module. |
-| Infrastructure libraries | [go-messaging](https://github.com/standards-lab/go-messaging) | The messaging infrastructure service: the broker-agnostic contract a service emits events and runs reactors on, the transactional outbox and the idempotent inbox, with the PostgreSQL engine, which holds the outbox and inbox retentions, and the NATS JetStream provider as sub-modules. |
-| Infrastructure libraries | [go-observability](https://github.com/standards-lab/go-observability) | The observability infrastructure service: OpenTelemetry configuration and process lifecycle, the trace-correlating log handler, HTTP server middleware, and the request-ID source function, with the OTLP exporters as a sub-module. |
-| Infrastructure libraries | [go-storage](https://github.com/standards-lab/go-storage) | The object storage infrastructure service: the standard-tier client interface over the operations Azure Blob and S3 share, the lifecycle wrapper that bounds and gates it, and the conformance suite a provider proves itself against, with the Azure Blob and S3 providers as sub-modules. |
-| Application SDKs | [go-web-sdk](https://github.com/standards-lab/go-web-sdk) | The SDK for Go Elemental web services: the server, routing, problem responses, paginated reads, the probes, middleware, and the integration toolkit. |
-| Application SDKs | [go-cli-sdk](https://github.com/standards-lab/go-cli-sdk) | The SDK for Go Elemental command-line tools: a dispatcher on the standard library's `flag` whose commands build only the graph nodes they declare, and the scenario runner. |
-| Templates | [go-web-sdk-template](https://github.com/standards-lab/go-web-sdk-template) | Scaffolds an initial Go Elemental web service, engine-free, with the composition root as one file per layer and the integration tier in place. |
-| Templates | [go-cli-sdk-template](https://github.com/standards-lab/go-cli-sdk-template) | Scaffolds an initial Go Elemental CLI, engine-free, with the composition root as one file per layer and the integration tier in place. |
-| Reference architectures | [go-web-service](https://github.com/standards-lab/go-web-service) | The holistic Go Elemental web service reference, grown in documented layers on the declared stack; versionless until its 1.0. |
+| Core SDK | [go-core](https://github.com/standards-lab/go-core) | The common primitives every application type uses. |
+| Infrastructure libraries | [go-ai](https://github.com/standards-lab/go-ai) | The model endpoint client. |
+| Infrastructure libraries | [go-database](https://github.com/standards-lab/go-database) | The SQL infrastructure library. |
+| Infrastructure libraries | [go-messaging](https://github.com/standards-lab/go-messaging) | The messaging infrastructure library. |
+| Infrastructure libraries | [go-observability](https://github.com/standards-lab/go-observability) | The observability infrastructure library. |
+| Infrastructure libraries | [go-storage](https://github.com/standards-lab/go-storage) | The object storage infrastructure library. |
+| Application SDKs | [go-web-sdk](https://github.com/standards-lab/go-web-sdk) | The SDK for web services. |
+| Application SDKs | [go-cli-sdk](https://github.com/standards-lab/go-cli-sdk) | The SDK for command-line tools. |
+| Templates | [go-web-sdk-template](https://github.com/standards-lab/go-web-sdk-template) | Scaffolds an initial web service. |
+| Templates | [go-cli-sdk-template](https://github.com/standards-lab/go-cli-sdk-template) | Scaffolds an initial CLI. |
+| Reference architectures | [go-web-service](https://github.com/standards-lab/go-web-service) | The holistic web service reference. |
 
-Two libraries stand [adjacent](../../principles/repository-topology.md#adjacent-libraries) to
+Four libraries stand [adjacent](../../principles/repository-topology.md#adjacent-libraries) to
 the standard rather than in it: standalone libraries any Go project can adopt on its own, each
 with its guide in its own repository.
 
-- [sqlate](https://github.com/standards-lab/sqlate) is the SQL templating library the
-  standard's libraries consume: authored `.sql` files made dynamic and composable, with the
-  PostgreSQL dialect and the conventions linter as sub-modules.
-- [blobfs](https://github.com/standards-lab/blobfs) is a tree of directories and file metadata
-  in SQL over any object store, built on sqlate, with the PostgreSQL engine and its migration
-  set as a sub-module.
+- [sqlate](https://github.com/standards-lab/sqlate): the SQL templating library.
+- [blobfs](https://github.com/standards-lab/blobfs): a file tree in SQL over any object store.
+- [docproc](https://github.com/standards-lab/docproc): document extraction for models.
+- [docinfer](https://github.com/standards-lab/docinfer): inference over extracted documents.

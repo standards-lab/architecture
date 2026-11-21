@@ -20,11 +20,10 @@ Service is the package's API; the data access beneath it stays unexported.
 - `entities.go` holds the shapes the operations take and return.
 - `errors.go` holds the errors the domain adds, worded in the domain's terms.
 
-A web service's domain adds `handler.go`, its routes, as go-web-service's `document` and
-`organization` domains do. A CLI's domain adds `commands.go`, which holds the command functions,
-their flag structs, and the parsers for the CLI's argument syntax, and `output.go`, which holds
-the writers and record layouts the commands print with. A file appears only when the domain has
-that role: a domain with no object store has no `storage.go`.
+A web service's domain adds `handler.go`, its routes. A CLI's domain adds `commands.go`, which holds
+the command functions, their flag structs, and the parsers for the CLI's argument syntax, and
+`output.go`, which holds the writers and record layouts the commands print with. A file appears only
+when the domain has that role: a domain with no object store has no `storage.go`.
 
 ## A CLI splits its API by dependency profile
 
@@ -32,24 +31,21 @@ A CLI may split off a second API type for each set of dependencies a group of it
 named after the file that holds it, so a command brings up only what it uses. A CLI runs one
 command per process, and a command that builds a dependency it never uses fails when that
 dependency is unreachable. A web service builds every dependency for the process lifetime, so it
-has no reason to split. In
-[spike-cli-architecture](https://github.com/JaimeStill/spike-cli-architecture)'s `files` domain,
-`Service` holds the database alone, and `Storage`, in `storage.go` and built by
-`NewStorage(svc, st)`, holds the Service's data access and the object store. The directory
-commands declare only the Service's node and run with the object store down; the object commands
-declare the Storage's node.
+has no reason to split. A domain may have a `Service` holding the database alone and a `Storage`,
+in `storage.go`, adding the object store: commands that declare only the Service's node run with
+the object store down, and the commands that move objects declare the Storage's node.
 
 ## A CLI domain's commands
 
 - **One `Commands` call per domain.** A domain exports one `Commands` function, which returns
-  `[]*cli.Command` whether it builds one command or many, so every mount in the composition root
-  is `root.Add(pkg.Commands(...)...)`.
+  its commands whether it builds one or many, so every mount in the composition root is the same
+  one call.
 - **Plain command functions of declared nodes.** Each command is built by a function that takes
   the graph nodes it declares, as
   [Composition terms](../../../principles/composition-terms.md#the-terms) admits for a CLI's
-  command packages. The command declares them with `Use` and reads their values with `inv.Get`;
-  no handle type wraps a node.
-- **Input checks in `Validate`.** `Args` only counts positional arguments, and every argument and
-  flag value, the domain's form rules included, is checked in `Validate`, so bad input builds no
-  dependency.
+  command packages. The command declares them and reads their values when it runs; no handle type
+  wraps a node.
+- **Input checks before any build.** The argument count is checked first, and every argument and
+  flag value, the domain's form rules included, is checked in the command's validation step, so
+  bad input builds no dependency.
 - **A state change is never silent.** A command that changes state prints one success line.

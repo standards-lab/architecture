@@ -26,24 +26,16 @@ to each construction site, so per-resource variation is different values at diff
 Where a library's configuration block defaults an operational bound, such as a timeout or a
 pool size, the default is a starting point the application's configuration overrides.
 
-The worked case is sqlate's optimistic-concurrency guard. The mechanism — match by key and expected
-version, advance the version in the same statement, and tell a missing row from a version mismatch —
-is standard SQL and belongs to the library. The organization's convention of naming that column
-`version` binds in the service's commands and migrations, so the guard takes the version parameter's
-name from its caller rather than assuming it: `Statement.Guarded(check, version)` and
-`Returning.Guarded(version, current)` both receive it, and go-web-service passes `"version"` to
-`Statement.Guarded` where it builds its guards. The policy rule has its worked case in go-web-sdk:
-`ParseQuery` takes the default and maximum page sizes as a `Limits` value from its caller, and the
-service's configuration supplies them. The same rule holds for go-observability, whose baseline is
-OpenTelemetry: it enables the architecture's use of the standard without hard-coding the
-architecture's choices into it.
+An optimistic-concurrency guard shows the split. The mechanism (match by key and expected
+version, advance the version in the same statement, and tell a missing row from a version
+mismatch) is standard SQL and belongs to the library. The convention that names the version
+column binds in the service's commands and migrations, so the guard takes the column's name from
+its caller rather than assuming it. Likewise a library that parses a paginated read takes the
+default and maximum page sizes from its caller, and the service's configuration supplies them.
 
 ## A type is introduced only when it is needed
 
 A consumer uses a library's types as the library defines them, and introduces a type or a layer of
 its own only when it adds something the library's lacks. A pass-through wrapper, a type whose
 methods only forward to the value it holds, adds a name to learn and a layer to keep current, and
-nothing else. The worked case is
-[spike-cli-architecture](https://github.com/JaimeStill/spike-cli-architecture)'s schema commands:
-their migrator node holds sqlate's `*migrate.Migrator` itself, which `schema.NewMigrator` builds,
-rather than a client type that forwards to it.
+nothing else.

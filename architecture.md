@@ -52,9 +52,8 @@ Top to bottom:
   occurrence rather than a caller (a subscription, an interval, a wake on demand). It owns what the
   occurrence arrives on: the inbound counterpart to the application layer's transport, which a
   caller drives instead. A Reactor commonly dispatches to a Domain Service, but a background
-  worker the application runs for the process lifetime is a Reactor too: go-web-service's
-  sweeper, woken on demand, on an interval, and at startup, is one. A Reactor is not a Domain
-  Service.
+  worker the application runs for the process lifetime is a Reactor too: a sweeper woken on
+  demand, on an interval, and at startup is one. A Reactor is not a Domain Service.
 - **Infrastructure Services**: the process-level services an application is composed on, such as
   the logger, the database, and storage. Their APIs are defined outside the application,
   and they are distinct from domain services. A service that holds a resource follows a uniform
@@ -148,6 +147,4 @@ one.
 ## Implementing standards
 
 A standard declares the architecture it implements in its definition.
-[Go Elemental](standards/go-elemental/README.md) is the first implementing standard; its
-[web service template](https://github.com/standards-lab/go-web-sdk-template) is the first
-code expression of the elements.
+[Go Elemental](standards/go-elemental/README.md) implements it.
