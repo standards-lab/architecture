@@ -6,15 +6,23 @@ repositories that implement them, published as plain markdown a person reads on 
 site serves without rewriting. The root `README.md` states what belongs here and how a page
 arrives.
 
-## Capabilities
+## Capability map
 
-- The Elemental Architecture (`architecture.md`) and its principles (`principles/`).
-- Each standard's definition, principles, and member catalog (`standards/<key>/`).
-- The front-matter schema and the conventions, in the root `README.md`.
-
-## Site hosting
-
-Site hosting is planned; `backlog.docs-site` in the workspace roadmap carries it.
+- **Elemental Architecture** (built): the architecture and its principles
+  ([architecture.md](../architecture.md), [principles/](../principles/)).
+- **Standards** (built): each standard's definition, principles, and member catalog
+  ([standards/](../standards/), one `standards/<key>/` directory per standard).
+- **Page conventions** (built): the page front-matter schema and the conventions
+  ([README.md](../README.md)).
+- **Check** (built): every relative link resolves, every page carries the front matter its type
+  requires, and every reference in the scripts resolves ([scripts/check.sh](../scripts/check.sh)).
+- **Site hosting** (planned): architecture published as a project site (the workspace roadmap's
+  `sites` goal, task `architecture-site`).
+- **Web Elemental standard** (planned): a draft web standard beside Go Elemental, with Lit as its
+  one runtime dependency (goal v1.client.stack, task `standard`).
+- **Development-time secrets** (planned): the principle for the workspace's development-time
+  secret convention, a private `secrets` repository read through fnox (goal v1.ai.hosting, task
+  `secrets`).
 
 ## Goal records
 
