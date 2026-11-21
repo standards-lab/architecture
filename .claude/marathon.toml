@@ -1,6 +1,7 @@
 [project]
 kind = "context"
 check = "scripts/check.sh"
+currency = "scripts/currency.sh"
 
 [remote]
 platform = "github"

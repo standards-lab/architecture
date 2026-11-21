@@ -15,7 +15,8 @@ arrives.
 - **Page conventions** (built): the page front-matter schema and the conventions
   ([README.md](../README.md)).
 - **Check** (built): every relative link resolves, every page carries the front matter its type
-  requires, and every reference in the scripts resolves ([scripts/check.sh](../scripts/check.sh)).
+  requires, and `lint-context` and `lint-references` pass ([scripts/check.sh](../scripts/check.sh)),
+  with marathon's tools pinned in [mise.toml](../mise.toml).
 - **Site hosting** (planned): architecture published as a project site (the workspace roadmap's
   `sites` goal, task `architecture-site`).
 - **Web Elemental standard** (planned): a draft web standard beside Go Elemental, with Lit as its

@@ -7,4 +7,6 @@ workflow.
   front-matter schema.
 - [`context/README.md`](context/README.md): the working context.
 - [`STANDARDS.md`](STANDARDS.md): the judgement calls the standards-reviewer applies.
-- `scripts/check.sh`: the check.
+- `scripts/check.sh`: the check (`mise run check`): links, front matter, `lint-context`, and
+  `lint-references`.
+- `mise.toml`: the pinned tools (`mise install`) and the `check` and `currency` tasks.
