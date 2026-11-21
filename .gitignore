@@ -1,5 +1,2 @@
-# Marathon session plan files.
 .claude/plans/
-
-# Marathon session briefs, the body of each task's pull request.
 .claude/briefs/
