@@ -32,7 +32,8 @@ surface on which a component chooses such a version, so no chosen version is exe
 
 A container image is pinned by an exact tag, and its latest is the highest semantic version
 among the tags that carry the pinned tag's variant suffix: a pin of `18.6-alpine` is current
-against the newest `-alpine` release, not the newest tag of any variant.
+against the newest `-alpine` release, not the newest tag of any variant. A tag counts only when it
+has at least one dot, so a bare build number never sorts above every release.
 
 A developer tool pinned for one task alone is covered too. A currency check reads every mise
 environment's config, each `mise.<env>.toml` through `mise -E <env>`, not only `mise.toml`.

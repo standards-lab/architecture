@@ -14,8 +14,9 @@ page states the shared mechanics.
 ## One check per repository
 
 Each repository has one check, `mise run check`, read-only and deterministic, stopping at the first
-failure. For every module in the repository's module list, with the workspace file disabled
-(`GOWORK=off`) so a broken version pin fails it, it runs the Go SDK's gates and then golangci-lint:
+failing gate; the two lints both run. For every module in the repository's module list, with the
+workspace file disabled (`GOWORK=off`) so a broken version pin fails it, it runs the Go SDK's gates
+and then golangci-lint:
 
 - `go build ./...`
 - `go vet ./...`
@@ -25,14 +26,14 @@ failure. For every module in the repository's module list, with the workspace fi
 - `go test -race ./...`
 - `golangci-lint run ./...`
 
-A repository adds what its own code needs: sqlate, blobfs, go-messaging, and go-web-service run
-the SQL conventions lint after the loop, and both templates and go-web-service vet, fix, and lint
-with `-tags integration` so the integration suite compiles and lints too
-([tests and documentation](tests-and-docs.md)). Each template's check runs inside its
-`template/` subtree, and its lints run there and again at the template repository's root, so a
-generated project inherits them and runs them once, at its own root. Last, from the repository root, every repository runs marathon's
-`lint-context` and `lint-references`, both of them even when the first fails, and fails if either
-does; a lint missing from PATH fails the check with a message naming `mise install`.
+A repository adds what its own code needs: sqlate, blobfs, go-messaging, and go-web-service run the
+SQL conventions lint after the loop, and both templates and go-web-service vet, fix, and lint with
+`-tags integration` so the integration suite compiles and lints too ([tests and
+documentation](tests-and-docs.md)). Each template's check runs inside its `template/` subtree, and
+its lints run there and again at the template repository's root, so a generated project inherits
+them and runs them once, at its own root. Last, from the repository root, every repository runs
+marathon's `lint-context` and `lint-references`, both of them even when the first fails, and fails
+if either does; a lint missing from PATH fails the check with a message naming `mise install`.
 
 CI runs the same check, so the gate is the one a developer runs. Each repository's CI workflow has
 one `check` job that installs the pinned tools with mise and runs `mise run check`, on every pull
@@ -51,10 +52,10 @@ read, so the gate moves only by a deliberate bump.
 
 Beside the check, two development-time tasks keep a repository current:
 
-- `mise run currency` runs the repository's `scripts/currency.sh`, which reports every
-  direct requirement, Go version, tool, and action pin, and where the repository has one, every
-  container image tag, read from each compose service's Dockerfile `FROM` line, that trails its latest release, and exits non-zero when it reports
-  any. It reads the network and writes nothing.
+- `mise run currency` runs the repository's `scripts/currency.sh`, which reports every direct
+  requirement, Go version, tool, and action pin, and where the repository has one, every container
+  image tag, read from each compose service's Dockerfile `FROM` line, that trails its latest
+  release, and exits non-zero when it reports any. It reads the network and writes nothing.
 - `mise run upgrade` moves every module's `go` directive to the current Go minor, upgrades its
   direct requirements to their latest, tidies, and bumps the local mise tools, rewriting
   `go.mod` and `mise.toml`.

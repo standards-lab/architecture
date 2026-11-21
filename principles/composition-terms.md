@@ -15,13 +15,13 @@ way, and a standard keeps the terms in its language's idiom.
 ## The terms
 
 - **Graph**: the composition root's description of the application's dependencies, as nodes.
-  Describing a graph constructs nothing. Only the composition root, its test fixtures, the SDKs
-  that run a graph, and the packages that build a CLI's commands import `graph`. Such a package
-  takes the nodes its commands declare, because a command declares its nodes so that a run builds only
-  what the command uses; it reads their values when the command runs and never sees a scope or
-  the system. Every other package below the root takes its dependencies as plain values through
-  its constructor and never sees a node, a scope, or the system, so the graph's API can change
-  without reaching them.
+  Describing a graph constructs nothing. Only the composition root, its test fixtures, the SDKs that
+  run a graph, and the packages that build a CLI's commands import `graph`. Such a package takes the
+  nodes its commands declare, because a command declares its nodes so that a run builds only what
+  the command uses; it reads their values when the command runs and never sees a scope or the
+  system. Every other package below the root takes its dependencies as plain values through its
+  constructor and never sees a node, a scope, or the system, so the graph's API can change without
+  reaching them.
 - **Node**: one dependency in the graph, a name and a constructor. A constructor declares the
   nodes it depends on by using them, and those uses are the graph's edges.
 - **System**: what one build of the graph constructs. A build starts from a set of root nodes and
@@ -42,13 +42,12 @@ way, and a standard keeps the terms in its language's idiom.
   shuts down; a CLI command uses it. Run starts the system, serves until its context ends, and
   shuts down; a long-running service uses it.
 
-## Retired and kept terms
+## Terms not used
 
-- **Stage** is retired. A stage is a startup position the composition root assigns by number, and
-  a hand-assigned order can disagree with the dependencies it encodes. A layer is computed from
-  those dependencies, so it cannot.
-- **Service** keeps its meanings for the deployed application, such as a web service, and for the
-  infrastructure tiers, such as an infrastructure service. It does not name a subsystem.
+- **Stage** is not a term: a startup position assigned by number can disagree with the dependencies
+  it encodes. A layer is computed from those dependencies, so it cannot.
+- **Service** does not name a subsystem. It names the deployed application, such as a web
+  service, and the infrastructure tiers, such as an infrastructure service.
 
 ## Why one graph serves every application type
 

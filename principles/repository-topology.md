@@ -30,7 +30,9 @@ and every member repository of a standard belongs to exactly one:
   stack.
 
 A standard's adjacent libraries stand beside the five tiers rather than in one, and the
-agent-tooling repositories and the organization-context repositories stand outside them.
+agent-tooling repositories, such as
+[claude-plugins](https://github.com/standards-lab/claude-plugins), and the organization-context
+repositories, such as [org](https://github.com/standards-lab/org), stand outside them.
 
 ## Adjacent libraries
 
@@ -41,13 +43,13 @@ repository. An adjacent library follows the standard's engineering principles (n
 layout, releases and CI, tests and documentation) without being a member of any tier. It is
 consumed downward like any library, and it may build on another adjacent library.
 
-An adjacent library may also depend on a standard's stack libraries, and the dependency rule
-then holds transitively: whatever may not depend on a tier may not depend on an adjacent library
-that depends on it. Such a dependency pins the library's level above the highest tier it depends on, so
+An adjacent library may also depend on a standard's stack libraries, and the dependency rule then
+holds transitively: whatever may not depend on a tier may not depend on an adjacent library that
+depends on it. Such a dependency pins the library's level above the highest tier it depends on, so
 nothing at or below that tier, and nothing that may not use that tier, may use it: an adjacent
 library that depends on an infrastructure library is out of reach of an application SDK, a peer
-tier, and only the layers above that tier, such as a reference architecture, may use it. An
-adjacent library that depends on no tier is usable by every tier.
+tier, and only the layers above that tier, such as a reference architecture, may use it. An adjacent
+library that depends on no tier is usable by every tier.
 
 ## Dependencies run downward, one tier at a time
 

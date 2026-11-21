@@ -16,16 +16,18 @@ arrives.
   ([README.md](../README.md)).
 - **Check** (built): every relative link resolves, every page carries the front matter its type
   requires, and `lint-context` and `lint-references` pass ([scripts/check.sh](../scripts/check.sh)),
-  with marathon's tools pinned in [mise.toml](../mise.toml).
-- **Site hosting** (planned): architecture published as a project site (the workspace roadmap's
-  `sites` goal, task `architecture-site`).
+  with marathon's tools pinned in [mise.toml](../mise.toml). No CI runs it; the merge waits on no
+  checks.
+- **Site hosting** (planned): architecture published as a project site
+  (`standards-lab/roadmap/index.toml`, goal `sites`, task `architecture-site`).
 - **Web Elemental standard** (planned): a draft web standard beside Go Elemental, with Lit as its
-  one runtime dependency (goal v1.client.stack, task `standard`).
+  one runtime dependency (`standards-lab/roadmap/index.toml`, goal `v1.client.stack`, task
+  `standard`).
 - **Development-time secrets** (planned): the principle for the workspace's development-time
-  secret convention, a private `secrets` repository read through fnox (goal v1.ai.hosting, task
-  `secrets`).
+  secret convention, a private `secrets` repository read through fnox
+  (`standards-lab/roadmap/index.toml`, goal `v1.ai.hosting`, task `secrets`).
 
 ## Goal records
 
-`goals/` holds one record per active goal rooted here; the workspace roadmap at the coordinator
-lists the goals.
+`goals/`, when present, holds one record per active goal rooted here;
+`standards-lab/roadmap/index.toml` lists the goals.

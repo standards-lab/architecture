@@ -52,12 +52,13 @@ not when the graph is described, with the fix named: an unfinalized configuratio
 malformed route prefix, a duplicate mount or subsystem, a group modified after its module is built,
 a `lifecycle.Readiness` bound to a second coordinator. The graph's own wiring defects panic with a
 `graph: ` prefix, and those its description shows already, such as a bad or duplicate name or an
-`After` or `In` naming a nil or foreign handle, panic as the graph is described. No runtime condition produces such a defect and no caller can recover from it
-sensibly, and the composition root is written once and runs at boot, so a loud failure there beats a
-silent one in production. A defect in configuration content, a reserved connection option or an
-invalid value, returns an error from the call that reads it, the configuration's finalize step or
-the provider's constructor, because configuration is input. A constructor's error returns from the
-graph's build, and the service exits 1.
+`After` or `In` naming a nil or foreign handle, panic as the graph is described. No runtime
+condition produces such a defect and no caller can recover from it sensibly, and the composition
+root is written once and runs at boot, so a loud failure there beats a silent one in production. A
+defect in configuration content, a reserved connection option or an invalid value, returns an error
+from the call that reads it, the configuration's finalize step or the provider's constructor,
+because configuration is input. A constructor's error returns from the graph's build, and the
+service exits 1.
 
 ## Cold start, hot start, drain
 
@@ -74,10 +75,10 @@ coordinator watches its channel: the first non-nil error ends the run.
 
 ## Readiness reflects the live state of the process
 
-The coordinator is ready once startup completes, and not ready again the moment draining
-begins, so a readiness probe reports a draining process as unavailable before its teardown
-runs. A subsystem exposes its own readiness through its named readiness check, which the
-coordinator infers only from a `Starter` that implements `Ready`, a `lifecycle.ReadyStarter`;
-a value that implements `Ready` alone joins no probe. That state is live: a subsystem that degrades fails the probe under its own name until it restores, and a
-process that begins draining stays not ready until it exits. Leaf components take a plain
-`context.Context`, keeping them usable without the coordinator.
+The coordinator is ready once startup completes, and not ready again the moment draining begins, so
+a readiness probe reports a draining process as unavailable before its teardown runs. A subsystem
+exposes its own readiness through its named readiness check, which the coordinator infers only from
+a `Starter` that implements `Ready`, a `lifecycle.ReadyStarter`; a value that implements `Ready`
+alone joins no probe. That state is live: a subsystem that degrades fails the probe under its own
+name until it restores, and a process that begins draining stays not ready until it exits. Leaf
+components take a plain `context.Context`, keeping them usable without the coordinator.

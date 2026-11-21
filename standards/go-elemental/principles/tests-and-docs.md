@@ -81,13 +81,13 @@ variable, so the unit tier never reaches it:
   `integration` job, on push to `main` and on manual dispatch.
 - **go-web-sdk-template's, go-cli-sdk-template's, and go-web-service's integration tier**
   (`-tags integration`, in the root-level `integration` package) runs the built program as a
-  subprocess, black-box: a service through its API, and a CLI through its arguments, its two
-  output streams, and its exit code. Each repository's `mise run integration` task and CI `integration` job run
-  it, the job on push to `main` and on manual dispatch. go-web-service's task and job boot its
+  subprocess, black-box: a service through its API, and a CLI through its arguments, its two output
+  streams, and its exit code. Each repository's `mise run integration` task and CI `integration` job
+  run it, the job on push to `main` and on manual dispatch. go-web-service's task and job boot its
   compose stack under Docker as an isolated project on its own ports and tear it down with its
-  volumes; the templates are engine-free and run the suite against the binary alone. The check
-  vets, fixes, and lints the suite with the integration tag, so it always compiles, but runs
-  only the unit tier.
+  volumes; the templates are engine-free and run the suite against the binary alone. The check vets,
+  fixes, and lints the suite with the integration tag, so it always compiles, but runs only the unit
+  tier.
 
 The integration tier drives a service only through production surfaces: configuration by
 environment variable, the API and the admin mount for state, the network for faults, and

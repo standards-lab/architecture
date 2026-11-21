@@ -34,11 +34,11 @@ the run returns. It loads nothing.
 
 `internal/app` has one file per layer:
 
-- `app.go` holds `App`, with `New` and `Run`, and `Nodes`. `New` describes the graph layer by
-  layer and builds the command tree; it is cold, reading and building nothing. `Run` is one
-  `cli.Program{Root, Graph, LifecycleConfig}.Run` call. `Nodes` holds one handle per node, each named as the dispatcher
-  labels its errors. The App publishes its graph, its `Nodes`, and its root command, so a
-  fixture can observe or replace a node before a run.
+- `app.go` holds `App`, with `New` and `Run`, and `Nodes`. `New` describes the graph layer by layer
+  and builds the command tree; it is cold, reading and building nothing. `Run` is one
+  `cli.Program{Root, Graph, LifecycleConfig}.Run` call. `Nodes` holds one handle per node, each
+  named as the dispatcher labels its errors. The App publishes its graph, its `Nodes`, and its root
+  command, so a fixture can observe or replace a node before a run.
 - `infrastructure.go` defines the configuration and the infrastructure services as graph nodes.
   Configuration is read in its node's constructor, from the tool's environment prefix, only when
   a build reaches it; no aggregate `Config` struct gathers it. It is the only file in the
@@ -81,11 +81,11 @@ package, as go-cli-sdk-template's `Builds` and `Halt` do.
 
 ## Exit codes and command words
 
-- **Help and usage errors exit 2.** Requested help, a parent run with no subcommand or an
-  unknown one, and every usage error return go-core's
+- **Help and usage errors exit 2.** Requested help, a parent run with no subcommand or an unknown
+  one, and every usage error return go-core's
   [`ExitUsage`](https://github.com/standards-lab/go-core/blob/main/process/doc.go); any other
-  failure returns `ExitFailure`, 1, reported once on stderr. `cli.Program`'s `Run` returns the code and the
-  entrypoint exits with it unchanged, so no tool remaps a code or prints its own error line.
+  failure returns `ExitFailure`, 1, reported once on stderr. `cli.Program`'s `Run` returns the code
+  and the entrypoint exits with it unchanged, so no tool remaps a code or prints its own error line.
 - **Subcommands are bare words.** A parent names the capability, so its subcommands never repeat
   it: `<tool> files list`, not `<tool> files list-files` or `<tool> files-list`.
 
