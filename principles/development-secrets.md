@@ -15,8 +15,9 @@ reference stays complete even though the values stay private.
 
 The convention is built on [fnox](https://fnox.jdx.dev), which keeps secrets in a TOML file and
 encrypts each value with [age](https://age-encryption.org), and on [mise](https://mise.jdx.dev),
-which hands a secret to the tasks that need it. Each repository's own documentation gives the
-step-by-step commands; this page states what holds and why.
+which hands a secret to the tasks that need it. This page is the one home for the convention and
+every step of it. A repository that holds secrets documents only its own: which secrets it holds,
+which tasks are granted them, and its recipients.
 
 ## Where a secret lives
 
@@ -30,18 +31,15 @@ backup.
 ## How a secret describes itself
 
 Every secret carries a description saying what it is, what reads it, and how to generate one's
-own, and a link to the page that issues it wherever one does. A reader lists them without a key.
-
-Each repository's check guards the file without a key. It refuses a secret with no description,
-a value that is not ciphertext, a tracked age secret key, and a local override file that git does
-not ignore.
+own, and a link to the page that issues it wherever one does. A reader lists them without a key,
+with `mise secrets ls`.
 
 ## Keys and the backup
 
 Each device has its own age key, generated on that device, held as a plain file readable only by
 its owner, and never copied off it. The key never enters a dotfiles repository or any other
-repository. It is a key of its own rather than the device's SSH key, so secret access and SSH access
-rotate apart.
+repository. It is a key of its own rather than the device's SSH key, so secret access and SSH
+access rotate apart. Only a key's public half ever travels.
 
 One more recipient is a backup identity, protected by a passphrase and held offline. It decrypts
 every value on its own, so losing every device loses nothing.
@@ -49,29 +47,9 @@ every value on its own, so losing every device loses nothing.
 ## How a task receives a secret
 
 A secret reaches only the task that is granted it, and mise redacts the value from that task's
-output. Without an identity that decrypts it, the task runs as it would without the secret, and a
-value the caller exports itself still works. A contributor without a key loses only the tasks that
-need the value, and the check never needs one.
-
-## Adding a device, rotating, and restoring
-
-A new device generates its own key, and its public key joins the file's recipients under the
-device's name. A device that already decrypts re-encrypts every value to the new list, commits the
-file, and the new device pulls it. The key never travels; only its public half does.
-
-Removing a recipient does not revoke it. The old ciphertext is public and stays in git history,
-and the removed key still decrypts it. Only rotating the value at the source that issues it
-revokes access.
-
-Restoring after losing every device needs only the backup identity: it decrypts every value, and
-the values are re-encrypted to the new devices.
-
-## A stranger's own values
-
-A stranger supplies their own values in a gitignored local file, encrypted to their own key, that
-overrides the committed one. They name that file explicitly when setting a value, since a plain
-set rewrites the committed file. In a fork, they replace the committed file's recipients and values
-with their own.
+output. Without an identity that decrypts it, fnox warns and leaves the variable unset, so the
+task runs as it would without the secret, and a value the caller exports itself still works. A
+contributor without a key loses only the tasks that need the value, and the check never needs one.
 
 ## What is not a secret
 
@@ -79,3 +57,159 @@ A credential published for development, such as a local storage emulator's well-
 database container's default password, is not a secret. It stays committed in plain text where
 the tooling expects it, since encrypting a published value protects nothing and costs the reader
 the reference.
+
+## Adding secrets to a repository
+
+The repository's root `fnox.toml` stops fnox's search for parent files, declares an age provider
+with one named recipient per device and one for the backup, and holds each secret with its
+description and issuing page:
+
+```toml
+root = true
+
+[providers.age]
+type = "age"
+
+[providers.age.recipients]
+<device> = "age1..."
+backup = "age1..."
+
+[secrets]
+EXAMPLE_TOKEN = { provider = "age", value = "...", description = "What it is, what reads it, and how to generate your own.", url = "https://issuer.example/tokens" }
+```
+
+Write each value through fnox, which encrypts it. With no value argument, fnox reads it from a
+hidden prompt or from stdin, so it never lands in a command line or a shell history; `-d` records
+the description:
+
+```sh
+fnox -c ./fnox.toml set EXAMPLE_TOKEN -d "What it is, what reads it, and how to generate your own."
+```
+
+`mise.toml` holds mise to a release that supports task secrets, enables them, pins the tools, and
+grants each secret to the tasks that read it:
+
+```toml
+min_version = "<version>"
+
+[settings]
+experimental = true
+
+[tools]
+"aqua:FiloSottile/age" = "<version>"
+fnox = "<version>"
+yq = "<version>"
+
+[secrets.fnox]
+
+[tasks.integration]
+secrets = ["EXAMPLE_TOKEN"]
+run = "..."
+```
+
+`[secrets.fnox]` makes fnox mise's secret source, and a task's `secrets` list is its grant. When
+a secret stands in for a per-role variable a caller may set, such as one token per endpoint, the
+task's script copies the granted value only into each role's variable that is still unset, so a
+value the caller exports for a role takes precedence over the committed one.
+
+`.gitignore` lists the local override files:
+
+```gitignore
+fnox.local.toml
+.fnox.local.toml
+```
+
+The repository's check runs a `lint-secrets` script, which reads the file without a key and
+refuses:
+
+- a secret with no description, which leaves the reference incomplete;
+- an age-provider value that isn't age ciphertext, a plaintext value set by hand, which is
+  rotated if it was ever committed;
+- a tracked file that holds an age secret key, which exposes that identity;
+- a local override file that git doesn't ignore, or that is tracked, since it holds one
+  machine's own values.
+
+It needs git, jq, and the pinned yq, and no key, so CI runs it.
+
+## Setting up a device's key
+
+On the device, in a repository that pins age, generate the key with the pinned `age-keygen` into
+a directory only its owner can open, and print its public key:
+
+```sh
+mkdir -p -m 700 ~/.config/fnox
+(umask 077; mise exec -- age-keygen -o ~/.config/fnox/age.txt)
+mise exec -- age-keygen -y ~/.config/fnox/age.txt
+```
+
+fnox reads `~/.config/fnox/age.txt` by default. Keep it a plain file, never a symbolic link, that
+no dotfiles repository tracks or links. `stat -c '%a %F' ~/.config/fnox ~/.config/fnox/age.txt`
+confirms `700 directory` and `600 regular file`.
+
+## Creating the offline backup identity
+
+Generate the backup identity straight into a passphrase-protected file, so its secret half never
+reaches the disk in the clear:
+
+```sh
+mise exec -- age-keygen 2> backup.pub | mise exec -- age -p -a > backup.age
+```
+
+`backup.pub` holds the public key, which is committed as the `backup` recipient and is the only
+part committed. Keep `backup.age` out of every repository, in more than one offline place, and its
+passphrase apart from it.
+
+## Adding a device
+
+1. Set up the new device's key, then clone the repository and run `mise trust` and
+   `mise install` there.
+2. On a device that already decrypts, add the new public key under `[providers.age.recipients]`
+   with the device's short name, re-encrypt every value to the new list, and run the check:
+
+   ```sh
+   fnox -c ./fnox.toml reencrypt -p age --force
+   mise run check
+   ```
+
+3. Commit `fnox.toml` and pull it on the new device, where
+   `fnox -c ./fnox.toml get EXAMPLE_TOKEN | wc -c` confirms it decrypts without printing the
+   value.
+
+## Rotating a value, and removing a device
+
+Removing a recipient doesn't revoke it. The old ciphertext is public and stays in git history,
+and the removed key still decrypts it. To remove a device, delete its recipient and re-encrypt as
+when adding one, then rotate every value it could read: issue a new value at the source that
+issues it, revoke the old one there, and set the new one with `fnox -c ./fnox.toml set`.
+
+## Restoring from the backup
+
+With every device lost, decrypt the backup identity into a directory only its owner can open, and
+point fnox at it:
+
+```sh
+T=$(mktemp -d); chmod 700 "$T"
+mise exec -- age -d -o "$T/age.txt" backup.age
+FNOX_CONFIG_DIR="$T" fnox -c ./fnox.toml get EXAMPLE_TOKEN | wc -c
+```
+
+With `FNOX_CONFIG_DIR` still set, add the new devices' recipients and re-encrypt as when adding a
+device. Then destroy the decrypted identity:
+
+```sh
+shred -u "$T/age.txt"; rmdir "$T"
+```
+
+## Supplying your own values
+
+A stranger, or a machine that isn't a recipient, supplies its own values in the gitignored
+`fnox.local.toml`, which overrides `fnox.toml`. Give it an age provider whose only recipient is
+your own public key, then write each value to it by name:
+
+```sh
+fnox -c ./fnox.local.toml set EXAMPLE_TOKEN
+```
+
+A plain `fnox set` writes to the committed `fnox.toml`, so name the local file with `-c` unless
+you mean to change the committed one. In a fork, replace the committed file's recipients with your
+own instead, and set each value again.

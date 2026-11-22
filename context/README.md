@@ -18,8 +18,8 @@ arrives.
   requires, and `lint-context` and `lint-references` pass ([scripts/check.sh](../scripts/check.sh)),
   with marathon's tools pinned in [mise.toml](../mise.toml). No CI runs it; the merge waits on no
   checks.
-- **Development-time secrets** (built): the principle for the workspace's development-time
-  secret convention, each repository's own age-encrypted `fnox.toml`
+- **Development-time secrets** (built): the one home for the development-time secret
+  convention, each repository's own age-encrypted `fnox.toml`, and every procedure for it
   ([principles/development-secrets.md](../principles/development-secrets.md)).
 - **Site hosting** (planned): architecture published as a project site
   (`standards-lab/roadmap/index.toml`, goal `sites`, task `architecture-site`).
