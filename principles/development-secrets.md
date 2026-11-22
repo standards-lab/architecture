@@ -98,6 +98,7 @@ experimental = true
 [tools]
 "aqua:FiloSottile/age" = "<version>"
 fnox = "<version>"
+jq = "<version>"
 yq = "<version>"
 
 [secrets.fnox]
@@ -142,7 +143,8 @@ mkdir -p -m 700 ~/.config/fnox
 mise exec -- age-keygen -y ~/.config/fnox/age.txt
 ```
 
-fnox reads `~/.config/fnox/age.txt` by default. `stat -c '%a %F' ~/.config/fnox
+fnox reads `$XDG_CONFIG_HOME/fnox/age.txt` by default, which is `~/.config/fnox/age.txt`
+unless `XDG_CONFIG_HOME` is set elsewhere. `stat -c '%a %F' ~/.config/fnox
 ~/.config/fnox/age.txt` confirms `700 directory` and `600 regular file`.
 
 ## Creating the offline backup identity
