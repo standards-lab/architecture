@@ -15,8 +15,8 @@ reference stays complete even though the values stay private.
 
 The convention is built on [fnox](https://fnox.jdx.dev), which keeps secrets in a TOML file and
 encrypts each value with [age](https://age-encryption.org), and on [mise](https://mise.jdx.dev),
-which hands a secret to the tasks that need it. Each repository's README gives the step-by-step
-commands; this page states what holds and why.
+which hands a secret to the tasks that need it. Each repository's own documentation gives the
+step-by-step commands; this page states what holds and why.
 
 ## Where a secret lives
 
