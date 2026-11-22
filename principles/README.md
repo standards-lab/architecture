@@ -19,6 +19,7 @@ a principle, tightening it for its own scope, and never loosen it.
 - [The composition root](composition-root.md)
 - [Composition terms](composition-terms.md)
 - [Rolling currency](rolling-currency.md)
+- [Development-time secrets](development-secrets.md)
 - [Validation-first layering](validation-first.md)
 - [Context architecture](context-architecture.md)
 - [A standalone tool beside the library](tool-beside-library.md)
