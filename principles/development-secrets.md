@@ -43,8 +43,8 @@ its owner, and never copied off it. The key never enters a dotfiles repository o
 repository. It is a key of its own rather than the device's SSH key, so secret access and SSH access
 rotate apart.
 
-One more recipient is a backup identity, protected by a passphrase and held offline. It alone
-decrypts every value, so losing every device loses nothing.
+One more recipient is a backup identity, protected by a passphrase and held offline. It decrypts
+every value on its own, so losing every device loses nothing.
 
 ## How a task receives a secret
 
@@ -63,14 +63,14 @@ Removing a recipient does not revoke it. The old ciphertext is public and stays 
 and the removed key still decrypts it. Only rotating the value at the source that issues it
 revokes access.
 
-Restoring after losing every device needs only the backup identity, which decrypts every value to
-re-encrypt to new devices.
+Restoring after losing every device needs only the backup identity: it decrypts every value, and
+the values are re-encrypted to the new devices.
 
 ## A stranger's own values
 
-A stranger supplies their own values in a gitignored local file that overrides the committed one,
-encrypted to their own key, and naming that file explicitly when setting a value: a plain set
-rewrites the committed file. In a fork, they replace the committed file's recipients and values
+A stranger supplies their own values in a gitignored local file, encrypted to their own key, that
+overrides the committed one. They name that file explicitly when setting a value, since a plain
+set rewrites the committed file. In a fork, they replace the committed file's recipients and values
 with their own.
 
 ## What is not a secret
