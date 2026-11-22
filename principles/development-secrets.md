@@ -40,7 +40,8 @@ not ignore.
 
 Each device has its own age key, generated on that device, held as a plain file readable only by
 its owner, and never copied off it. The key never enters a dotfiles repository or any other
-repository. An SSH key does not serve, since fnox cannot use one protected by a passphrase.
+repository. It is a key of its own rather than the device's SSH key, so secret access and SSH access
+rotate apart.
 
 One more recipient is a backup identity, protected by a passphrase and held offline. It alone
 decrypts every value, so losing every device loses nothing.
