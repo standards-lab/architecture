@@ -36,10 +36,11 @@ with `mise secrets ls`.
 
 ## Keys and the backup
 
-Each device has its own age key, generated on that device, held as a plain file readable only by
-its owner, and never copied off it. The key never enters a dotfiles repository or any other
-repository. It is a key of its own rather than the device's SSH key, so secret access and SSH
-access rotate apart. Only a key's public half ever travels.
+Each device has its own age key, generated on that device, held as a plain file, never a
+symbolic link, readable only by its owner, and never copied off it. The key never enters a
+dotfiles repository or any other repository, and no repository links it. It is a key of its own
+rather than the device's SSH key, so secret access and SSH access rotate apart. Only a key's public
+half ever travels.
 
 One more recipient is a backup identity, protected by a passphrase and held offline. It decrypts
 every value on its own, so losing every device loses nothing.
@@ -60,9 +61,8 @@ the reference.
 
 ## Adding secrets to a repository
 
-The repository's root `fnox.toml` stops fnox's search for parent files, declares an age provider
-with one named recipient per device and one for the backup, and holds each secret with its
-description and issuing page:
+The repository's root `fnox.toml` stops fnox's search for parent files, declares the age
+provider and its named recipients, and holds each secret with its description and issuing page:
 
 ```toml
 root = true
@@ -142,9 +142,8 @@ mkdir -p -m 700 ~/.config/fnox
 mise exec -- age-keygen -y ~/.config/fnox/age.txt
 ```
 
-fnox reads `~/.config/fnox/age.txt` by default. Keep it a plain file, never a symbolic link, that
-no dotfiles repository tracks or links. `stat -c '%a %F' ~/.config/fnox ~/.config/fnox/age.txt`
-confirms `700 directory` and `600 regular file`.
+fnox reads `~/.config/fnox/age.txt` by default. `stat -c '%a %F' ~/.config/fnox
+~/.config/fnox/age.txt` confirms `700 directory` and `600 regular file`.
 
 ## Creating the offline backup identity
 
@@ -155,14 +154,14 @@ reaches the disk in the clear:
 mise exec -- age-keygen 2> backup.pub | mise exec -- age -p -a > backup.age
 ```
 
-`backup.pub` holds the public key, which is committed as the `backup` recipient and is the only
-part committed. Keep `backup.age` out of every repository, in more than one offline place, and its
-passphrase apart from it.
+`backup.pub` holds the public key after `Public key: `; that key, committed as the `backup`
+recipient, is the only part committed. Keep `backup.age` out of every repository, in more than
+one offline place, and its passphrase apart from it.
 
 ## Adding a device
 
-1. Set up the new device's key, then clone the repository and run `mise trust` and
-   `mise install` there.
+1. On the new device, clone the repository, run `mise trust` and `mise install` there, then set
+   up the device's key.
 2. On a device that already decrypts, add the new public key under `[providers.age.recipients]`
    with the device's short name, re-encrypt every value to the new list, and run the check:
 
@@ -203,8 +202,9 @@ shred -u "$T/age.txt"; rmdir "$T"
 ## Supplying your own values
 
 A stranger, or a machine that isn't a recipient, supplies its own values in the gitignored
-`fnox.local.toml`, which overrides `fnox.toml`. Give it an age provider whose only recipient is
-your own public key, then write each value to it by name:
+`fnox.local.toml`, which overrides `fnox.toml`. Set up your own key as in [Setting up a device's
+key](#setting-up-a-devices-key), give the file an age provider whose only recipient is your public
+key, then write each value to it by name:
 
 ```sh
 fnox -c ./fnox.local.toml set EXAMPLE_TOKEN
