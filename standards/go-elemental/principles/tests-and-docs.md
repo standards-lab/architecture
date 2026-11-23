@@ -69,7 +69,8 @@ is an example.
 
 A PostgreSQL suite makes a throwaway database for each test through
 [sqlate's `postgres/pgtest`](https://github.com/standards-lab/sqlate/tree/postgres/v0.8.0/postgres/pgtest).
-[go-messaging's `postgres`](https://github.com/standards-lab/go-messaging/tree/postgres/v0.4.0/postgres)
+[go-messaging's `postgres`](https://github.com/standards-lab/go-messaging/tree/postgres/v0.4.0/postgres),
+[blobfs's `postgres`](https://github.com/standards-lab/blobfs/tree/postgres/v0.6.1/postgres),
 and [docproc's `postgres`](https://github.com/standards-lab/docproc/tree/postgres/v0.1.1/postgres)
 suites are examples.
 
