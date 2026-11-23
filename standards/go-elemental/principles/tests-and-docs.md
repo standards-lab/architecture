@@ -34,6 +34,12 @@ its behavior with fakes, scripted drivers, and loopback listeners:
 - **Handlers** run through recorded requests with no listener; a test that must listen binds
   port 0 and reads the assigned port back, never a fixed port.
 
+A test that reads data outside its module's zip, such as a nested system tool's committed goldens
+read in place, skips when that tree is absent, as it is in the module zip, naming what is missing.
+A file missing within the repository, where the tree is present, fails the test.
+[docproc's `internal/tooltest`](https://github.com/standards-lab/docproc/tree/v0.4.2/internal/tooltest)
+is an example.
+
 A shared test helper stays in its test package until more than one test package needs it; then
 it is hoisted into a `<pkg>test` package, following the standard library's `httptest` and `fstest`
 naming, under `internal/` unless another module's tests consume it.
@@ -55,6 +61,17 @@ built program sits in a root-level `integration` package and runs the program as
 black-box: a service through its API, and a CLI through its arguments, its two output streams,
 and its exit code. The check vets, fixes, and lints a tagged suite with its tag, so it always
 compiles, but runs only the unit tier.
+
+An integration tier over system tools nested in the repository builds the tools from the same
+checkout and puts them first on PATH, so no installed release stands in for them.
+[docproc's `test:integration`](https://github.com/standards-lab/docproc/blob/v0.4.2/docs/development.md)
+is an example.
+
+A PostgreSQL suite makes a throwaway database for each test through
+[sqlate's `postgres/pgtest`](https://github.com/standards-lab/sqlate/tree/postgres/v0.8.0/postgres/pgtest).
+[go-messaging's `postgres`](https://github.com/standards-lab/go-messaging/tree/postgres/v0.4.0/postgres)
+and [docproc's `postgres`](https://github.com/standards-lab/docproc/tree/postgres/v0.1.1/postgres)
+suites are examples.
 
 The integration tier drives a service only through production surfaces: configuration by
 environment variable, the API and the admin mount for state, the network for faults, and
@@ -90,6 +107,14 @@ on them, and the harnesses follow these rules:
 
 Toolkit mechanics, such as dropping the race runtime's exit sleep from a launched binary, stay
 with the toolkit's own code and documentation.
+
+## Performance work removes waste, with no time target
+
+Performance work sets no time target. It removes a slowdown's waste stage by stage, so each stage
+does its work and nothing more, keeps the output byte-identical, and states the reasoning in the
+repository's docs.
+[docproc's mail performance page](https://github.com/standards-lab/docproc/blob/v0.4.2/docs/mail-performance.md)
+is an example.
 
 ## doc.go and godoc
 

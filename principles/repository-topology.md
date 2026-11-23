@@ -69,7 +69,11 @@ A repository sits where its base module's dependencies place it. A nested module
 provider, a command, or an example, pins only its own level and does not move the repository:
 whatever may use the base module still may, and only the nested module is out of reach of what
 may not use its dependencies: an adjacent library's example module may require an infrastructure
-library and a provider while its base module depends on no tier.
+library and a provider while its base module depends on no tier. System tools written in another
+language and nested in the library that runs them, as
+[docproc's `tools/`](https://github.com/standards-lab/docproc/tree/v0.4.2/tools) are, do not move
+the repository either: the library runs them as processes and imports none of their code, so they
+add nothing to what the base module depends on.
 
 ## Versioning across the tiers
 

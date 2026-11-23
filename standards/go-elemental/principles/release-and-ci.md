@@ -36,10 +36,14 @@ context lints, such as marathon's `lint-context` and `lint-references`, all of t
 fails, and fails if any does; a lint missing from PATH fails the check with a message naming
 `mise install`.
 
-CI runs the same check, so the gate is the one a developer runs. A repository's CI workflow has
-one `check` job that installs the pinned tools with mise and runs `mise run check`, on every pull
-request into `main` and every push to it; there is no per-module matrix, because the check loops
-over the modules itself. A suite beyond the unit tier that CI runs has a job of its own, which runs
+CI runs the same check, so the gate is the one a developer runs, on every pull request into `main`
+and every push to it. A repository whose CI skips nothing has one `check` job that installs the
+pinned tools with mise and runs `mise run check`; there is no per-module matrix, because the check
+loops over the modules itself. A repository whose CI skips jobs by path, running each part of the
+check only when its paths changed, adds a gate job that always runs, last, and fails when a job it
+needs failed. Its `main` ruleset requires the gate job, so a job skipped by its paths never blocks
+a merge. [docproc's `ci` job](https://github.com/standards-lab/docproc/blob/v0.4.2/.github/workflows/ci.yml)
+is an example. A suite beyond the unit tier that CI runs has a job of its own, which runs
 the suite's mise task; an `integration` job runs on push to `main` and on manual dispatch. A suite
 CI does not run runs on a developer's machine ([tests and documentation](tests-and-docs.md)). A job
 that needs containers runs the same mise task a developer runs, and the task prints the
@@ -53,11 +57,14 @@ Beside the check, two development-time tasks keep a repository current:
 
 - `mise run currency` runs the repository's `scripts/currency.sh`, which reports every direct
   requirement, Go version, tool, and action pin, and where the repository has one, every container
-  image tag, read from each compose service's Dockerfile `FROM` line, that trails its latest
-  release, and exits non-zero when it reports any. It reads the network and writes nothing.
-- `mise run upgrade` moves every module's `go` directive to the current Go minor, upgrades its
-  direct requirements to their latest, tidies, and bumps the local mise tools, rewriting
-  `go.mod` and `mise.toml`.
+  image tag, read from each compose service's Dockerfile `FROM` line or from a default image the
+  library names in its source, that trails its latest release, and exits non-zero when any it
+  reports is not held. It reads the network and writes nothing.
+- `mise run upgrade` bumps the local mise tools, then moves every module's `go` directive to the
+  current Go minor, upgrades its direct requirements to their latest, and tidies, then moves the
+  workflows' action pins, rewriting `mise.toml`, `go.mod`, and the workflows. It skips a held pin.
+  [Rolling currency](../../../principles/rolling-currency.md#how-an-upgrade-runs) states the order
+  and the holds.
 
 Currency is not a CI gate: no workflow runs it, so a new upstream release never turns a
 repository's CI red. Dependabot covers security only: a repository enables Dependabot security
@@ -72,18 +79,23 @@ Each artifact keeps its own `CHANGELOG.md` in Keep-a-Changelog form: dated headi
 between cuts, and link-reference definitions resolving each bracketed heading to its compare or
 tag URL. There is no umbrella version spanning a base module and its sub-modules.
 
-Each repository's release workflow has one `release` job, triggered by a pushed tag. A
-repository with sub-modules derives the module's path prefix and changelog from the tag; a
-repository with one artifact names them in the workflow. The job extracts the matching changelog
-section and creates the GitHub release; runs for the same tag are serialized.
+Each repository has one release workflow, triggered by a pushed tag. A repository with one
+artifact names its path and changelog in the workflow. A repository with sub-modules derives the
+module's path prefix and changelog from the tag. A repository that also releases nested system
+tools serves the tools' tags and its Go modules' tags from the same workflow: its first job routes
+the tag by its prefix, such as `tools/<format>/` for a tool, and each later job runs for one kind
+of tag. [docproc's release workflow](https://github.com/standards-lab/docproc/blob/v0.4.2/.github/workflows/release.yml)
+is an example. A release job extracts the matching changelog section and creates the GitHub
+release; runs for the same tag are serialized.
 
 Release preparation lands on `main` through a pull request, like any other change: the
 changelog date, metadata edits, and the README brought current with the release's changes. A
-ruleset on `main` requires the pull request and forbids deleting or force-pushing the branch.
+ruleset on `main` requires the pull request, and the gate job where CI skips jobs by path, and
+forbids deleting or force-pushing the branch.
 
 The tag is pushed only after `main`'s CI run passes, the integration job included where the
 repository has one, so a release never points at a commit that failed CI. This is practice, not
-a gate: no ruleset requires a status check, and the release workflow runs no CI of its own.
+a gate: no rule holds a tag to a passing run, and the release workflow runs no CI of its own.
 
 A tag whose release failed may be deleted and re-pushed at the same version once the fix is on
 `main`. A released tag is never re-cut: once the module proxy has fetched a version, the
@@ -112,9 +124,15 @@ and CI needs no private-module configuration.
 
 A module zip includes every committed file below its `go.mod`, `context/`, `CLAUDE.md`, and
 `.claude/` among them. Go provides no supported way to exclude them, and they cost nothing: the
-toolchain compiles only imported `.go` files, so they ship as committed. The templates are the
-deliberate exception: each one's module boundary at `template/` exists so the management layer never
-ships.
+toolchain compiles only imported `.go` files, so they ship as committed. Two module boundaries are
+deliberate exceptions:
+
+- A template's boundary at `template/` exists so the management layer never ships.
+- A repository that nests system tools in another language under `tools/` puts a `go.mod` there,
+  holding no Go code, so the tools' sources and fixtures stay out of the library's module zip: the
+  go command stops at a directory holding a `go.mod`. That module is never tagged or required.
+  [docproc's `tools/go.mod`](https://github.com/standards-lab/docproc/blob/v0.4.2/tools/go.mod) is
+  an example.
 
 ## Containers for tests and development
 
