@@ -23,8 +23,8 @@ arrives.
   ([principles/development-secrets.md](../principles/development-secrets.md)).
 - **Site hosting** (planned): architecture published as a project site
   (`standards-lab/roadmap/index.toml`, goal `sites`, task `architecture-site`).
-- **Web Elemental standard** (built): a draft web standard beside Go Elemental, with
-  Lit as its one runtime dependency, its member catalog, and its packages-and-releases principle
+- **Web Elemental standard** (built): a draft web standard beside Go Elemental, with Lit as its
+  one runtime dependency, its member catalog, and its packages-and-releases principle
   ([standards/web-elemental/](../standards/web-elemental/)).
 
 ## Goal records

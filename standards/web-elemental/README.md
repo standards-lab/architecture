@@ -47,4 +47,4 @@ principles it enhances, and its package documentation states its API.
 | Icons | [web-icons](https://github.com/standards-lab/web-icons) | The icon modules and a Vite plugin that fills icon markers. |
 | Components | [web-components](https://github.com/standards-lab/web-components) | The Lit components, each with a shadow root. |
 | SDK | [web-app-sdk](https://github.com/standards-lab/web-app-sdk) | The application SDK beside the components: router, API client, and events. |
-| Templates | [webappgen](https://github.com/standards-lab/webappgen) | A Go CLI that writes a client project on the layers, shipped as a Go binary. |
+| Templates | [webappgen](https://github.com/standards-lab/webappgen) | A Go CLI that writes a client project on the layers. |
