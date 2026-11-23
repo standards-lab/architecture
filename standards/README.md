@@ -15,3 +15,5 @@ implements some other architecture.
 
 - [Go Elemental](go-elemental/README.md) — the Go implementation of the Elemental Architecture:
   a complete reference architecture on the Go standard library.
+- [Web Elemental](web-elemental/README.md) — the web implementation of the Elemental
+  Architecture, a draft: the browser platform first, with Lit its one runtime dependency.

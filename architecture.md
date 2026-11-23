@@ -148,4 +148,5 @@ one.
 ## Implementing standards
 
 A standard declares the architecture it implements in its definition.
-[Go Elemental](standards/go-elemental/README.md) implements it.
+[Go Elemental](standards/go-elemental/README.md) implements it, and
+[Web Elemental](standards/web-elemental/README.md) implements it as a draft.
