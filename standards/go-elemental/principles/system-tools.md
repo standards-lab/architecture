@@ -34,6 +34,23 @@ An adapter finds its tool and checks its version when it is built, so a missing 
 fails the system at startup, and it runs the tool under the caller's context, so cancelling the
 caller stops the tool.
 
+## A run's memory bound is set before exec
+
+A bound on a tool's memory is in place before the tool's program executes, never applied to a
+process that has already started, since a runtime reserves its address space and sizes its stacks
+at startup, under the bound in place then. docproc's exec
+runner, which sets the bound through util-linux's `prlimit` before the tool's program runs
+([`tool/exec.go`](https://github.com/standards-lab/docproc/blob/v0.4.2/tool/exec.go)), is an
+example.
+
+## A message's alternative parts are one content
+
+The parts of a `multipart/alternative` message are each an alternative version of the same
+information (RFC 2046 §5.1.4), so a tool that converts a message to Markdown makes it from one of
+them and appends nothing from the others.
+[docproc-mail](https://github.com/standards-lab/docproc/blob/tools/mail/v0.1.4/tools/mail/README.md#output)
+is an example.
+
 ## A tool's license stays with the tool
 
 Running a tool links nothing into the system, so the tool's license stays with the tool and does

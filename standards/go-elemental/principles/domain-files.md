@@ -25,6 +25,11 @@ the command functions, their flag structs, and the parsers for the CLI's argumen
 `output.go`, which holds the writers and record layouts the commands print with. A file appears only
 when the domain has that role: a domain with no object store has no `storage.go`.
 
+A CLI command package with no `Service` or store keeps `commands.go` and `output.go` and names each other file by the concern it holds.
+[cmd/docproc's
+`internal/run`](https://github.com/standards-lab/docproc/tree/cmd/docproc/v0.2.2/cmd/docproc/internal/run),
+with `collect.go`, `file.go`, `runner.go`, and `stat_*.go`, is an example.
+
 ## A CLI splits its API by dependency profile
 
 A CLI may split off a second API type for each set of dependencies a group of its commands needs,

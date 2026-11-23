@@ -57,6 +57,28 @@ part of the graph and mounts its own commands, so adding a command touches its l
 its package, and nothing else. The composition root's fixtures live in an internal `apptest`
 package.
 
+## A command nested in its library's repository
+
+A command that ships as a nested module of its library's repository keeps `main.go` at its
+module's root rather than at `cmd/<name>/main.go`, so `go install <module>@<version>` installs the
+command by its name. The command is the module's one public surface, so every package sits under
+`internal/`: `app`, `apptest`, and the command packages, which a CLI of its own keeps at the
+module's root level. [docproc's
+`cmd/docproc`](https://github.com/standards-lab/docproc/tree/cmd/docproc/v0.2.2/cmd/docproc) is an
+example.
+
+## The built-binary integration tier
+
+A CLI's built-binary integration tier builds the CLI's binary with the race detector and starts
+it with its arguments, under a bound of the tier's own. It does not launch through go-core's
+[`processtest`](https://github.com/standards-lab/go-core/tree/v0.12.0/process/processtest), which
+at v0.12.0 keeps the binary it builds private, launches it without arguments, and gives up at
+15 s. The tier's `integration` package sits at the module's root, outside `internal/`, where
+[go-cli-sdk-template's template/v0.3.0](https://github.com/standards-lab/go-cli-sdk-template/tree/template/v0.3.0/template/integration)
+places it, and is a nested command's one package outside `internal/`. [docproc's
+`cmd/docproc/integration`](https://github.com/standards-lab/docproc/tree/cmd/docproc/v0.2.2/cmd/docproc/integration)
+is an example.
+
 ## A command builds only what it declares
 
 - **A command declares its nodes.** A command declares the nodes it needs and reads their values

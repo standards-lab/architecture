@@ -29,3 +29,13 @@ module defines the standard tier, and each provider sub-module pins its own vend
 Where the dependency line is drawn, meaning what a base module may take at all, is not fixed
 at the architecture level. Each standard draws its own line as part of its definition, and a
 module may enhance it, tightening it further for its own scope and never loosening it.
+
+## A dependency's missing feature is the component's own requirement
+
+A feature a dependency lacks is the component's own requirement, filled in the component's own
+code, owned and tested there. The component works around the gap rather than waiting on, or
+asking for, a change upstream. An external repository is engaged only to report something
+legitimately broken. The mail and OneNote tools nested in docproc are examples: each fills in its
+own code what its parsing library lacks, and its Limits section records the library's gaps
+([docproc-mail](https://github.com/standards-lab/docproc/blob/tools/mail/v0.1.4/tools/mail/README.md#limits),
+[docproc-onenote](https://github.com/standards-lab/docproc/blob/tools/onenote/v0.1.2/tools/onenote/README.md#limits)).
