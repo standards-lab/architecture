@@ -37,17 +37,16 @@ documentation; a comment inside a statement body is one of the five kinds or goe
 configuration file's header is at most a short description of the file plus `See` reference
 lines; its reasoning lives in the docs or the README.
 
-A comment is where the justification for not doing the right thing gets written, and nothing
-keeps it true once the code beside it changes. The code itself, its names, its tests, and its
-checks carry everything else, and each of them fails visibly when it goes stale. The five kinds
-remain because each says what the code cannot: what an API promises its consumer, why a rule
-or a version is set aside, where third-party code came from and under what license, and which
-document governs it. Provenance stays in source only where a license obliges it; internal
-lineage has [one authoritative home](context-architecture.md), so it lives in one record rather
-than in comments that drift from it. A reference stays true because its target is the single
-source of truth, and the repository's check resolves each reference, so a stale one fails
-visibly. The reasoning follows Lauren Tan, "All Code Is Slop (Except Mine)", AI Engineer Code
-2026.
+A comment is where the justification for not doing the right thing gets written, and nothing keeps
+it true once the code beside it changes. The code itself, its names, its tests, and its checks carry
+everything else, and each of them fails visibly when it goes stale. The five kinds remain because
+each says what the code cannot: what an API promises its consumer, why a rule or a version is set
+aside, where third-party code came from and under what license, and which document governs it.
+Provenance stays in source only for third-party code, whose license travels with it; internal
+lineage has [one authoritative home](context-architecture.md), so it lives in one record rather than
+in comments that drift from it. A reference stays true because its target is the single source of
+truth, and the repository's check resolves each reference, so a stale one fails visibly. The
+reasoning follows Lauren Tan, "All Code Is Slop (Except Mine)", AI Engineer Code 2026.
 
 ## How the principle is enforced
 
