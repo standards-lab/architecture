@@ -135,7 +135,8 @@ and never loosen it:
 - [A standalone tool beside the library](principles/tool-beside-library.md) — an operator's use
   case ships as a command beside the library.
 - [Five kinds of comment](principles/comments.md) — source carries only package documentation,
-  a suppression's or a pin hold's reason, provenance, and a reference to its governing document.
+  a suppression's or a pin hold's reason, third-party provenance, and a reference to its
+  governing document.
 
 ## A note on "Domain Service"
 
@@ -147,4 +148,5 @@ one.
 ## Implementing standards
 
 A standard declares the architecture it implements in its definition.
-[Go Elemental](standards/go-elemental/README.md) implements it.
+[Go Elemental](standards/go-elemental/README.md) implements it, and
+[Web Elemental](standards/web-elemental/README.md) implements it as a draft.

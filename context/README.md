@@ -23,9 +23,9 @@ arrives.
   ([principles/development-secrets.md](../principles/development-secrets.md)).
 - **Site hosting** (planned): architecture published as a project site
   (`standards-lab/roadmap/index.toml`, goal `sites`, task `architecture-site`).
-- **Web Elemental standard** (planned): a draft web standard beside Go Elemental, with Lit as its
-  one runtime dependency (`standards-lab/roadmap/index.toml`, goal `v1.client.stack`, task
-  `standard`).
+- **Web Elemental standard** (built): a draft web standard beside Go Elemental, with Lit as its
+  one runtime dependency, its member catalog, and its packages-and-releases principle
+  ([standards/web-elemental/](../standards/web-elemental/)).
 
 ## Goal records
 

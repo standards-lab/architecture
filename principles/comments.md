@@ -16,10 +16,12 @@ compose files) is one of exactly five kinds:
   the suppression or the construct, such as Rust's `// SAFETY:` on an `unsafe` block.
 - **A pin hold's reason:** the reason a version is held back from the latest release that
   [rolling currency](rolling-currency.md) tracks, written beside the pin.
-- **Provenance:** one line per source naming the repository and commit of code taken from
-  elsewhere, with a short clause saying what changed, such as
-  `Adapted from <repo> (<commit>): <what changed>`; with it stays any license notice the ported
-  file's license requires.
+- **Third-party provenance:** one line per source of code taken from outside the workspace,
+  naming the upstream, its tag or commit, and its license, with a short clause saying what
+  changed, such as `From <upstream> (<tag or commit>), <license>: <what changed>`; with it stays
+  any notice the license requires. Code taken from the workspace's own repositories and spikes
+  carries no provenance comment: its lineage is recorded in the workspace's references catalog,
+  once per repository at a commit, not per file.
 - **Reference:** one line pointing a code or configuration file at the document or principle
   that governs it, in place of restating it, such as
   `See architecture/principles/rolling-currency.md`.
@@ -35,14 +37,16 @@ documentation; a comment inside a statement body is one of the five kinds or goe
 configuration file's header is at most a short description of the file plus `See` reference
 lines; its reasoning lives in the docs or the README.
 
-A comment is where the justification for not doing the right thing gets written, and nothing
-keeps it true once the code beside it changes. The code itself, its names, its tests, and its
-checks carry everything else, and each of them fails visibly when it goes stale. The five kinds
-remain because each says what the code cannot: what an API promises its consumer, why a rule
-or a version is set aside, where code came from, and which document governs it. A reference
-stays true because its target is the single source of truth, and the repository's check
-resolves each reference, so a stale one fails visibly. The reasoning follows Lauren Tan, "All
-Code Is Slop (Except Mine)", AI Engineer Code 2026.
+A comment is where the justification for not doing the right thing gets written, and nothing keeps
+it true once the code beside it changes. The code itself, its names, its tests, and its checks carry
+everything else, and each of them fails visibly when it goes stale. The five kinds remain because
+each says what the code cannot: what an API promises its consumer, why a rule or a version is set
+aside, where third-party code came from and under what license, and which document governs it.
+Provenance stays in source only for third-party code, whose license travels with it; internal
+lineage has [one authoritative home](context-architecture.md), so it lives in one record rather than
+in comments that drift from it. A reference stays true because its target is the single source of
+truth, and the repository's check resolves each reference, so a stale one fails visibly. The
+reasoning follows Lauren Tan, "All Code Is Slop (Except Mine)", AI Engineer Code 2026.
 
 ## How the principle is enforced
 

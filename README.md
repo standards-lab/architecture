@@ -46,6 +46,9 @@ architecture's.
 - [Go Elemental](standards/go-elemental/README.md) is the Go implementation of the Elemental
   Architecture: a complete reference architecture on the Go standard library, with the smallest
   deliberate dependency surface. Its README catalogs its member repositories by tier.
+- [Web Elemental](standards/web-elemental/README.md) is the web implementation of the Elemental
+  Architecture, a draft: the browser platform first, with the smallest deliberate dependency
+  surface. Its README catalogs its member repositories by tier.
 
 ## What belongs here
 
