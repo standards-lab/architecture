@@ -44,6 +44,10 @@ variant suffix: it sorts after the version, so a pin of `9.0.2-cli-ls89` is curr
 newest `-cli-ls<N>` tag, by version first and build second. A tag counts only when it has at least
 one dot, so a bare build number never sorts above every release.
 
+A source a Dockerfile builds is pinned by the release tag it fetches, and its latest is the highest
+semantic version among the source repository's tags. The tags are read rather than the published
+releases, because a project may tag a release without publishing one.
+
 A developer tool pinned for one task alone is covered too. A currency check reads every
 environment's tool configuration, not only the default. A tool CI never needs stays pinned and
 current, and CI skips installing it, as mise's `MISE_DISABLE_TOOLS` does for the 7-Zip pin
