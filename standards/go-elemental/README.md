@@ -67,6 +67,10 @@ further, stating the enhancement beside its link to the principle.
 - [DSL-driven services](principles/dsl-driven-services.md) states how a service whose
   expressive content is a language of its own is integrated, and the conventions the
   standard's authored SQL declares.
+- [Database extensions](principles/database-extensions.md) states that an extension's features
+  are native tier, that the image is an extension's one version source, how the application
+  declares extensions and the migrator reconciles them, and the modules an extension's layers
+  live in.
 
 ## Member repositories
 
