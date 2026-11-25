@@ -55,12 +55,13 @@ bump.
 
 Beside the check, two development-time tasks keep a repository current:
 
-- `mise run currency` runs the repository's `scripts/currency.sh`, which reports every direct
-  requirement, Go version, tool, and action pin, and where the repository has one, every container
-  image tag, read from a compose file's or a workflow's `image:` line, from each compose service's
-  Dockerfile `FROM` line, or from a default image the library names in its source, and every
-  source a Dockerfile builds, read from its build-argument pin, that trails its latest release,
-  and exits non-zero when any it reports is not held. It reads the network and writes nothing.
+- `mise run currency` runs the repository's `scripts/currency.sh`, which reports every pin that
+  trails its latest release and exits non-zero when any it reports is not held. It checks every
+  direct requirement, Go version, tool, and action pin, and, where the repository has them, every
+  container image tag, read from a compose file's or a workflow's `image:` line, from each compose
+  service's Dockerfile `FROM` line, or from a default image the library names in its source, and
+  every source a Dockerfile builds, read from its build-argument pin. It reads the network and
+  writes nothing.
 - `mise run upgrade` bumps the local mise tools, then moves every module's `go` directive to the
   current Go minor, upgrades its direct requirements to their latest, and tidies, then moves the
   workflows' action pins, then every container image tag and Dockerfile build-argument pin that
