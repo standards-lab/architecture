@@ -23,3 +23,4 @@ repository may enhance one further, stating the enhancement where it links to th
 - [Tests and documentation](tests-and-docs.md)
 - [Releases and CI](release-and-ci.md)
 - [DSL-driven services](dsl-driven-services.md)
+- [Database extensions](database-extensions.md)

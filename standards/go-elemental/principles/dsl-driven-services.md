@@ -105,7 +105,9 @@ stated by none of them alone:
   native file names the engine feature it uses and how another engine expresses the same effect,
   so the native files are found by one search; with the migrations, which carry no tier, they
   are a repository's complete port list. The conventions linter refuses a standard file that
-  uses a form the engine declares native.
+  uses a form the engine declares native, and equally one that uses a form a declared
+  [database extension](database-extensions.md) declares native. A native file that uses an
+  extension's forms names the extension in its header.
 - A statement is named for its operation, never for its SQL verb. The file, the store method,
   the service method, and the route share one name.
 - A command's validation belongs to the domain's entity. Existence and uniqueness belong to

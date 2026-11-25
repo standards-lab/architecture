@@ -29,6 +29,8 @@ surface on which a component chooses such a version, so no chosen version is exe
 - the developer tools the task runner and CI invoke;
 - the container images a compose file or a CI workflow starts, each pinned once: a compose
   service's pin is the `FROM` line of the Dockerfile it builds from, which currency reads;
+- each source a Dockerfile builds into its image, such as a database extension, pinned once, by
+  one build argument, which currency reads;
 - the container image a library names as its default in its source, pinned by tag and digest
   together, which currency reports and an upgrade moves together, such as docproc's
   [`picture.LibreOfficeImage`](https://pkg.go.dev/github.com/standards-lab/docproc@v0.4.2/picture#LibreOfficeImage)
