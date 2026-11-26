@@ -43,16 +43,13 @@ For a server's side of the options, see vLLM's
 
 ## The row runs the official template at the card's settings
 
-The chat template renders tool definitions, calls, and results into the token sequence the model
-was trained on, and the server parses the model's calls from that same format. A row serves the
-model's official template, at the sampling and reasoning settings its card states;
-[Reading a model card](model-cards.md) says what those settings are and where a card states them.
-They are the configuration the model's tool calls were measured at, and any other is one nobody
-has measured.
+A row serves the model's official chat template, at the sampling and reasoning settings its card
+states. [Reading a model card](model-cards.md) says what the template and those settings are,
+where a card states them, and why a model runs at them.
 
 A template override is for a template that is broken, one that renders a conversation the card's
 format doesn't describe. It is never for a shape the model sometimes strays from: that shape is
-the server's to constrain, per request, while the model keeps its template
+the server's to constrain, as above, and a template workaround is a deviation from the card
 ([Why a model runs at its card's values](model-cards.md#why-a-model-runs-at-its-cards-values)).
 ai-hosting's class-profile schema expresses the rule in
 [a row's keys](https://github.com/standards-lab/ai-hosting/blob/bd34b83629d4935d1b1a7c2a633bd162ccbbc0dd/classes/README.md#a-rows-keys),

@@ -34,9 +34,10 @@ A reader meets more on the same card:
 - **Stop and special tokens.** The tokens that end a turn or mark a tool call, listed as end
   tokens in `generation_config.json` and named in the card's format guide. An engine that parses
   the model's native format handles them; a hand-built prompt has to.
-- **Multi-turn rules.** What the history carries back: one card drops earlier thinking except on
-  tool-call turns, another passes reasoning back after a tool call. Both are the client's job,
-  since the server sees only the history the client sends.
+- **Multi-turn rules.** What the history carries back, such as earlier thinking dropped except on
+  tool-call turns. The history is the client's to keep, as
+  [Tool-call reliability](tool-call-reliability.md#the-client-sends-reasoning-back-on-turns-that-called-tools)
+  says for the reasoning of a turn that called tools.
 - **Prompt forms.** A request whose content the model was trained to see in a set form: an
   embedding model's task prefixes for a query and for a document, a transcription instruction,
   or the order of image or audio inputs against the text. Omitting a prefix usually still works
@@ -55,10 +56,11 @@ configuration, and a deviation is a new configuration nobody has measured.
 - **An engine's defaults are a deviation.** A model whose checkpoint carries no sampling runs at
   whatever the engine defaults to unless its row states the card's values. A truncation the card
   doesn't name is turned off rather than left to the engine.
-- **A workaround in the template is a deviation too.** When a client needs a shape the model
-  sometimes misses, it constrains that shape per request, with a tool choice or a response
-  format, and the model keeps its card's template and settings. A patched template or a forced
-  reasoning level is a per-model workaround carried across every build and conversion.
+- **A workaround in the template is a deviation too.** A patched template or a forced reasoning
+  level is a per-model workaround carried across every build and conversion. A shape the model
+  sometimes misses is constrained per request instead, as
+  [Tool-call reliability](tool-call-reliability.md#the-server-constrains-a-shape-needed-every-time)
+  says, and the model keeps its card's template and settings.
 
 ## A checkpoint derived from another publisher's model
 
