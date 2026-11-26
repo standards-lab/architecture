@@ -24,3 +24,5 @@ a principle, tightening it for its own scope, and never loosen it.
 - [Context architecture](context-architecture.md)
 - [A standalone tool beside the library](tool-beside-library.md)
 - [Five kinds of comment](comments.md)
+- [Reading a model card](model-cards.md)
+- [Tool-call reliability](tool-call-reliability.md)
