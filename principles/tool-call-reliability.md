@@ -33,10 +33,10 @@ asking for one. A turn where a text answer is valid stays `auto`; a constraint b
 every reply must take the shape.
 
 A deployment that refuses `required` is a gap the client declares, so a request that needs it is
-refused before it is sent rather than quietly answered under `auto`. go-ai declares the gap in a
-format's profile, as
-[`NoToolChoiceRequired`](https://github.com/standards-lab/go-ai/blob/c8519634000a2d3f278d1abca91078be674862dd/docs/concepts.md#profiles),
-and expresses the constraint itself as
+refused before it is sent rather than quietly answered under `auto`. go-ai at `c851963` is an
+example, in
+[`NoToolChoiceRequired`](https://github.com/standards-lab/go-ai/blob/c8519634000a2d3f278d1abca91078be674862dd/docs/concepts.md#profiles)
+and
 [`ToolChoiceRequired`](https://github.com/standards-lab/go-ai/blob/c8519634000a2d3f278d1abca91078be674862dd/protocol/tool.go#L39-L40).
 For a server's side of the options, see vLLM's
 [tool calling](https://docs.vllm.ai/en/latest/features/tool_calling/).
@@ -51,9 +51,8 @@ A template override is for a template that is broken, one that renders a convers
 format doesn't describe. It is never for a shape the model sometimes strays from: that shape is
 the server's to constrain, as above, and a template workaround is a deviation from the card
 ([Why a model runs at its card's values](model-cards.md#why-a-model-runs-at-its-cards-values)).
-ai-hosting's class-profile schema expresses the rule in
-[a row's keys](https://github.com/standards-lab/ai-hosting/blob/bd34b83629d4935d1b1a7c2a633bd162ccbbc0dd/classes/README.md#a-rows-keys),
-which hold no chat template and take a row's sampling from its card.
+[ai-hosting's class-profile schema at `bd34b83`](https://github.com/standards-lab/ai-hosting/blob/bd34b83629d4935d1b1a7c2a633bd162ccbbc0dd/classes/README.md#a-rows-keys)
+is an example.
 
 ## The client sends reasoning back on turns that called tools
 
@@ -65,5 +64,5 @@ Dropped, the model continues from a prompt unlike the one it was trained to cont
 next call is the one that drifts. What else the history carries back is the card's multi-turn
 rule ([Reading a model card](model-cards.md#what-each-value-means)).
 
-go-ai sends a reply's reasoning back with the rest of its output in
-[a stateless conversation](https://github.com/standards-lab/go-ai/blob/c8519634000a2d3f278d1abca91078be674862dd/docs/concepts.md#stateless-conversations).
+[go-ai's stateless conversations at `c851963`](https://github.com/standards-lab/go-ai/blob/c8519634000a2d3f278d1abca91078be674862dd/docs/concepts.md#stateless-conversations)
+are an example.

@@ -69,8 +69,9 @@ its own generation config. A checkpoint another publisher derived from that mode
 quantization or fine-tuning, is described by the base model's card. Only such a derived
 checkpoint takes its sampling from the base card, and only when its own `generation_config.json`
 lacks the base card's values; when the derived checkpoint's generation config carries them, it
-runs on that, as any checkpoint does. ai-hosting's class-profile schema expresses the rule in
-[its `sampling` field](https://github.com/standards-lab/ai-hosting/blob/bd34b83629d4935d1b1a7c2a633bd162ccbbc0dd/classes/README.md#sampling).
+runs on that, as any checkpoint does.
+[ai-hosting's class-profile schema at `bd34b83`](https://github.com/standards-lab/ai-hosting/blob/bd34b83629d4935d1b1a7c2a633bd162ccbbc0dd/classes/README.md#sampling)
+is an example.
 
 ## A card's evals rank candidates
 
